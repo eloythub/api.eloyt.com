@@ -1,0 +1,19 @@
+{
+  "name": "idea-studio-server",
+  "version": "0.0.0",
+  "description": "idea studio server app",
+  "main": "built/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eloythub/idea-studio-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eloythub/idea-studio-server/issues"
+  },
+  "homepage": "https://github.com/eloythub/idea-studio-server#readme"
+}
