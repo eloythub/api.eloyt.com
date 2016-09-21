@@ -1,7 +1,11 @@
-FROM node:4.5
+FROM mhart/alpine-node:4.5
 
 MAINTAINER Mahan hazrati<eng.mahan.hazrati@gmail.com>
 
-EXPOSE 8080
+RUN ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
 
-CMD ['npm', 'start']
+WORKDIR /var/app/server
+
+EXPOSE 3000
+
+ENTRYPOINT ["npm", "start"]
