@@ -35,9 +35,11 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-RUN npm install pm2 -g
-
 RUN useradd --user-group --create-home --shell /bin/false app
+
+ENTRYPOINT ["node", "app.js"]
+
+RUN npm install pm2 -g
 
 # root directory
 ENV HOME=/home/app
@@ -46,6 +48,6 @@ WORKDIR $HOME/api
 COPY package.json $HOME/api/package.json
 RUN npm install
 
-EXPOSE 80
-
 CMD pm2 start --no-daemon app.js --watch
+
+EXPOSE 80
