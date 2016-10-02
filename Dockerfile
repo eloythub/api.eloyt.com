@@ -43,9 +43,9 @@ RUN useradd --user-group --create-home --shell /bin/false app
 ENV HOME=/home/app
 
 WORKDIR $HOME/api
-
-CMD make install
+COPY package.json $HOME/api/package.json
+RUN npm install
 
 EXPOSE 80
 
-ENTRYPOINT ["node", "app.js"]
+CMD pm2 start --no-daemon app.js --watch

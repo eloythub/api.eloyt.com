@@ -1,23 +1,21 @@
+const Hapi = require('hapi');
 
-const express = require('express');
+const server = new Hapi.Server();
 
-// Constants
-const PORT = 80;
+server.connection({ port: 80 });
 
-// App
-const app = express();
-app.get('/', function (req, res) {
-  res.send('Hello world\n');
-  console.log('hosted');
-});
-app.get('/test', function (req, res) {
-  res.send('Hello world\n');
-  console.log('hosted');
-});
-app.get('/test1', function (req, res) {
-  res.send('Hello world\n');
-  console.log('hosted');
+server.route({
+    method: 'GET',
+    path: '/',
+    handler: function (request, reply) {
+        reply('Hello, world!');
+    }
 });
 
-app.listen(PORT);
-console.log('Running on http://localhost:' + PORT);
+server.start((err) => {
+
+    if (err) {
+        throw err;
+    }
+    console.log(`Server running at: ${server.info.uri}`);
+});
