@@ -1,21 +1,6 @@
-const Hapi = require('hapi');
+'use strict';
 
-const server = new Hapi.Server();
+const Server = require('./server');
+const server = new Server(80);
 
-server.connection({ port: 80 });
-
-server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-        reply('Hello, world!');
-    }
-});
-
-server.start((err) => {
-
-    if (err) {
-        throw err;
-    }
-    console.log(`Server running at: ${server.info.uri}`);
-});
+server.fireUp();

@@ -26,7 +26,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.5.0
+ENV NODE_VERSION 6.7.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -35,11 +35,9 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-RUN useradd --user-group --create-home --shell /bin/false app
-
-ENTRYPOINT ["node", "app.js"]
-
 RUN npm install pm2 -g
+
+RUN useradd --user-group --create-home --shell /bin/false app
 
 # root directory
 ENV HOME=/home/app
@@ -48,6 +46,6 @@ WORKDIR $HOME/api
 COPY package.json $HOME/api/package.json
 RUN npm install
 
-CMD pm2 start --no-daemon app.js --watch
-
 EXPOSE 80
+
+CMD pm2 start --no-daemon app.js --watch
