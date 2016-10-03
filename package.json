@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/eloythub/idea-studio-server#readme",
   "dependencies": {
-    "hapi": "^15.1.1"
+    "hapi": "^15.1.1",
+    "promise": "^7.1.1"
   }
 }
