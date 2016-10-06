@@ -22,11 +22,11 @@ module.exports = class Server {
 
   fireUp () {
     this.server.start((err) => {
-        if (err) {
-            throw err;
-        }
+      if (err) {
+          throw err;
+      }
 
-        console.log(`Server running at: ${this.server.info.uri}`);
+      console.log(`Server running at: ${this.server.info.uri}`);
     });
   }
 }
