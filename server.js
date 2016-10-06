@@ -5,17 +5,17 @@ const Router = require('./router');
 const Routes = require('./app/routes');
 
 module.exports = class Server {
-  constructor(port) {
+  constructor(env) {
     this.server = new Hapi.Server();
 
     // server connection config
-    this.server.connection({ port: port | 80 });
+    this.server.connection({ port: env.exposePort | 80 });
 
     // router setup
-    const router = new Router();
+    const router = new Router(env);
 
     // handle the routes
-    new Routes(router);
+    new Routes(router, env);
 
     this.server.route(router.getRoutes());
   }

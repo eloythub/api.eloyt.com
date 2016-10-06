@@ -1,14 +1,20 @@
 'use strict';
 
-const graph   = require('fbgraph');
-const http    = require('http');
-const options = {
+const UsersModel = require('../models/users');
+const graph      = require('fbgraph');
+const http       = require('http');
+const options    = {
     timeout:  3000
   , pool:     { maxSockets:  Infinity }
   , headers:  { connection:  "keep-alive" }
 };
 
 module.exports = class Repository {
+  constructor(env) {
+    this.env        = env;
+    this.usersModel = new UsersModel(env);
+  }
+
   fetchOrCreateUser(tokenId, userId) {
     let base = this;
     graph.setAccessToken(tokenId);

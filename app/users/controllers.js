@@ -1,8 +1,13 @@
 'use strict';
 
 const Repository = require('./repository');
-const repos = new Repository();
+
 module.exports = class Controllers {
+  constructor(env) {
+    this.env   = env;
+    this.repos = new Repository(env);
+  }
+
   createOrGet(req, res) {
     if (req.payload.provider !== 'facebook') {
       res({
@@ -22,7 +27,7 @@ module.exports = class Controllers {
       return;
     }
 
-    repos.fetchOrCreateUser(
+    this.repos.fetchOrCreateUser(
       req.payload.credentials.token,
       req.payload.credentials.userId
     ).then((data) => {

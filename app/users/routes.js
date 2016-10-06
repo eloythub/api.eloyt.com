@@ -3,8 +3,8 @@
 const BaseRoute = require('../base-router');
 
 module.exports = class UsersRoutes extends BaseRoute {
-  constructor(router) {
-    super('users');
+  constructor(router, env, routerBaseUrl) {
+    super(router, env, routerBaseUrl);
 
     this.router = router;
 

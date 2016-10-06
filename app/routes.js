@@ -3,8 +3,9 @@
 const UsersRoutes = require('./users/routes');
 
 module.exports = class Routes {
-  constructor(router) {
+  constructor(router, env) {
     this.router = router;
+    this.env    = env;
 
     this.setRootRoutes();
     this.setRoutes();
@@ -24,6 +25,6 @@ module.exports = class Routes {
   }
 
   setRoutes() {
-    new UsersRoutes(this.router, 'users');
+    new UsersRoutes(this.router, this.env, 'users');
   }
 }
