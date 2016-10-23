@@ -1,16 +1,8 @@
 'use strict';
 
-const mongoose = require('mongoose');
+const BaseModel = require('../base-model');
 
 
-module.exports = class UsersModel {
-  constructor(env) {
-    this.env = env;
+module.exports = class UsersModel extends BaseModel {
 
-    const credential = env.mongoDb.username ? `${env.mongoDb.username}:${env.mongoDb.password}@` : '';
-
-    const connectionString = `mongodb://${credential}${env.mongoDb.host}:${env.mongoDb.port}/${env.mongoDb.database}`;
-
-    this.mongoose = mongoose.connect(connectionString);
-  }
 }
