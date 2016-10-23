@@ -24,7 +24,6 @@ module.exports = class UsersModel extends BaseModel {
         default: Date.now
       }
     });
-
   }
 
   getUserByEmail(email) {
