@@ -16,10 +16,10 @@ module.exports = class Routes {
       method: 'GET',
       path: '/',
       handler: function (request, reply) {
-          reply({
-            status: true,
-            message: 'service is up and running'
-          });
+        reply({
+          status: true,
+          message: 'service is up and running'
+        });
       }
     });
   }

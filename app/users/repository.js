@@ -15,6 +15,20 @@ module.exports = class Repository {
     this.usersModel = new UsersModel(env);
   }
 
+  getUserByEmail(email, findUserByEmailResponse) {
+    let base = this;
+
+    return new Promise((fulfill, reject) => {
+      if (findUserByEmailResponse) {
+        fulfill(findUserByEmailResponse);
+
+        return;
+      }
+
+      base.usersModel.createUser(email).then(fulfill, reject);
+    });
+  }
+
   fetchOrCreateUser(tokenId, userId) {
     let base = this;
     graph.setAccessToken(tokenId);
@@ -24,7 +38,13 @@ module.exports = class Repository {
         tokenId: tokenId,
         userId: userId,
       }).then((data) => {
-        fulfill(data);
+        base.usersModel.getUserByEmail(data.email)
+          .then((findUserByEmailResponse) => {
+            base.getUserByEmail(
+              data.email,
+              findUserByEmailResponse
+            ).then(fulfill, reject);
+          }, reject)
       }, (error) => {
         reject(error);
       });
