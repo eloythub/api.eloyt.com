@@ -19,7 +19,9 @@ module.exports = class UsersRoutes extends BaseRoute {
     this.router.addRoute({
       method: 'POST',
       path: this.prefix + '/create-or-get',
-      handler: this.controllers.createOrGet,
+      handler: (req, res) => {
+        this.controllers.createOrGet(req, res);
+      },
     });
   }
 }

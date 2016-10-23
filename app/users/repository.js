@@ -42,8 +42,6 @@ module.exports = class Repository {
           return;
         }
 
-        console.log(res);
-
         fulfill(res);
       });
     });
