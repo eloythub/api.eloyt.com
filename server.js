@@ -1,5 +1,6 @@
 'use strict';
 
+const debug  = require('debug');
 const Hapi   = require('hapi');
 const Router = require('./router');
 const Routes = require('./app/routes');
@@ -9,7 +10,7 @@ module.exports = class Server {
     this.server = new Hapi.Server();
 
     // server connection config
-    this.server.connection({ port: env.exposePort | 80 });
+    this.server.connection({ port: env.exposePort || 80 });
 
     // router setup
     const router = new Router(env);
@@ -26,7 +27,7 @@ module.exports = class Server {
           throw err;
       }
 
-      console.log(`Server running at: ${this.server.info.uri}`);
+      debug(`Server running at: ${this.server.info.uri}`);
     });
   }
 }
