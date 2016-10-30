@@ -13,7 +13,7 @@ describe('Router', () => {
 		expect(router.addRoute({
       'test-route': 'test-route'
     })).to.be.empty;
-    expect(router.routes).to.deep.equal([ { 'test-route': 'test-route' } ]);
+    expect(router.routes).to.eql([ { 'test-route': 'test-route' } ]);
 	});
 
   it('getRoutes', function() {
@@ -21,12 +21,12 @@ describe('Router', () => {
       'test-env': 'test-env',
     });
 
-    expect(router.getRoutes()).to.deep.equal([]);
+    expect(router.getRoutes()).to.eql([]);
 
     router.addRoute({
       'test-route': 'test-route'
     });
 
-    expect(router.getRoutes()).to.deep.equal([ {'test-route': 'test-route'} ]);
+    expect(router.getRoutes()).to.eql([ {'test-route': 'test-route'} ]);
 	});
 });
