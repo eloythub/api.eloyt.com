@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "./node_modules/.bin/mocha --compilers js:babel-register --require babel-polyfill ./tests --watch --recursive",
-    "tunnel": "./ngrok http 8090"
+    "tunnel": "./ngrok authtoken gPgrkH1Kg6Vm18FjgqnM_6LZE7eE7sJRtC8SDMvTbc http 8090"
   },
   "repository": {
     "type": "git",
