@@ -20,13 +20,13 @@ module.exports = class Repository {
     let base = this;
 
     return new Promise((fulfill, reject) => {
-      const data = {
-        initFrontCameraByDefault: payload.initFrontCameraByDefault,
-        highVideoQualityRecord: payload.highVideoQualityRecord,
-        deleteVideoAfterRecord: payload.deleteVideoAfterRecord,
-      };
+      let data = {}
 
-      base.settingsModel.saveSettingsByUserId(userId, data).then(fulfill, reject);
+      if (payload.userId) {
+        delete payload['userId'];
+      }
+
+      base.settingsModel.saveSettingsByUserId(userId, payload).then(fulfill, reject);
     });
   }
 

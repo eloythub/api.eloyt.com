@@ -54,20 +54,17 @@ module.exports = class SettingsModel extends BaseModel {
     const Model = this.model;
 
     return new Promise((fulfill, reject) => {
-      Model.findByIdAndUpdate(
-        base.mongoose.Types.ObjectId(userId),
-        {
-          $set: data
-        }, (err, res) => {
-          if (err) {
-            reject(err);
+      Model.update({
+        userId: base.mongoose.Types.ObjectId(userId),
+      }, data, (err, res) => {
+        if (err) {
+          reject(err);
 
-            return;
-          }
-
-          fulfill();
+          return;
         }
-      );
+
+        fulfill();
+      });
     });
   }
 
