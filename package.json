@@ -1,24 +1,23 @@
 {
-  "name": "idea-studio-server",
+  "name": "api-eloyt-com",
   "version": "0.0.0",
-  "description": "idea studio server app",
+  "description": "eloyt server app",
   "main": "built/app.js",
   "scripts": {
     "start": "node app.js",
     "test": "./node_modules/.bin/mocha --compilers js:babel-register --require babel-polyfill ./tests --watch --recursive",
-    "ngrok-auth": "./ngrok authtoken gPgrkH1Kg6Vm18FjgqnM_6LZE7eE7sJRtC8SDMvTbc",
     "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eloythub/idea-studio-server.git"
+    "url": "git+https://github.com/eloythub/api.eloyt.com.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/eloythub/idea-studio-server/issues"
   },
-  "homepage": "https://github.com/eloythub/idea-studio-server#readme",
+  "homepage": "https://github.com/eloythub/api.eloyt.com#readme",
   "dependencies": {
     "fbgraph": "^1.3.0",
     "hapi": "^15.1.1",

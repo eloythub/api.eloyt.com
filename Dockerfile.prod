@@ -46,6 +46,8 @@ WORKDIR $HOME/api.eloyt.com
 COPY package.json $HOME/api.eloyt.com/package.json
 RUN npm install
 
-EXPOSE 80
+COPY . $HOME/api.eloyt.com
 
-CMD pm2 start --no-daemon app.js --watch
+CMD ["pm2-docker", "app.js"]
+
+EXPOSE 80

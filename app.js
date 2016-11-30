@@ -8,7 +8,7 @@ const server = new Server({
     password: process.env['MONGO_DB_PASSWORD'] || '',
     host: process.env['MONGO_DB_HOST'] || 'mongoDB',
     port: process.env['MONGO_DB_PORT'] || 27017,
-    database: process.env['MONGO_DB_DATABSE'] || 'eloyt_idea_studio',
+    database: process.env['MONGO_DB_DATABSE'] || 'eloyt',
   },
 });
 
