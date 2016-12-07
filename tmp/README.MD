@@ -1,0 +1,1 @@
+This directory is just for handling the uploaded files

@@ -44,7 +44,7 @@ ENV HOME=/home/app
 
 WORKDIR $HOME/api.eloyt.com
 COPY package.json $HOME/api.eloyt.com/package.json
-RUN npm install
+RUN npm install --production
 
 COPY . $HOME/api.eloyt.com
 

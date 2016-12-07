@@ -13,7 +13,7 @@ module.exports = class Controllers {
       res({
         statusCode: 403,
         error: 'credential is not valid',
-      });
+      }).code(403);
 
       return;
     }
@@ -40,7 +40,7 @@ module.exports = class Controllers {
           res({
             statusCode: 500,
             error: 'something went wrong, check the logs of ::getSettingsByUserId',
-          });
+          }).code(500);
         });
 
         return;
@@ -54,7 +54,7 @@ module.exports = class Controllers {
       res({
         statusCode: 500,
         error: 'something went wrong, check the logs of ::getSettingsByUserId',
-      });
+      }).code(500);
     });
   }
 
@@ -63,7 +63,7 @@ module.exports = class Controllers {
       res({
         statusCode: 403,
         error: 'credential is not valid',
-      });
+      }).code(403);
 
       return;
     }
@@ -80,7 +80,7 @@ module.exports = class Controllers {
       res({
         statusCode: 500,
         error: 'something went wrong, check the logs of ::getSettingsByUserId',
-      });
+      }).code(500);
     });
   }
 }

@@ -48,4 +48,4 @@ RUN npm install
 
 EXPOSE 80
 
-CMD pm2 start --no-daemon app.js --watch
+CMD pm2 start --no-daemon app.js --watch --ignore-watch tmp

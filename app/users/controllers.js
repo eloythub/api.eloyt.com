@@ -13,7 +13,7 @@ module.exports = class Controllers {
       res({
         statusCode: 403,
         error: 'credential is not valid',
-      });
+      }).code(403);
 
       return;
     }
@@ -30,7 +30,7 @@ module.exports = class Controllers {
       res({
         statusCode: 500,
         error: 'something went wrong, check the logs of ::fetchOrCreateUser',
-      });
+      }).code(500);
     });
   }
 }

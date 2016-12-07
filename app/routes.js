@@ -2,6 +2,7 @@
 
 const UsersRoutes = require('./users/routes');
 const SettingsRoutes = require('./settings/routes');
+const StreamRoutes = require('./stream/routes');
 
 module.exports = class Routes {
   constructor(router, env) {
@@ -28,5 +29,6 @@ module.exports = class Routes {
   setRoutes() {
     new UsersRoutes(this.router, this.env, 'users');
     new SettingsRoutes(this.router, this.env, 'settings');
+    new StreamRoutes(this.router, this.env, 'stream');
   }
 }

@@ -10,6 +10,7 @@ const server = new Server({
     port: process.env['MONGO_DB_PORT'] || 27017,
     database: process.env['MONGO_DB_DATABSE'] || 'eloyt',
   },
+  googleCloudStorageBucket: process.env['GCLOUD_STORAGE_BUCKET'] || 'eloyt',
 });
 
 server.fireUp();
