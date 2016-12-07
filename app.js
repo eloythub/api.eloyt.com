@@ -10,6 +10,7 @@ const server = new Server({
     port: process.env['MONGO_DB_PORT'] || 27017,
     database: process.env['MONGO_DB_DATABSE'] || 'eloyt',
   },
+  googleCloudProjectId: process.env['GCLOUD_PROJECT_ID'],
   googleCloudStorageBucket: process.env['GCLOUD_STORAGE_BUCKET'] || 'eloyt',
 });
 

@@ -40,12 +40,16 @@ RUN npm install pm2 -g
 RUN useradd --user-group --create-home --shell /bin/false app
 
 # root directory
-ENV HOME=/home/app
+ENV HOME=/services/api.eloyt.com
 
-WORKDIR $HOME/api.eloyt.com
-COPY package.json $HOME/api.eloyt.com/package.json
-RUN npm install
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+# Install app dependencies
+#COPY package.json $HOME/
+ONBUILD CMD npm install
 
 EXPOSE 80
 
+CMD cd $HOME
 CMD pm2 start --no-daemon app.js --watch --ignore-watch tmp

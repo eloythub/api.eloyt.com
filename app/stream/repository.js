@@ -1,15 +1,16 @@
 'use strict';
 
+const format     = require('util').format;
 module.exports = class Repository {
   constructor(env) {
     this.env = env;
+
+    this.storage = require('@google-cloud/storage')({
+      projectId: this.env.googleCloudProjectId,
+    });
   }
 
   uploadToGCLOUD() {
-    //const format     = require('util').format;
-    //const storage    = require('@google-cloud/storage')({
-    //  projectId: 'grape-spaceship-123',
-    //});
 
     //const bucket     = storage.bucket(this.env.googleCloudStorageBucket);
   }
