@@ -45,11 +45,11 @@ ENV HOME=/services/api.eloyt.com
 # Install app dependencies
 ADD package.json /tmp/package.json
 RUN cd /tmp && yarn install
-RUN mkdir -p $HOME && cp -a /tmp/node_modules $HOME
 
-WORKDIR ${HOME}
+RUN cp -ar /tmp/node_modules /usr/local/lib/
+
+WORKDIR $HOME
 
 EXPOSE 80
 
-CMD cd $HOME
-CMD pm2 start --no-daemon ./app.js --watch --ignore-watch ./tmp
+CMD pm2 start --no-daemon ./app.js --watch --ignore-watch ./tmp\
