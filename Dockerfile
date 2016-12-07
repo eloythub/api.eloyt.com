@@ -35,21 +35,21 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-RUN npm install pm2 -g
+RUN npm install pm2 yarn -g
 
 RUN useradd --user-group --create-home --shell /bin/false app
 
 # root directory
 ENV HOME=/services/api.eloyt.com
 
-RUN mkdir -p $HOME
-WORKDIR $HOME
-
 # Install app dependencies
-#COPY package.json $HOME/
-ONBUILD CMD npm install
+ADD package.json /tmp/package.json
+RUN cd /tmp && yarn install
+RUN mkdir -p $HOME && cp -a /tmp/node_modules $HOME
+
+WORKDIR ${HOME}
 
 EXPOSE 80
 
 CMD cd $HOME
-CMD pm2 start --no-daemon app.js --watch --ignore-watch tmp
+CMD pm2 start --no-daemon ./app.js --watch --ignore-watch ./tmp

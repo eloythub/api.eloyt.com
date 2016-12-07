@@ -31,7 +31,8 @@
     "hapi": "^16.0.1",
     "mongoose": "^4.7.1",
     "promise": "^7.1.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "yarn": "^0.17.10"
   },
   "devDependencies": {
     "chai": "^3.5.0",
