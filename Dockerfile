@@ -57,4 +57,4 @@ CMD cp -a -n /tmp/node_modules $HOME/ && \
     pm2 start \
         --no-daemon ./app.js \
         --watch \
-        --ignore-watch "tmp/* .pm2"
+        --ignore-watch "tmp/* .pm2 .config"

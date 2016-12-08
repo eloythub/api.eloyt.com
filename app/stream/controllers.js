@@ -22,23 +22,44 @@ module.exports = class Controllers {
       return;
     }
 
-    const name = uuid.v4() + '.mp4';
-    const path = __dirname + '/../../tmp/' + name;
+    const uploadedFileName = uuid.v4() + '.mp4';
+    const uploadedFilePath = __dirname + '/../../tmp/' + uploadedFileName;
 
-    const file = fs.createWriteStream(path);
+    const fileStream = fs.createWriteStream(uploadedFilePath);
 
-    file.on('error', function (err) {
-      console.error(err)
+    fileStream.on('error', (err) => {
+      res({
+        statusCode: 500,
+        err,
+      }).code(500)
+
+      return;
     });
 
-    uploadFile.pipe(file);
+    uploadFile.pipe(fileStream);
 
-    uploadFile.on('end', function (err) {
+    uploadFile.on('end', (err) => {
       if (err) {
-        res(err).code(500)
+        res({
+          statusCode: 500,
+          err,
+        }).code(500)
+
+        return;
       }
 
-      res({fileName: name});
+      this.repos.uploadToGCLOUD(uploadedFileName, uploadedFilePath, fileStream).then((gCloudStoragePath) => {
+        fs.unlink(uploadedFilePath, () => {
+          res({url: gCloudStoragePath});
+        });
+      }, (err) => {
+        fs.unlink(uploadedFilePath, () => {
+          res({
+            statusCode: 500,
+            error: err,
+          }).code(500)
+        });
+      })
     });
   }
 }

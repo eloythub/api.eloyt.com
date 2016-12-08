@@ -23,7 +23,9 @@ module.exports = class StreamRoutes extends BaseRoute {
           output: 'stream',
           parse: true,
         },
-        handler: this.controllers.videoUploadHandle,
+        handler: (req, res) => {
+          this.controllers.videoUploadHandle(req, res);
+        },
       },
     });
   }

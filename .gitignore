@@ -42,3 +42,6 @@ jspm_packages
 tmp/*.mp4
 
 .pm2
+.config
+
+keys/gcs/*.json

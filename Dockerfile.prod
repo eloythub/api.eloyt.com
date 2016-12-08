@@ -35,17 +35,21 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-RUN npm install pm2 -g
+RUN npm install pm2 yarn -g
 
 RUN useradd --user-group --create-home --shell /bin/false app
 
 # root directory
 ENV HOME=/home/app
 
-WORKDIR $HOME/api.eloyt.com
+WORKDIR /tmp
+COPY yarn.lock $HOME/api.eloyt.com/yarn.lock
 COPY package.json $HOME/api.eloyt.com/package.json
-RUN npm install --production
+RUN yarn install --production
 
+WORKDIR $HOME/api.eloyt.com
+
+COPY /tmp $HOME/api.eloyt.com
 COPY . $HOME/api.eloyt.com
 
 CMD ["pm2-docker", "app.js"]
