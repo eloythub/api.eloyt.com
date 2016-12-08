@@ -41,18 +41,19 @@ RUN useradd --user-group --create-home --shell /bin/false app
 
 # root directory
 ENV HOME=/services/api.eloyt.com
+ENV TMP=/tmp
 
 # Install app dependencies
-WORKDIR /tmp
-ADD yarn.lock /tmp/yarn.lock
-ADD package.json /tmp/package.json
+WORKDIR $TMP
+ADD yarn.lock $TMP/yarn.lock
+ADD package.json $TMP/package.json
 RUN yarn install
 
 WORKDIR $HOME
 
 EXPOSE 80
 
-CMD cp -a -n /tmp/node_modules $HOME/ && \
+CMD cp -a -n $TMP/node_modules $HOME/ && \
     rm -rf .pm2 && \
     pm2 start \
         --no-daemon ./app.js \
