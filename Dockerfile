@@ -23,9 +23,9 @@ RUN cd $TMP_DIR && yarn
 
 WORKDIR $PROD_DIR
 
-RUN ln -s /tmp/node_modules
-
-CMD rm -rf .pm2 && \
+CMD cd $PROD_DIR && \
+	ln -sf /tmp/node_modules && \
+	rm -rf .pm2 && \
     pm2 start \
         --no-daemon ./app.js \
         --watch \
