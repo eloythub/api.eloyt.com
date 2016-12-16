@@ -10,7 +10,6 @@ RUN apt-get -y install  build-essential \
                         git \
                         curl
 
-
 RUN npm install -g pm2 yarn
 
 ENV TMP_DIR=/tmp
@@ -21,10 +20,9 @@ COPY yarn.lock $TMP_DIR/yarn.lock
 COPY package.json $TMP_DIR/package.json
 RUN cd $TMP_DIR && yarn
 
+COPY $TMP_DIR $PROD_DIR
 COPY . $PROD_DIR/
 WORKDIR $PROD_DIR
-
-RUN ln -s /tmp/node_modules
 
 CMD ["pm2-docker", "app.js"]
 
