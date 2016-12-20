@@ -11,12 +11,26 @@ module.exports = class Controllers {
   }
 
   videoUploadHandle(req, res) {
-    const uploadFile = req.payload.file;
+    const uploadFile           = req.payload.file;
+    const userId               = req.payload.userId;
+    const geoLocationLatitude  = req.payload.geoLocationLatitude;
+    const geoLocationLongitude = req.payload.geoLocationLongitude;
 
+    // Validate the File
     if (!uploadFile) {
       res({
         statusCode: 400,
         message: 'No file uploaded.',
+      }).code(400);
+
+      return;
+    }
+
+    // Validate the GEO location
+    if (!geoLocationLatitude || !geoLocationLongitude) {
+      res({
+        statusCode: 400,
+        message: 'GEO Location is missing.',
       }).code(400);
 
       return;
@@ -48,7 +62,14 @@ module.exports = class Controllers {
         return;
       }
 
-      this.repos.uploadToGCLOUD(uploadedFileName, uploadedFilePath, fileStream).then((gCloudStoragePath) => {
+      this.repos.uploadToGCLOUD(
+        userId, 
+        [ geoLocationLatitude, geoLocationLongitude ],
+        uploadedFileName, 
+        uploadedFilePath, 
+        fileStream, 
+        'video'
+      ).then((gCloudStoragePath) => {
         fs.unlink(uploadedFilePath, () => {
           res({url: gCloudStoragePath});
         });

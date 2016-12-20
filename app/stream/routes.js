@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseRoute = require('../base-router');
+const Joi = require('joi')
 
 module.exports = class StreamRoutes extends BaseRoute {
   constructor(router, env, routerBaseUrl) {
@@ -26,6 +27,14 @@ module.exports = class StreamRoutes extends BaseRoute {
         handler: (req, res) => {
           this.controllers.videoUploadHandle(req, res);
         },
+        validate: {
+          payload: {
+            file: Joi.any(),
+            userId: Joi.string(),
+            geoLocationLatitude: Joi.number(),
+            geoLocationLongitude: Joi.number(),
+          }
+        }
       },
     });
   }

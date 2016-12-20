@@ -3,9 +3,13 @@
 const format  = require('util').format;
 const Promise = require('promise');
 
+const ResourcesModel = require('../models/resources');
+
 module.exports = class Repository {
   constructor(env) {
     this.env = env;
+
+    this.resourcesModel = new ResourcesModel(env);
 
     this.storage = require('@google-cloud/storage')({
       projectId: this.env.googleCloudProjectId,
@@ -16,7 +20,7 @@ module.exports = class Repository {
     this.bucket = this.storage.bucket(this.env.googleCloudStorageBucket);
   }
 
-  uploadToGCLOUD(fileName, filePath, fileStream) {
+  uploadToGCLOUD(userId, geoLocation, fileName, filePath, fileStream, resourceType) {
     return new Promise((fulfill, reject) => {
       this.bucket.upload(filePath, (err) => {
         if (err) {
@@ -36,8 +40,17 @@ module.exports = class Repository {
             return;
           }
 
-          // Return the access Url
-          fulfill(format(`https://storage.googleapis.com/${this.env.googleCloudStorageBucket}/${fileName}`));
+          const resourceUrl = format(`https://storage.googleapis.com/${this.env.googleCloudStorageBucket}/${fileName}`);
+
+          // add into database resources
+          this.resourcesModel.create(userId, geoLocation, resourceUrl, resourceType)
+            .then(fulfill)
+            .catch((err) => {
+              // Delete file from the gcs bucket incase of failure
+              this.bucket.file(fileName).delete();
+
+              reject(err);
+            });
         });
       });
     });
