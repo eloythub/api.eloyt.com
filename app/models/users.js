@@ -15,6 +15,26 @@ module.exports = class UsersModel extends BaseModel {
           unique: true
         }
       },
+      name: {
+        trim: true,
+        type: String,
+      },
+      firstName: {
+        trim: true,
+        type: String,
+      },
+      lastname: {
+        trim: true,
+        type: String,
+      },
+      gender: {
+        trim: true,
+        type: String,
+      },
+      avatar: {
+        type: this.mongoose.Schema.ObjectId,
+        ref: 'resources'
+      },
       activated: {
         type: Boolean,
         default: true
@@ -31,7 +51,7 @@ module.exports = class UsersModel extends BaseModel {
 
     return new Promise((fulfill, reject) => {
       Model.find({
-        email: email
+        email
       }, (err, res) => {
         if (err) {
           reject(err);
@@ -44,11 +64,9 @@ module.exports = class UsersModel extends BaseModel {
     });
   }
 
-  createUser(email) {
+  create(email, name, firstName, lastName, gender, avatar) {
     const Model = this.model;
-    const Users = new Model({
-      email: email,
-    });
+    const Users = new Model({email, name, firstName, lastName, gender, avatar});
 
     return new Promise((fulfill, reject) => {
       Users.save((err, res) => {

@@ -19,16 +19,13 @@ module.exports = class BaseModel {
       connectionString
     );
 
-    env.mongooseSchemas  = {};
-    this.mongooseSchemas = env.mongooseSchemas;
+    this.mongooseSchemas = this.env.mongooseSchemas = this.env.mongooseSchemas || {};
   }
 
   registerSchema(alias, collectionName, schema) {
     const Schema = this.mongoose.Schema;
 
-    return this.mongooseSchemas[alias] = this.mongooseSchemas[alias]
-      || this.mongoose.model(
-        collectionName, new Schema(schema)
-      );
+    return this.env.mongooseSchemas[alias] = this.env.mongooseSchemas[alias]
+      || this.mongoose.model(collectionName, new Schema(schema));
   }
 }

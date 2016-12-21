@@ -16,9 +16,21 @@ module.exports = class Repository {
       keyFilename: 'keys/gcs/Eloyt-234bb463581d.json',
     });
 
-
     this.bucket = this.storage.bucket(this.env.googleCloudStorageBucket);
   }
+
+  //downloadFile (url, dest, cb) {
+  //  const file = fs.createWriteStream(dest);
+  //  const request = http.get(url, (response) => {
+  //    response.pipe(file);
+  //    file.on('finish', function() {
+  //      file.close(cb);  // close() is async, call cb after close completes.
+  //    });
+  //  }).on('error', function(err) { // Handle errors
+  //    fs.unlink(dest); // Delete the file async. (But we don't check the result)
+  //    if (cb) cb(err.message);
+  //  });
+  //};
 
   uploadToGCLOUD(userId, geoLocation, fileName, filePath, fileStream, resourceType) {
     return new Promise((fulfill, reject) => {

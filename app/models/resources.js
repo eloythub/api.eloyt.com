@@ -40,7 +40,7 @@ module.exports = class ResourcesModel extends BaseModel {
     });
 
     return new Promise((fulfill, reject) => {
-        Resources.save((err, res) => {
+      Resources.save((err, res) => {
         if (err) {
           reject(err);
 
