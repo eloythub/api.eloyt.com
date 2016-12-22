@@ -23,7 +23,7 @@ module.exports = class UsersModel extends BaseModel {
         trim: true,
         type: String,
       },
-      lastname: {
+      lastName: {
         trim: true,
         type: String,
       },
@@ -33,7 +33,7 @@ module.exports = class UsersModel extends BaseModel {
       },
       avatar: {
         type: this.mongoose.Schema.ObjectId,
-        ref: 'resources'
+        ref: 'resources',
       },
       activated: {
         type: Boolean,
@@ -64,6 +64,24 @@ module.exports = class UsersModel extends BaseModel {
     });
   }
 
+  getUserById(userId) {
+    const Model = this.model;
+
+    return new Promise((fulfill, reject) => {
+      Model.find({
+        _id: this.mongoose.Types.ObjectId(userId),
+      }, (err, res) => {
+        if (err) {
+          reject(err);
+
+          return;
+        }
+
+        fulfill(res[0] || null);
+      });
+    });
+  }
+
   create(email, name, firstName, lastName, gender, avatar) {
     const Model = this.model;
     const Users = new Model({email, name, firstName, lastName, gender, avatar});
@@ -78,6 +96,62 @@ module.exports = class UsersModel extends BaseModel {
 
         fulfill(res);
       });
+    });
+  }
+
+  update(userId, attributes) {
+    const Model = this.model;
+    const Users = new Model();
+
+
+    // check if avatar is being updated in attributes, then convert to ObjectId
+    if (typeof attributes.avatar === 'string') {
+      attributes.avatar = this.mongoose.Types.ObjectId(attributes.avatar);
+    }
+
+    return new Promise((fulfill, reject) => {
+      this.model.findByIdAndUpdate(
+        this.mongoose.Types.ObjectId(userId),
+        {
+          $set: attributes
+        },
+        (err, res) => {
+          if (err) {
+            reject(err);
+
+            return;
+          }
+
+          this.getUserById(userId).then(fulfill).catch(reject);
+        }
+      );
+    });
+  }
+
+  delete(userId) {
+    const Model = this.model;
+    const Users = new Model();
+
+    return new Promise((fulfill, reject) => {
+      Users.find({
+          _id: this.mongoose.Types.ObjectId(userId)
+      })
+      .remove(function (err, res) {
+        if (err) {
+          reject(err);
+
+          return;
+        }
+
+        if (res.result.ok === 0) {
+          reject();
+
+          return;
+        }
+
+        fulfill();
+      })
+      .exec();
     });
   }
 }

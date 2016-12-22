@@ -3,7 +3,7 @@
 const StreamRepository = require('../stream/repository');
 const UsersModel       = require('../models/users');
 const graph            = require('fbgraph');
-const http             = require('http');
+const uuid             = require('uuid');
 
 const options = {
     timeout:  3000
@@ -26,31 +26,25 @@ module.exports = class Repository {
         return;
       }
 
-      //http.get(profilePicture.data.url, (response) => {
-      //
-      //});
-      //  .then((response) => {
-      //    this.streamRepository.uploadToGCLOUD(
-      //      userId,
-      //      null,
-      //      uploadedFileName,
-      //      profilePicture.data.url,
-      //      fileStream,
-      //      'video'
-      //    )
-      //  })
-      //  .catch(reject);
-
       // Fetch profile picture from FB and upload to cloud storage
-      const email = profileInfo.email;
-      const name = profileInfo.name;
+      const email     = profileInfo.email;
+      const name      = profileInfo.name;
       const firstName = profileInfo.first_name;
-      const lastName = profileInfo.last_name;
-      const gender = profileInfo.gender;
-      const avatar = null;
+      const lastName  = profileInfo.last_name;
+      const gender    = profileInfo.gender;
 
       this.usersModel.create(email, name, firstName, lastName, gender)
-        .then(fulfill)
+        .then((user) => {
+          // upload to cloud storage
+          this.streamRepository.uploadToGCLOUDFromUrl(profilePicture.data.url, 'jpg', user._id, null, 'avatar')
+            .then((gCloudResponse) => {
+              // update the avatar of the user
+              this.usersModel.update(user._id, { avatar: gCloudResponse._id })
+                .then(fulfill)
+                .catch(reject);
+            })
+            .catch(reject);
+        })
         .catch(reject);
     });
   }

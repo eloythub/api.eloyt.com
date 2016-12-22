@@ -27,8 +27,6 @@ module.exports = class Controllers {
         data: data,
       });
     }, (error) => {
-
-      console.log(error)
       res({
         statusCode: 500,
         error: 'something went wrong, check the logs of ::fetchOrCreateUser',
