@@ -37,5 +37,22 @@ module.exports = class StreamRoutes extends BaseRoute {
         }
       },
     });
+
+    this.router.addRoute({
+      method: 'GET',
+      path: this.prefix + '/{userId}/{resourceType}/{resourceId}',
+      config: {
+        handler: (req, res) => {
+          this.controllers.streamResource(req, res);
+        },
+        validate: {
+          params: {
+            userId: Joi.string(),
+            resourceType: Joi.string(),
+            resourceId: Joi.string(),
+          }
+        }
+      },
+    });
   }
 }

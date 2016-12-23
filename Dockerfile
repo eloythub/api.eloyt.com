@@ -29,6 +29,9 @@ CMD cd $PROD_DIR && \
     pm2 start \
         --no-daemon ./app.js \
         --watch \
+        --silent \
+        --no-vizion \
+        --instances 1 \
         --ignore-watch "tmp/* .pm2 .config"
 
 EXPOSE 80

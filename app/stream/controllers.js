@@ -3,6 +3,7 @@
 const Repository = require('./repository');
 const fs         = require('fs');
 const uuid       = require('uuid');
+const https      = require('https');
 
 module.exports = class Controllers {
   constructor(env) {
@@ -82,5 +83,38 @@ module.exports = class Controllers {
         });
       })
     });
+  }
+
+  streamResource(req, res) {
+    const userId       = req.params.userId;
+    const resourceId   = req.params.resourceId;
+    const resourceType = req.params.resourceType;
+
+    this.repos.findResource(userId, resourceId, resourceType)
+      .then((resourceData) => {
+        if (!resourceData) {
+          res({
+            statusCode: 404,
+          }).code(404)
+
+          return;
+        }
+
+        https.get(resourceData.resourceUrl, (proxyRes) => {
+          // pipe the resourceUrl to response
+          res(null, proxyRes).code(200);
+        }).on('error', (message) => {
+          res({
+            statusCode: 500,
+            message,
+          }).code(500);
+        });
+      })
+      .catch((error) => {
+        res({
+          statusCode: 500,
+          message: 'something went wrong, please check the entries',
+        }).code(500);
+      })
   }
 }

@@ -51,4 +51,24 @@ module.exports = class ResourcesModel extends BaseModel {
       });
     });
   }
+
+  findResource(userId, resourceId, resourceType) {
+    const Model = this.model;
+
+    return new Promise((fulfill, reject) => {
+      Model.find({
+        _id: this.mongoose.Types.ObjectId(resourceId),
+        userId: this.mongoose.Types.ObjectId(userId),
+        resourceType: resourceType,
+      }, (err, res) => {
+        if (err) {
+          reject(err);
+
+          return;
+        }
+
+        fulfill(res[0] || null);
+      });
+    });
+  }
 }

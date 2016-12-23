@@ -87,4 +87,8 @@ module.exports = class Repository {
       });
     });
   }
+
+  findResource(userId, resourceId, resourceType) {
+    return this.resourcesModel.findResource(userId, resourceId, resourceType);
+  }
 }

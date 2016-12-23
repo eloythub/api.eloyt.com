@@ -15,9 +15,12 @@ module.exports = class BaseModel {
 
     mongoose.Promise = global.Promise;
 
-    this.mongoose = env.mongoose = env.mongoose || mongoose.connect(
-      connectionString
-    );
+
+    this.mongoose = this.env.mongoose;
+
+    if (typeof this.env.mongoose === 'undefined') {
+      this.mongoose = this.env.mongoose = mongoose.connect(connectionString);
+    }
 
     this.mongooseSchemas = this.env.mongooseSchemas = this.env.mongooseSchemas || {};
   }

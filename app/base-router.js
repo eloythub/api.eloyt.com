@@ -6,6 +6,6 @@ module.exports = class BaseRoute {
 
     this.env         = env;
     this.controllers = new Controllers(env);
-    this.prefix = '/' + prefix;
+    this.prefix      = '/' + prefix;
   }
 }
