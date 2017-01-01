@@ -24,9 +24,9 @@ module.exports = class Controllers {
       if (!data) {
         const defaultSettings = {
           userId: req.params.userId,
-          initFrontCameraByDefault: false,
+          initFrontCameraByDefault: true,
           highVideoQualityRecord: false,
-          deleteVideoAfterRecord: false,
+          deleteVideoAfterRecord: true,
         };
 
         this.repos.createSettings(
