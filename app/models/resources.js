@@ -13,6 +13,10 @@ module.exports = class ResourcesModel extends BaseModel {
         type: this.mongoose.Schema.ObjectId,
         ref: 'users'
       },
+      resourceStatisticId: {
+        type: this.mongoose.Schema.ObjectId,
+        ref: 'resources_statistics'
+      },
       geoLocation: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index

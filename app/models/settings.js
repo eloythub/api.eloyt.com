@@ -15,7 +15,7 @@ module.exports = class SettingsModel extends BaseModel {
       },
       initFrontCameraByDefault: {
         type: Boolean,
-        default: false
+        default: true
       },
       highVideoQualityRecord: {
         type: Boolean,
@@ -23,7 +23,7 @@ module.exports = class SettingsModel extends BaseModel {
       },
       deleteVideoAfterRecord: {
         type: Boolean,
-        default: false
+        default: true
       },
     });
   }
