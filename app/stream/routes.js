@@ -54,5 +54,21 @@ module.exports = class StreamRoutes extends BaseRoute {
         }
       },
     });
+
+    this.router.addRoute({
+      method: 'GET',
+      path: this.prefix + '/produce/{userId}/{offset}',
+      config: {
+        handler: (req, res) => {
+          this.controllers.produceStreamResources(req, res);
+        },
+        validate: {
+          params: {
+            userId: Joi.string(),
+            offset: Joi.number().integer().min(1).max(100),
+          }
+        }
+      },
+    });
   }
 }

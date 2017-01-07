@@ -75,4 +75,42 @@ module.exports = class ResourcesModel extends BaseModel {
       });
     });
   }
+
+
+  produceStreamResource(userId, args) {
+    const Model = this.model;
+
+    const resourceType = args['resourceType'] || 'video';
+    const offset = args['offset'] || 20;
+
+    return new Promise((fulfill, reject) => {
+      Model.find({
+          // userId: this.mongoose.Types.ObjectId(userId),
+          resourceType,
+        })
+        .lean()
+        .populate({ path: 'userId' })
+        .limit(parseInt(offset))
+        .exec((err1, streamResources) => {
+          if (err1) {
+            reject(err1);
+
+            return;
+          }
+
+          Model.populate(streamResources, {
+            path: 'userId.avatar',
+            model: 'resources',
+          }, (err2, res) => {
+            if (err2) {
+              reject(err2);
+
+              return;
+            }
+
+            fulfill(streamResources);
+          });
+        });
+    });
+  }
 }

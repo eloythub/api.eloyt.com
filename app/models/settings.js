@@ -19,7 +19,7 @@ module.exports = class SettingsModel extends BaseModel {
       },
       highVideoQualityRecord: {
         type: Boolean,
-        default: false
+        default: true
       },
       deleteVideoAfterRecord: {
         type: Boolean,

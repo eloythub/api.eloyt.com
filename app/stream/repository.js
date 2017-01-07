@@ -91,4 +91,8 @@ module.exports = class Repository {
   findResource(userId, resourceId, resourceType) {
     return this.resourcesModel.findResource(userId, resourceId, resourceType);
   }
+
+  produceStreamResource(userId, args) {
+    return this.resourcesModel.produceStreamResource(userId, args);
+  }
 }

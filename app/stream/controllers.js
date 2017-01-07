@@ -117,4 +117,27 @@ module.exports = class Controllers {
         }).code(500);
       })
   }
+
+  produceStreamResources(req, res) {
+    const userId = req.params.userId;
+    const offset = req.params.offset;
+
+    const args = {
+      offset,
+    };
+
+    this.repos.produceStreamResource(userId, args)
+      .then((resourceData) => {
+        res({
+          statusCode: 200,
+          resourceData,
+        }).code(200)
+      })
+      .catch((error) => {
+        res({
+          statusCode: 500,
+          message: 'something went wrong, please check the entries',
+        }).code(500);
+      })
+  }
 }
