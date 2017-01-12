@@ -1,5 +1,3 @@
-'use strict';
-
 const Repository = require('./repository');
 const fs         = require('fs');
 const uuid       = require('uuid');
@@ -46,7 +44,7 @@ module.exports = class Controllers {
       res({
         statusCode: 500,
         err,
-      }).code(500)
+      }).code(500);
 
       return;
     });
@@ -57,28 +55,28 @@ module.exports = class Controllers {
       if (err) {
         res({
           statusCode: 500,
-          err,
-        }).code(500)
+          error: err,
+        }).code(500);
 
         return;
       }
 
       this.repos.uploadToGCLOUD(
-        userId, 
-        [ geoLocationLatitude, geoLocationLongitude ],
-        uploadedFileName, 
-        uploadedFilePath, 
-        fileStream, 
+        userId,
+        [geoLocationLatitude, geoLocationLongitude],
+        uploadedFileName,
+        uploadedFilePath,
+        fileStream,
         'video'
       ).then((gCloudStoragePath) => {
         fs.unlink(uploadedFilePath, () => {
           res({url: gCloudStoragePath});
         });
-      }, (err) => {
+      }, (error) => {
         fs.unlink(uploadedFilePath, () => {
           res({
             statusCode: 500,
-            error: err,
+            error,
           }).code(500)
         });
       })
@@ -95,7 +93,7 @@ module.exports = class Controllers {
         if (!resourceData) {
           res({
             statusCode: 404,
-          }).code(404)
+          }).code(404);
 
           return;
         }
@@ -103,17 +101,17 @@ module.exports = class Controllers {
         https.get(resourceData.resourceUrl, (proxyRes) => {
           // pipe the resourceUrl to response
           res(null, proxyRes).code(200);
-        }).on('error', (message) => {
+        }).on('error', (error) => {
           res({
             statusCode: 500,
-            message,
+            error,
           }).code(500);
         });
       })
       .catch((error) => {
         res({
           statusCode: 500,
-          message: 'something went wrong, please check the entries',
+          error,
         }).code(500);
       })
   }
@@ -136,8 +134,8 @@ module.exports = class Controllers {
       .catch((error) => {
         res({
           statusCode: 500,
-          message: 'something went wrong, please check the entries',
+          error,
         }).code(500);
       })
   }
-}
+};

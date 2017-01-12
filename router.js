@@ -13,4 +13,4 @@ module.exports = class Router {
   getRoutes() {
     return this.routes;
   }
-}
+};

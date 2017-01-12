@@ -4,7 +4,7 @@ const SettingsModel = require('../models/settings');
 
 module.exports = class Repository {
   constructor(env) {
-    this.env        = env;
+    this.env           = env;
     this.settingsModel = new SettingsModel(env);
   }
 
@@ -20,8 +20,6 @@ module.exports = class Repository {
     let base = this;
 
     return new Promise((fulfill, reject) => {
-      let data = {}
-
       if (payload.userId) {
         delete payload['userId'];
       }
@@ -44,4 +42,4 @@ module.exports = class Repository {
       base.settingsModel.createSettings(data).then(fulfill, reject);
     });
   }
-}
+};

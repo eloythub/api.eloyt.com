@@ -6,8 +6,6 @@ module.exports = class SettingsModel extends BaseModel {
   constructor(env) {
     super(env);
 
-    const ObjectId = this.mongoose.Types.ObjectId
-
     this.model = this.registerSchema('settings', 'settings', {
       userId: {
         type: this.mongoose.Schema.ObjectId,
@@ -84,4 +82,4 @@ module.exports = class SettingsModel extends BaseModel {
       });
     });
   }
-}
+};

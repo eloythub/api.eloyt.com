@@ -6,11 +6,11 @@ const assert = chai.assert;
 
 let server;
 
-const inputEnv = {
+const inputEnv    = {
   'exposePort': 800,
 };
 const inputRoutes = [
-  { name: 'test' },
+  {name: 'test'},
 ];
 
 let HapiMockOk = {
@@ -20,7 +20,7 @@ let HapiMockOk = {
         uri: 'local-test',
       },
       connection: (env) => {
-        expect(env).to.eql({ port: 800 });
+        expect(env).to.eql({port: 800});
       },
       route: (routes) => {
         expect(routes).to.eql(inputRoutes);
@@ -36,7 +36,7 @@ let HapiMockFailed = {
   Server: () => {
     return {
       connection: (env) => {
-        expect(env).to.eql({ port: 800 });
+        expect(env).to.eql({port: 800});
       },
       route: (routes) => {
         expect(routes).to.eql(inputRoutes);
@@ -57,10 +57,11 @@ let RouterMock = (env) => {
   };
 };
 
-let RoutesMock = () => {};
+let RoutesMock = () => {
+};
 
 describe('Server', () => {
-  it('fireUp - OK', function() {
+  it('fireUp - OK', function () {
     let debugMock = (msg) => {
       expect(msg).to.be.equal('Server running at: local-test');
     };
@@ -75,9 +76,9 @@ describe('Server', () => {
     server = new Server(inputEnv);
 
     server.fireUp();
-	});
+  });
 
-  it('fireUp - FAIL', function() {
+  it('fireUp - FAIL', function () {
     let Server = proxyquire('../server', {
       'hapi': HapiMockFailed,
       './router': RouterMock,
@@ -89,5 +90,5 @@ describe('Server', () => {
     expect(() => {
       server.fireUp();
     }).to.throw('test-exception');
-	});
+  });
 });

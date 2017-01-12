@@ -6,8 +6,6 @@ module.exports = class ResourcesModel extends BaseModel {
   constructor(env) {
     super(env);
 
-    const ObjectId = this.mongoose.Types.ObjectId
-
     this.model = this.registerSchema('resources', 'resources', {
       userId: {
         type: this.mongoose.Schema.ObjectId,
@@ -76,12 +74,11 @@ module.exports = class ResourcesModel extends BaseModel {
     });
   }
 
-
   produceStreamResource(userId, args) {
     const Model = this.model;
 
     const resourceType = args['resourceType'] || 'video';
-    const offset = args['offset'] || 20;
+    const offset       = args['offset'] || 20;
 
     return new Promise((fulfill, reject) => {
       Model.find({
@@ -89,7 +86,7 @@ module.exports = class ResourcesModel extends BaseModel {
           resourceType,
         })
         .lean()
-        .populate({ path: 'userId' })
+        .populate({path: 'userId'})
         .limit(parseInt(offset))
         .exec((err1, streamResources) => {
           if (err1) {
@@ -113,4 +110,4 @@ module.exports = class ResourcesModel extends BaseModel {
         });
     });
   }
-}
+};

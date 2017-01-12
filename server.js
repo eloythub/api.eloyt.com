@@ -10,7 +10,7 @@ module.exports = class Server {
     this.server = new Hapi.Server();
 
     // server connection config
-    this.server.connection({ port: env.exposePort || 80 });
+    this.server.connection({port: env.exposePort || 80});
 
     // router setup
     const router = new Router(env);
@@ -21,10 +21,10 @@ module.exports = class Server {
     this.server.route(router.getRoutes());
   }
 
-  fireUp () {
+  fireUp() {
     this.server.start((err) => {
       if (err) {
-          throw err;
+        throw err;
       }
 
       debug(`Server running at: ${this.server.info.uri}`);

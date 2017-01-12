@@ -2,7 +2,6 @@
 
 const BaseModel = require('../base-model');
 
-
 module.exports = class UsersModel extends BaseModel {
   constructor(env) {
     super(env);
@@ -103,7 +102,6 @@ module.exports = class UsersModel extends BaseModel {
     const Model = this.model;
     const Users = new Model();
 
-
     // check if avatar is being updated in attributes, then convert to ObjectId
     if (typeof attributes.avatar === 'string') {
       attributes.avatar = this.mongoose.Types.ObjectId(attributes.avatar);
@@ -135,23 +133,23 @@ module.exports = class UsersModel extends BaseModel {
     return new Promise((fulfill, reject) => {
       Users.find({
           _id: this.mongoose.Types.ObjectId(userId)
-      })
-      .remove(function (err, res) {
-        if (err) {
-          reject(err);
+        })
+        .remove(function (err, res) {
+          if (err) {
+            reject(err);
 
-          return;
-        }
+            return;
+          }
 
-        if (res.result.ok === 0) {
-          reject();
+          if (res.result.ok === 0) {
+            reject();
 
-          return;
-        }
+            return;
+          }
 
-        fulfill();
-      })
-      .exec();
+          fulfill();
+        })
+        .exec();
     });
   }
-}
+};

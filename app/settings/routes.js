@@ -31,4 +31,4 @@ module.exports = class SettingsRoutes extends BaseRoute {
       },
     });
   }
-}
+};

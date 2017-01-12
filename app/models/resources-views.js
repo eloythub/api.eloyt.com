@@ -6,8 +6,6 @@ module.exports = class ResourcesViewsModel extends BaseModel {
   constructor(env) {
     super(env);
 
-    const ObjectId = this.mongoose.Types.ObjectId
-
     this.model = this.registerSchema('resources_views', 'resources_views', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,
@@ -27,4 +25,4 @@ module.exports = class ResourcesViewsModel extends BaseModel {
       },
     });
   }
-}
+};

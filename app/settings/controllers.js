@@ -53,7 +53,7 @@ module.exports = class Controllers {
     }, (error) => {
       res({
         statusCode: 500,
-        error: 'something went wrong, check the logs of ::getSettingsByUserId',
+        error,
       }).code(500);
     });
   }
@@ -79,8 +79,8 @@ module.exports = class Controllers {
     }, (error) => {
       res({
         statusCode: 500,
-        error: 'something went wrong, check the logs of ::getSettingsByUserId',
+        error,
       }).code(500);
     });
   }
-}
+};

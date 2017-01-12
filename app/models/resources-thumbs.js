@@ -6,8 +6,6 @@ module.exports = class ResourcesThumbsModel extends BaseModel {
   constructor(env) {
     super(env);
 
-    const ObjectId = this.mongoose.Types.ObjectId
-
     this.model = this.registerSchema('resources_thumbs', 'resources_thumbs', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,
@@ -30,4 +28,4 @@ module.exports = class ResourcesThumbsModel extends BaseModel {
       },
     });
   }
-}
+};

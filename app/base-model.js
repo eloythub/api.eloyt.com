@@ -15,7 +15,6 @@ module.exports = class BaseModel {
 
     mongoose.Promise = global.Promise;
 
-
     this.mongoose = this.env.mongoose;
 
     if (typeof this.env.mongoose === 'undefined') {
@@ -31,4 +30,4 @@ module.exports = class BaseModel {
     return this.env.mongooseSchemas[alias] = this.env.mongooseSchemas[alias]
       || this.mongoose.model(collectionName, new Schema(schema));
   }
-}
+};

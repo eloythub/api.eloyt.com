@@ -5,7 +5,7 @@ const Promise = require('promise');
 const fs      = require('fs');
 const https   = require('https');
 const uuid    = require('uuid');
-const path    = require('path')
+const path    = require('path');
 
 const ResourcesModel = require('../models/resources');
 
@@ -74,7 +74,7 @@ module.exports = class Repository {
 
           const resourceUrl = format(`https://storage.googleapis.com/${this.env.googleCloudStorageBucket}/${fileName}`);
 
-          // add into database resources
+          // Add into database resources
           this.resourcesModel.create(userId, geoLocation, resourceUrl, resourceType)
             .then(fulfill)
             .catch((err) => {
@@ -95,4 +95,4 @@ module.exports = class Repository {
   produceStreamResource(userId, args) {
     return this.resourcesModel.produceStreamResource(userId, args);
   }
-}
+};

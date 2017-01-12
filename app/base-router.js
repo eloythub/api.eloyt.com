@@ -8,4 +8,4 @@ module.exports = class BaseRoute {
     this.controllers = new Controllers(env);
     this.prefix      = '/' + prefix;
   }
-}
+};

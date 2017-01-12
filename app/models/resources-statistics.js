@@ -6,8 +6,6 @@ module.exports = class ResourcesStatisticsModel extends BaseModel {
   constructor(env) {
     super(env);
 
-    const ObjectId = this.mongoose.Types.ObjectId
-
     this.model = this.registerSchema('resources_statistics', 'resources_statistics', {
       userId: {
         type: this.mongoose.Schema.ObjectId,
@@ -35,4 +33,4 @@ module.exports = class ResourcesStatisticsModel extends BaseModel {
       },
     });
   }
-}
+};

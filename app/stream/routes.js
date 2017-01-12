@@ -1,7 +1,7 @@
 'use strict';
 
 const BaseRoute = require('../base-router');
-const Joi = require('joi')
+const Joi       = require('joi');
 
 module.exports = class StreamRoutes extends BaseRoute {
   constructor(router, env, routerBaseUrl) {
@@ -71,4 +71,4 @@ module.exports = class StreamRoutes extends BaseRoute {
       },
     });
   }
-}
+};

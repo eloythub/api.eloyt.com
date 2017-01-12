@@ -6,9 +6,9 @@ const graph            = require('fbgraph');
 const uuid             = require('uuid');
 
 const options = {
-    timeout:  3000
-  , pool:     { maxSockets:  Infinity }
-  , headers:  { connection:  "keep-alive" }
+  timeout: 3000
+  , pool: {maxSockets: Infinity}
+  , headers: {connection: "keep-alive"}
 };
 
 module.exports = class Repository {
@@ -39,7 +39,7 @@ module.exports = class Repository {
           this.streamRepository.uploadToGCLOUDFromUrl(profilePicture.data.url, 'jpg', user._id, null, 'avatar')
             .then((gCloudResponse) => {
               // update the avatar of the user
-              this.usersModel.update(user._id, { avatar: gCloudResponse._id })
+              this.usersModel.update(user._id, {avatar: gCloudResponse._id})
                 .then(fulfill)
                 .catch(reject);
             })
@@ -87,7 +87,7 @@ module.exports = class Repository {
     return new Promise((fulfill, reject) => {
       graph.setVersion("2.8");
 
-      graph.setOptions(options).get(api, function(error, res) {
+      graph.setOptions(options).get(api, function (error, res) {
         if (error) {
           reject(error);
 
@@ -100,22 +100,12 @@ module.exports = class Repository {
   }
 
   fetchProfilePictureFromFb(user) {
-    const fields = [
-      'id',
-      'email',
-      'name',
-      'gender',
-      'first_name',
-      'last_name',
-      'picture',
-    ];
-
     const api = `${user.userId}/picture?&access_token=${user.tokenId}&width=1024&redirect=false`;
 
     return new Promise((fulfill, reject) => {
       graph.setVersion("2.8");
 
-      graph.setOptions(options).get(api, function(error, res) {
+      graph.setOptions(options).get(api, function (error, res) {
         if (error) {
           reject(error);
 
@@ -126,4 +116,4 @@ module.exports = class Repository {
       });
     });
   }
-}
+};
