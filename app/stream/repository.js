@@ -64,7 +64,7 @@ module.exports = class Repository {
         // Give read access to all the users
         this.bucket.file(fileName).acl.readers.addAllUsers((aclError) => {
           if (aclError) {
-            // Delete file from the gcs bucket incase of failure
+            // Delete file from the gcs bucket in case of failure
             this.bucket.file(fileName).delete();
 
             reject(aclError);
@@ -78,7 +78,7 @@ module.exports = class Repository {
           this.resourcesModel.create(userId, geoLocation, resourceUrl, resourceType)
             .then(fulfill)
             .catch((err) => {
-              // Delete file from the gcs bucket incase of failure
+              // Delete file from the gcs bucket in case of failure
               this.bucket.file(fileName).delete();
 
               reject(err);

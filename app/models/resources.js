@@ -11,10 +11,6 @@ module.exports = class ResourcesModel extends BaseModel {
         type: this.mongoose.Schema.ObjectId,
         ref: 'users'
       },
-      resourceStatisticId: {
-        type: this.mongoose.Schema.ObjectId,
-        ref: 'resources_statistics'
-      },
       geoLocation: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
@@ -24,6 +20,18 @@ module.exports = class ResourcesModel extends BaseModel {
       },
       resourceType: {
         type: String,
+      },
+      thumbsUpCount: {
+        type: Number,
+        default: 0,
+      },
+      thumbsDownCount: {
+        type: Number,
+        default: 0,
+      },
+      viewsCount: {
+        type: Number,
+        default: 0,
       },
       uploadedAt: {
         type: Date,
