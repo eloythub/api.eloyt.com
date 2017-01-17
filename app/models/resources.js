@@ -82,19 +82,18 @@ module.exports = class ResourcesModel extends BaseModel {
     });
   }
 
-  produceStreamResource(userId, args) {
+  produceStreamResource(resourceType, offset) {
     const Model = this.model;
-
-    const resourceType = args['resourceType'] || 'video';
-    const offset       = args['offset'] || 20;
 
     return new Promise((fulfill, reject) => {
       Model.find({
-          // userId: this.mongoose.Types.ObjectId(userId),
           resourceType,
         })
+        .select('_id userId')
         .lean()
-        .populate({path: 'userId'})
+        .populate({
+          path: 'userId',
+        })
         .limit(parseInt(offset))
         .exec((err1, streamResources) => {
           if (err1) {
@@ -104,7 +103,7 @@ module.exports = class ResourcesModel extends BaseModel {
           }
 
           Model.populate(streamResources, {
-            path: 'userId.avatar',
+            path: '_id userId.avatar',
             model: 'resources',
           }, (err2, res) => {
             if (err2) {

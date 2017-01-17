@@ -93,6 +93,9 @@ module.exports = class Repository {
   }
 
   produceStreamResource(userId, args) {
-    return this.resourcesModel.produceStreamResource(userId, args);
+    const resourceType = args['resourceType'] || 'video';
+    const offset       = args['offset'] || 20;
+
+    return this.resourcesModel.produceStreamResource(resourceType, offset);
   }
 };

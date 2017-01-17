@@ -19,6 +19,12 @@ module.exports = class BaseModel {
 
     if (typeof this.env.mongoose === 'undefined') {
       this.mongoose = this.env.mongoose = mongoose.connect(connectionString);
+
+
+      this.mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+      this.mongoose.connection.once('open', () => {
+        console.log('Mongo Connection Is ON');
+      });
     }
 
     this.mongooseSchemas = this.env.mongooseSchemas = this.env.mongooseSchemas || {};

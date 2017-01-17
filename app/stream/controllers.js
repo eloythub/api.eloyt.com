@@ -1,12 +1,14 @@
-const Repository = require('./repository');
-const fs         = require('fs');
-const uuid       = require('uuid');
-const https      = require('https');
+const Repository        = require('./repository');
+const StreamTransformer = require('./transformer');
+const fs                = require('fs');
+const uuid              = require('uuid');
+const https             = require('https');
 
 module.exports = class Controllers {
   constructor(env) {
-    this.env   = env;
-    this.repos = new Repository(env);
+    this.env         = env;
+    this.repos       = new Repository(env);
+    this.transformer = new StreamTransformer();
   }
 
   videoUploadHandle(req, res) {
@@ -125,10 +127,10 @@ module.exports = class Controllers {
     };
 
     this.repos.produceStreamResource(userId, args)
-      .then((resourceData) => {
+      .then((data) => {
         res({
           statusCode: 200,
-          resourceData,
+          data: this.transformer.produceStreamResources(data),
         }).code(200)
       })
       .catch((error) => {
