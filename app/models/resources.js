@@ -95,6 +95,7 @@ module.exports = class ResourcesModel extends BaseModel {
           path: 'userId',
         })
         .limit(parseInt(offset))
+        .sort({uploadedAt: 'desc'})
         .exec((err1, streamResources) => {
           if (err1) {
             reject(err1);
