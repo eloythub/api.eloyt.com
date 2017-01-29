@@ -190,7 +190,7 @@ async@2.1.2:
   dependencies:
     lodash "^4.14.0"
 
-async@^2.0.1, async@^2.1.2:
+async@>=0.2.9, async@^2.0.1, async@^2.1.2:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/async/-/async-2.1.4.tgz#2d2160c7788032e4dd6cbe2502f1f9a2c8f6cde4"
   dependencies:
@@ -1481,6 +1481,13 @@ fill-range@^2.1.0:
     randomatic "^1.1.3"
     repeat-element "^1.1.2"
     repeat-string "^1.5.2"
+
+fluent-ffmpeg@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/fluent-ffmpeg/-/fluent-ffmpeg-2.1.0.tgz#e6ab85e75ba8e49119a3900cd9df10d39831d392"
+  dependencies:
+    async ">=0.2.9"
+    which "^1.1.1"
 
 for-in@^0.1.5:
   version "0.1.6"
@@ -3357,7 +3364,7 @@ vizion@^0.2:
   dependencies:
     async "1.5"
 
-which@1:
+which@1, which@^1.1.1:
   version "1.2.12"
   resolved "https://registry.yarnpkg.com/which/-/which-1.2.12.tgz#de67b5e450269f194909ef23ece4ebe416fa1192"
   dependencies:

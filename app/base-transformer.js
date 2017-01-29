@@ -7,6 +7,10 @@ module.exports = class BaseTransformer {
     return `/stream/${userId}/${resourceType}/${resourceId}`;
   }
 
+  resourceThumbnailUri(userId, resourceType, resourceId, imageSize) {
+    return `/stream/${userId}/${resourceType}/${resourceId}/thumbnail/${imageSize}`;
+  }
+
   transform(data, map) {
     return DataTransform(data, map).transform();
   }

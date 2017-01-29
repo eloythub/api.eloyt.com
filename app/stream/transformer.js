@@ -9,6 +9,7 @@ module.exports = class StreamTransformer extends BaseTransformer {
         metaData: '_id', // temporary meta data
         id: '_id._id',
         resourceUri: '',
+        resourceThumbnailUri: '',
         user: {
           metaData: 'userId', // temporary meta data
           id: 'userId._id',
@@ -28,6 +29,13 @@ module.exports = class StreamTransformer extends BaseTransformer {
           item.metaData.userId,
           item.metaData.resourceType,
           item.metaData._id
+        );
+
+        item.resourceThumbnailUri = this.resourceThumbnailUri(
+          item.metaData.userId,
+          item.metaData.resourceType,
+          item.metaData._id,
+          'original'
         );
 
         item.user.avatarUri = this.resourceUri(

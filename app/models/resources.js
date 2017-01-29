@@ -82,6 +82,24 @@ module.exports = class ResourcesModel extends BaseModel {
     });
   }
 
+  findResourceById(resourceId) {
+    const Model = this.model;
+
+    return new Promise((fulfill, reject) => {
+      Model.find({
+        _id: this.mongoose.Types.ObjectId(resourceId),
+      }, (err, res) => {
+        if (err) {
+          reject(err);
+
+          return;
+        }
+
+        fulfill(res[0] || null);
+      });
+    });
+  }
+
   produceStreamResource(resourceType, offset) {
     const Model = this.model;
 

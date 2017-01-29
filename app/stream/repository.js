@@ -7,13 +7,15 @@ const https   = require('https');
 const uuid    = require('uuid');
 const path    = require('path');
 
-const ResourcesModel = require('../models/resources');
+const ResourcesModel                = require('../models/resources');
+const ResourcesVideoThumbnailsModel = require('../models/resources-video-thumbnails');
 
 module.exports = class Repository {
   constructor(env) {
     this.env = env;
 
     this.resourcesModel = new ResourcesModel(env);
+    this.resourcesVideoThumbnailsModel = new ResourcesVideoThumbnailsModel(env);
 
     this.storage = require('@google-cloud/storage')({
       projectId: this.env.googleCloudProjectId,
@@ -92,10 +94,18 @@ module.exports = class Repository {
     return this.resourcesModel.findResource(userId, resourceId, resourceType);
   }
 
+  findResourceThumb(resourceId, imageSize) {
+    return this.resourcesVideoThumbnailsModel.findResource(resourceId, imageSize);
+  }
+
   produceStreamResource(userId, args) {
     const resourceType = args['resourceType'] || 'video';
     const offset       = args['offset'] || 20;
 
     return this.resourcesModel.produceStreamResource(resourceType, offset);
+  }
+
+  createThumbnailRecord(sourceResourceId, thumbnailResourceId, imageSize) {
+    return this.resourcesVideoThumbnailsModel.create(sourceResourceId, thumbnailResourceId, imageSize);
   }
 };

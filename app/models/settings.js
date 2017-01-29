@@ -33,7 +33,7 @@ module.exports = class SettingsModel extends BaseModel {
 
     return new Promise((fulfill, reject) => {
       Model.find({
-        userId: base.mongoose.Types.ObjectId(userId)
+        userId: base.mongoose.Types.ObjectId(userId),
       }, (err, res) => {
         if (err) {
           reject(err);

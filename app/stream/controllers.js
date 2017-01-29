@@ -3,6 +3,7 @@ const StreamTransformer = require('./transformer');
 const fs                = require('fs');
 const uuid              = require('uuid');
 const https             = require('https');
+const ffmpeg            = require('fluent-ffmpeg');
 
 module.exports = class Controllers {
   constructor(env) {
@@ -116,6 +117,157 @@ module.exports = class Controllers {
           error,
         }).code(500);
       })
+  }
+
+
+  streamThumbnailResource(req, res) {
+    const userId       = req.params.userId;
+    const resourceId   = req.params.resourceId;
+    const resourceType = req.params.resourceType;
+    const imageSize    = req.params.imageSize;
+
+    if (resourceType !== 'video') {
+      return res({
+        statusCode: 500,
+        error: {
+          message: 'At the moment only accept\'s the video as resource',
+        },
+      }).code(500);
+    }
+
+    this.repos.findResource(userId, resourceId, resourceType)
+      .then((resource) => {
+        if (!resource) {
+          return res({
+            statusCode: 404,
+          }).code(404);
+        }
+
+        this.repos.findResourceThumb(resourceId, imageSize)
+          .then((thumbResource) => {
+            if (!thumbResource) {
+
+              return res({
+                statusCode: 404,
+              }).code(404);
+            }
+
+            https.get(thumbResource.resourceUrl, (proxyRes) => {
+              // pipe the resourceUrl to response
+              res(null, proxyRes).code(200);
+            }).on('error', (error) => {
+              res({
+                statusCode: 500,
+                error,
+              }).code(500);
+            });
+          })
+          .catch((error) => {
+            if (error === 'no-thumbnail-found') {
+              // It needs to generate the thumbnail here and upload to cloud storage
+              // then pipe the uploaded resource from cloud storage to response here
+              return this.generateThumbnailFromLink(res, resource, imageSize);
+            }
+
+            res({
+              statusCode: 500,
+              error,
+            }).code(500);
+          });
+      })
+      .catch((error) => {
+        res({
+          statusCode: 500,
+          error,
+        }).code(500);
+      })
+  }
+
+  generateThumbnailFromLink(res, resource, imageSize) {
+    const tmpDir               = '/opt/app/tmp';
+    const tmpDownloadDir       = tmpDir + '/' + uuid.v4() + '.mp4';
+    const tmpThumbnailFileName = uuid.v4() + '.png';
+    const tmpThumbnailDir      = tmpDir + '/' + tmpThumbnailFileName;
+
+    const file = fs.createWriteStream(tmpDownloadDir);
+
+    https.get(resource.resourceUrl, (response) => {
+      response.pipe(file);
+
+      file.on('finish', () => {
+        // pipe the resourceUrl to response
+        ffmpeg(tmpDownloadDir)
+          .on('error', (error) => {
+            console.log('error:', error);
+
+            fs.unlink(tmpDownloadDir);
+
+            res({
+              statusCode: 500,
+              error,
+            }).code(500);
+          })
+          .on('end', () => {
+            // Upload the thumbnail to the server
+            this.repos.uploadToGCLOUD(
+              null, // userId,
+              null,
+              tmpThumbnailFileName,
+              tmpDir + '/' + tmpThumbnailFileName,
+              file,
+              'thumbnail'
+            ).then((thumbnailResource) => {
+              file.close();
+
+              fs.unlink(tmpThumbnailDir);
+              fs.unlink(tmpDownloadDir, () => {
+                // Store Thumbnail into DB
+                this.repos.createThumbnailRecord(resource._id, thumbnailResource._id, 'original')
+                  .then(() => {
+                    // Download the thumbnail from cloud storage and pipe to response
+                    https.get(thumbnailResource.resourceUrl, (proxyRes) => {
+                      // pipe the resourceUrl to response
+                      res(null, proxyRes).code(200);
+                    }).on('error', (error) => {
+                      res({
+                        statusCode: 500,
+                        error,
+                      }).code(500);
+                    });
+                  })
+                  .catch((error) => {
+                    res({
+                      statusCode: 500,
+                      error,
+                    }).code(500)
+                  });
+              });
+            }, (error) => {
+              file.close();
+
+              fs.unlink(tmpThumbnailDir);
+              fs.unlink(tmpDownloadDir, () => {
+                res({
+                  statusCode: 500,
+                  error,
+                }).code(500)
+              });
+            });
+          })
+          .screenshots({
+            count: 1,
+            filename: tmpThumbnailFileName,
+            folder: tmpDir,
+          });
+      });
+    }).on('error', (error) => {
+      fs.unlink(tmpDownloadDir);
+
+      res({
+        statusCode: 500,
+        error,
+      }).code(500);
+    });
   }
 
   produceStreamResources(req, res) {

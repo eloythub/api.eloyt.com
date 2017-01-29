@@ -55,6 +55,25 @@ module.exports = class StreamRoutes extends BaseRoute {
       },
     });
 
+    // thumbnail route
+    this.router.addRoute({
+      method: 'GET',
+      path: this.prefix + '/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}',
+      config: {
+        handler: (req, res) => {
+          this.controllers.streamThumbnailResource(req, res);
+        },
+        validate: {
+          params: {
+            userId: Joi.string(),
+            resourceType: Joi.string(),
+            resourceId: Joi.string(),
+            imageSize: Joi.string(),
+          }
+        }
+      },
+    });
+
     this.router.addRoute({
       method: 'GET',
       path: this.prefix + '/produce/{userId}/{offset}',

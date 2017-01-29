@@ -12,6 +12,11 @@ RUN apt-get -y install  build-essential \
 
 RUN npm install -g pm2 yarn
 
+# FFMPEG on docker
+COPY ffmpeg-installer.sh $PROD_DIR/ffmpeg-installer.sh
+RUN chmod 755 $PROD_DIR/ffmpeg-installer.sh
+RUN $PROD_DIR/ffmpeg-installer.sh
+
 ENV TMP_DIR=/tmp
 ENV PROD_DIR=/opt/app
 
@@ -22,10 +27,6 @@ RUN cd $TMP_DIR && yarn
 
 WORKDIR $PROD_DIR
 
-# FFMPEG on docker
-COPY ffmpeg-installer.sh $PROD_DIR/ffmpeg-installer.sh
-RUN chmod 755 $PROD_DIR/ffmpeg-installer.sh
-RUN $PROD_DIR/ffmpeg-installer.sh
 
 CMD cd $PROD_DIR && \
 	ln -sf /tmp/node_modules && \
