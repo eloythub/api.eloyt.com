@@ -1,21 +1,51 @@
-FROM node:6.9.1
+FROM node:6.9
 MAINTAINER Mahan Hazrati<eng.mahan.hazrati@gmail.com>
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
 
 RUN apt-get update && apt-get -y upgrade
+
 RUN apt-get -y install  build-essential \
                         libmysqlclient-dev \
                         libssl-dev \
                         git \
-                        curl
+                        curl \
+                        libmp3lame-dev \
+                        libvorbis-dev \
+                        libtheora-dev \
+                        libspeex-dev \
+                        yasm \
+                        pkg-config \
+                        libopenjpeg-dev \
+                        libx264-dev
 
+RUN mkdir software && \
+    cd software && \
+    wget http://ffmpeg.org/releases/ffmpeg-3.2.2.tar.bz2 && \
+    cd .. && \
+    mkdir src && \
+    cd src && \
+    tar xvjf ../software/ffmpeg-3.2.2.tar.bz2 && \
+    cd ffmpeg-3.2.2 && \
+
+    ./configure \
+        --enable-gpl \
+        --enable-postproc \
+        --enable-swscale  \
+        --enable-avfilter  \
+        --enable-libmp3lame  \
+        --enable-libvorbis  \
+        --enable-libtheora  \
+        --enable-libx264  \
+        --enable-libspeex  \
+        --enable-shared  \
+        --enable-pthreads  \
+        --enable-libopenjpeg \
+        --enable-nonfree && \
+    make && \
+    make install && \
+    /sbin/ldconfig
 RUN npm install -g pm2 yarn
-
-# FFMPEG on docker
-COPY ffmpeg-installer.sh $PROD_DIR/ffmpeg-installer.sh
-RUN chmod 755 $PROD_DIR/ffmpeg-installer.sh
-RUN $PROD_DIR/ffmpeg-installer.sh
 
 ENV TMP_DIR=/tmp
 ENV PROD_DIR=/opt/app
@@ -26,7 +56,6 @@ COPY package.json $TMP_DIR/package.json
 RUN cd $TMP_DIR && yarn
 
 WORKDIR $PROD_DIR
-
 
 CMD cd $PROD_DIR && \
 	ln -sf /tmp/node_modules && \
