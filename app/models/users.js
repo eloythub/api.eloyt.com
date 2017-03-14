@@ -30,13 +30,25 @@ module.exports = class UsersModel extends BaseModel {
         trim: true,
         type: String,
       },
+      country: {
+        trim: true,
+        type: String,
+      },
+      mobile: {
+        trim: true,
+        type: String,
+      },
+      hashtags: {
+        type: Array,
+        default: []
+      },
       avatar: {
         type: this.mongoose.Schema.ObjectId,
         ref: 'resources',
       },
       activated: {
         type: Boolean,
-        default: true
+        default: false
       },
       registerAt: {
         type: Date,
