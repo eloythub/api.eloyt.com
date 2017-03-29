@@ -10,12 +10,10 @@ module.exports = class Controllers {
 
   createOrGet(req, res) {
     if (!req.payload.credentials) {
-      res({
+      return res({
         statusCode: 403,
         error: 'credential is not valid',
       }).code(403);
-
-      return;
     }
 
     this.repos.fetchOrCreateUser(
@@ -28,6 +26,30 @@ module.exports = class Controllers {
       });
     }, (error) => {
       res({
+        statusCode: 500,
+        error,
+      }).code(500);
+    });
+  }
+
+  profileUpdate(req, res) {
+    if (!req.payload.credentials.userId) {
+      return res({
+        statusCode: 403,
+        error: 'userId is not valid',
+      }).code(403);
+    }
+
+    this.repos.updateUserProfile(
+      req.payload.credentials.userId,
+      req.payload.credentials.attributes
+    ).then((data) => {
+      return res({
+        statusCode: 200,
+        data: data,
+      });
+    }, (error) => {
+      return res({
         statusCode: 500,
         error,
       }).code(500);

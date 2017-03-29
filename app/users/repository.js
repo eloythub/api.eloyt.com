@@ -73,6 +73,14 @@ module.exports = class Repository {
     });
   }
 
+  updateUserProfile(userId, attributes) {
+    return new Promise((fulfill, reject) => {
+      return this.usersModel.update(userId, attributes)
+        .then(fulfill)
+        .catch(reject);
+    });
+  }
+
   fetchProfileFromFb(user) {
     const fields = [
       'id',
