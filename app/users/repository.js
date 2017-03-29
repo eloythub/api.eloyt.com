@@ -32,8 +32,9 @@ module.exports = class Repository {
       const firstName = profileInfo.first_name;
       const lastName  = profileInfo.last_name;
       const gender    = profileInfo.gender;
+      const birthday  = profileInfo.birthday;
 
-      this.usersModel.create(email, name, firstName, lastName, gender)
+      this.usersModel.create(email, name, firstName, lastName, gender, birthday)
         .then((user) => {
           // upload to cloud storage
           this.streamRepository.uploadToGCLOUDFromUrl(profilePicture.data.url, 'jpg', user._id, null, 'avatar')
@@ -80,6 +81,12 @@ module.exports = class Repository {
       'gender',
       'first_name',
       'last_name',
+      'friends',
+      'picture',
+      'about',
+      'birthday',
+      'likes',
+      'location',
     ];
 
     const api = `${user.userId}?fields=${fields.join(',')}&access_token=${user.tokenId}`;
