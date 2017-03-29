@@ -52,6 +52,7 @@ module.exports = class UsersModel extends BaseModel {
       },
       birthday: {
         type: Date,
+        default: null,
       },
       registerAt: {
         type: Date,
@@ -99,9 +100,7 @@ module.exports = class UsersModel extends BaseModel {
   create(email, name, firstName, lastName, gender, birthday, avatar) {
     const Model = this.model;
 
-    const birthdayDateObject = new Date(`${birthday} 00:00`);
-
-    const Users = new Model({email, name, firstName, lastName, gender, birthdayDateObject, avatar});
+    const Users = new Model({email, name, firstName, lastName, gender, birthday, avatar});
 
     return new Promise((fulfill, reject) => {
       Users.save((err, res) => {
