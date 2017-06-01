@@ -33,6 +33,9 @@ module.exports = class ResourcesModel extends BaseModel {
         type: Number,
         default: 0,
       },
+      description: {
+        type: String,
+      },
       hashtags: {
         type: Array,
         default: []
