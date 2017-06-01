@@ -33,6 +33,10 @@ module.exports = class ResourcesModel extends BaseModel {
         type: Number,
         default: 0,
       },
+      hashtags: {
+        type: Array,
+        default: []
+      },
       uploadedAt: {
         type: Date,
         default: Date.now,
@@ -40,13 +44,14 @@ module.exports = class ResourcesModel extends BaseModel {
     });
   }
 
-  create(userId, geoLocation, resourceUrl, resourceType) {
+  create(userId, geoLocation, resourceUrl, resourceType, hashtags) {
     const Model     = this.model;
     const Resources = new Model({
       userId: this.mongoose.Types.ObjectId(userId),
       geoLocation,
       resourceUrl,
       resourceType,
+      hashtags,
     });
 
     return new Promise((fulfill, reject) => {

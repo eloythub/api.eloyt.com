@@ -15,17 +15,27 @@ module.exports = class Controllers {
   videoUploadHandle(req, res) {
     const uploadFile           = req.payload.file;
     const userId               = req.payload.userId;
+    const hashtagsRaw          = req.payload.hashtags;
     const geoLocationLatitude  = req.payload.geoLocationLatitude;
     const geoLocationLongitude = req.payload.geoLocationLongitude;
 
     // Validate the File
     if (!uploadFile) {
-      res({
+      return res({
         statusCode: 400,
         message: 'No file uploaded.',
       }).code(400);
 
-      return;
+    }
+
+    // Validate the Interests
+    const hashtags = hashtagsRaw.split(',');
+
+    if (!(hashtags.length >= 3 && hashtags.length <= 5)) {
+      return res({
+        statusCode: 400,
+        message: `hashtags must be in range of 3 to 5. ${hashtags.length} inserted.`,
+      }).code(400);
     }
 
     // Validate the GEO location
@@ -70,7 +80,8 @@ module.exports = class Controllers {
         uploadedFileName,
         uploadedFilePath,
         fileStream,
-        'video'
+        'video',
+        hashtags
       ).then((gCloudStoragePath) => {
         fs.unlink(uploadedFilePath, () => {
           res({url: gCloudStoragePath});

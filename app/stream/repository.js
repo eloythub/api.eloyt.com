@@ -25,7 +25,7 @@ module.exports = class Repository {
     this.bucket = this.storage.bucket(this.env.googleCloudStorageBucket);
   }
 
-  uploadToGCLOUDFromUrl(url, fileExtention, userId, geoLocation, resourceType) {
+  uploadToGCLOUDFromUrl(url, fileExtention, userId, geoLocation, resourceType, hashtags = []) {
     return new Promise((fulfill, reject) => {
       const tmpFileName = uuid.v4() + '.' + fileExtention;
       const tmpFilePath = __dirname + '/../../tmp/' + tmpFileName;
@@ -36,7 +36,7 @@ module.exports = class Repository {
 
         fileStream.on('finish', () => {
           fileStream.close(() => {
-            this.uploadToGCLOUD(userId, geoLocation, tmpFileName, tmpFilePath, fileStream, resourceType)
+            this.uploadToGCLOUD(userId, geoLocation, tmpFileName, tmpFilePath, fileStream, resourceType, hashtags)
               .then((res) => {
                 fs.unlink(tmpFilePath);
 
@@ -54,7 +54,7 @@ module.exports = class Repository {
     });
   };
 
-  uploadToGCLOUD(userId, geoLocation, fileName, filePath, fileStream, resourceType) {
+  uploadToGCLOUD(userId, geoLocation, fileName, filePath, fileStream, resourceType, hashtags = []) {
     return new Promise((fulfill, reject) => {
       this.bucket.upload(filePath, (err) => {
         if (err) {
@@ -77,7 +77,7 @@ module.exports = class Repository {
           const resourceUrl = format(`https://storage.googleapis.com/${this.env.googleCloudStorageBucket}/${fileName}`);
 
           // Add into database resources
-          this.resourcesModel.create(userId, geoLocation, resourceUrl, resourceType)
+          this.resourcesModel.create(userId, geoLocation, resourceUrl, resourceType, hashtags)
             .then(fulfill)
             .catch((err) => {
               // Delete file from the gcs bucket in case of failure

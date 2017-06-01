@@ -31,6 +31,7 @@ module.exports = class StreamRoutes extends BaseRoute {
           payload: {
             file: Joi.any(),
             userId: Joi.string(),
+            hashtags: Joi.string(),
             geoLocationLatitude: Joi.number(),
             geoLocationLongitude: Joi.number(),
           }
