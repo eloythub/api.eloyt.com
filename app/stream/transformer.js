@@ -10,6 +10,7 @@ module.exports = class StreamTransformer extends BaseTransformer {
         id: '_id._id',
         resourceUri: '',
         resourceThumbnailUri: '',
+        hashtags: '_id.hashtags',
         user: {
           metaData: 'userId', // temporary meta data
           id: 'userId._id',
