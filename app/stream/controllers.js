@@ -15,6 +15,7 @@ module.exports = class Controllers {
   videoUploadHandle(req, res) {
     const uploadFile           = req.payload.file;
     const userId               = req.payload.userId;
+    const description          = req.payload.description;
     const hashtagsRaw          = req.payload.hashtags;
     const geoLocationLatitude  = req.payload.geoLocationLatitude;
     const geoLocationLongitude = req.payload.geoLocationLongitude;
@@ -26,6 +27,14 @@ module.exports = class Controllers {
         message: 'No file uploaded.',
       }).code(400);
 
+    }
+
+    // Validate the Description
+    if (!description) {
+      return res({
+        statusCode: 400,
+        message: `description is missing.`,
+      }).code(400);
     }
 
     // Validate the Interests
@@ -81,6 +90,7 @@ module.exports = class Controllers {
         uploadedFilePath,
         fileStream,
         'video',
+        description,
         hashtags
       ).then((gCloudStoragePath) => {
         fs.unlink(uploadedFilePath, () => {

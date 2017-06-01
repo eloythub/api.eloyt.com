@@ -44,13 +44,14 @@ module.exports = class ResourcesModel extends BaseModel {
     });
   }
 
-  create(userId, geoLocation, resourceUrl, resourceType, hashtags) {
+  create(userId, geoLocation, resourceUrl, resourceType, description, hashtags) {
     const Model     = this.model;
     const Resources = new Model({
       userId: this.mongoose.Types.ObjectId(userId),
       geoLocation,
       resourceUrl,
       resourceType,
+      description,
       hashtags,
     });
 
