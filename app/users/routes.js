@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseRoute = require('../base-router');
+const Joi       = require('joi');
 
 module.exports = class UsersRoutes extends BaseRoute {
   constructor(router, env, routerBaseUrl) {
@@ -22,6 +23,19 @@ module.exports = class UsersRoutes extends BaseRoute {
       method: 'POST',
       path: this.prefix + '/profile-update',
       handler: (req, res) => this.controllers.profileUpdate(req, res),
+    });
+
+    this.router.addRoute({
+      method: 'GET',
+      path: this.prefix + '/{userId}',
+      config: {
+        handler: (req, res) => this.controllers.getProfile(req, res),
+        validate: {
+          params: {
+            userId: Joi.string(),
+          }
+        }
+      },
     });
   }
 };

@@ -50,6 +50,14 @@ module.exports = class Repository {
     });
   }
 
+  getUserProfileById(userId) {
+    return new Promise((fulfill, reject) => {
+      this.usersModel.getUserById(userId)
+        .then(fulfill)
+        .catch(reject);
+    });
+  }
+
   fetchOrCreateUser(tokenId, userId) {
     return new Promise((fulfill, reject) => {
       const user = {tokenId: tokenId, userId: userId};

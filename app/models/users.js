@@ -26,6 +26,11 @@ module.exports = class UsersModel extends BaseModel {
         trim: true,
         type: String,
       },
+      aboutMe: {
+        trim: true,
+        type: String,
+        default: ''
+      },
       gender: {
         trim: true,
         type: String,

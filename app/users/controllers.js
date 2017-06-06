@@ -55,4 +55,26 @@ module.exports = class Controllers {
       }).code(500);
     });
   }
+
+  getProfile(req, res) {
+    if (!req.params.userId) {
+      return res({
+        statusCode: 403,
+        error: 'userId is not valid',
+      }).code(403);
+    }
+
+    this.repos.getUserProfileById(req.params.userId)
+      .then((data) => {
+        return res({
+          statusCode: 200,
+          data: data,
+        });
+      }, (error) => {
+        return res({
+          statusCode: 500,
+          error,
+        }).code(500);
+      });
+  }
 };
