@@ -304,7 +304,7 @@ module.exports = class Controllers {
         res({
           statusCode: 200,
           data: this.transformer.produceStreamResources(data),
-        }).code(200)
+        }).code(200);
       })
       .catch((error) => {
         res({
@@ -319,11 +319,9 @@ module.exports = class Controllers {
 
     this.repos.produceOneStreamResourceById(resourceId)
       .then((data) => {
-        data = this.transformer.produceStreamResources(data);
-
         res({
           statusCode: 200,
-          data: data[0],
+          data: this.transformer.produceStreamResources(data)[0],
         }).code(200)
       })
       .catch((error) => {
