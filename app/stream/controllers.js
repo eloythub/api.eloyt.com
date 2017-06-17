@@ -313,4 +313,42 @@ module.exports = class Controllers {
         }).code(500);
       })
   }
+
+  streamResourceReact(req, res) {
+    const {userId, resourceId, resourceOwnerUserId, reactType} = req.params;
+
+    let response;
+
+    switch (reactType) {
+      case 'like':
+        response = this.repos.resourceReactLike(userId, resourceId, resourceOwnerUserId);
+        break;
+      case 'dislike':
+        response = this.repos.resourceReactDislike(userId, resourceId, resourceOwnerUserId);
+        break;
+      case 'skip':
+        response = this.repos.resourceReactSkip(userId, resourceId, resourceOwnerUserId);
+        break;
+    }
+
+    if (!response) {
+      return res({
+        statusCode: 500,
+        error: 'react type is wrong or empty',
+      }).code(500);
+    }
+
+    return response.then((data) => {
+        return res({
+          statusCode: 200,
+          data,
+        }).code(200)
+      })
+      .catch((error) => {
+        return res({
+          statusCode: 500,
+          error,
+        }).code(500);
+      })
+  }
 };

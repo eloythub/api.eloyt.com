@@ -8,13 +8,15 @@ const uuid    = require('uuid');
 const path    = require('path');
 
 const ResourcesModel                = require('../models/resources');
+const ResourcesReactsModel          = require('../models/resources-reacts');
 const ResourcesVideoThumbnailsModel = require('../models/resources-video-thumbnails');
 
 module.exports = class Repository {
   constructor(env) {
     this.env = env;
 
-    this.resourcesModel = new ResourcesModel(env);
+    this.resourcesModel                = new ResourcesModel(env);
+    this.resourcesReactsModel          = new ResourcesReactsModel(env);
     this.resourcesVideoThumbnailsModel = new ResourcesVideoThumbnailsModel(env);
 
     this.storage = require('@google-cloud/storage')({
@@ -107,5 +109,17 @@ module.exports = class Repository {
 
   createThumbnailRecord(sourceResourceId, thumbnailResourceId, imageSize) {
     return this.resourcesVideoThumbnailsModel.create(sourceResourceId, thumbnailResourceId, imageSize);
+  }
+
+  resourceReactLike(userId, resourceId, resourceOwnerUserId) {
+    return this.resourcesReactsModel.createReactLike(userId, resourceId, resourceOwnerUserId);
+  }
+
+  resourceReactDislike(userId, resourceId, resourceOwnerUserId) {
+    return this.resourcesReactsModel.createReactDislike(userId, resourceId, resourceOwnerUserId);
+  }
+
+  resourceReactSkip(userId, resourceId, resourceOwnerUserId) {
+    return this.resourcesReactsModel.createReactSkip(userId, resourceId, resourceOwnerUserId);
   }
 };

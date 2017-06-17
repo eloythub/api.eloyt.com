@@ -91,5 +91,23 @@ module.exports = class StreamRoutes extends BaseRoute {
         }
       },
     });
+
+    this.router.addRoute({
+      method: 'POST',
+      path: this.prefix + '/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}',
+      config: {
+        handler: (req, res) => {
+          this.controllers.streamResourceReact(req, res);
+        },
+        validate: {
+          params: {
+            userId: Joi.string(),
+            resourceId: Joi.string(),
+            resourceOwnerUserId: Joi.string(),
+            reactType: Joi.string(),
+          }
+        }
+      },
+    });
   }
 };
