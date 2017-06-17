@@ -145,4 +145,39 @@ module.exports = class ResourcesModel extends BaseModel {
         });
     });
   }
+
+  findOneStreamResourceById(resourceId) {
+    const Model = this.model;
+
+    return new Promise((fulfill, reject) => {
+      Model.find({
+          _id: this.mongoose.Types.ObjectId(resourceId),
+        })
+        .select('_id userId')
+        .lean()
+        .populate({
+          path: 'userId',
+        })
+        .exec((err1, streamResources) => {
+          if (err1) {
+            reject(err1);
+
+            return;
+          }
+
+          Model.populate(streamResources, {
+            path: '_id userId.avatar',
+            model: 'resources',
+          }, (err2, res) => {
+            if (err2) {
+              reject(err2);
+
+              return;
+            }
+
+            fulfill(streamResources);
+          });
+        });
+    });
+  }
 };

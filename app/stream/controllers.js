@@ -314,6 +314,26 @@ module.exports = class Controllers {
       })
   }
 
+  produceOneStreamResourceById(req, res) {
+    const { resourceId } = req.params;
+
+    this.repos.produceOneStreamResourceById(resourceId)
+      .then((data) => {
+        data = this.transformer.produceStreamResources(data);
+
+        res({
+          statusCode: 200,
+          data: data[0],
+        }).code(200)
+      })
+      .catch((error) => {
+        res({
+          statusCode: 500,
+          error,
+        }).code(500);
+      })
+  }
+
   streamResourceReact(req, res) {
     const {userId, resourceId, resourceOwnerUserId, reactType} = req.params;
 

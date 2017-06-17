@@ -107,6 +107,10 @@ module.exports = class Repository {
     return this.resourcesModel.produceStreamResource(resourceType, offset);
   }
 
+  produceOneStreamResourceById(resourceId) {
+    return this.resourcesModel.findOneStreamResourceById(resourceId);
+  }
+
   createThumbnailRecord(sourceResourceId, thumbnailResourceId, imageSize) {
     return this.resourcesVideoThumbnailsModel.create(sourceResourceId, thumbnailResourceId, imageSize);
   }

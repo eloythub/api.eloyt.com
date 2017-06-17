@@ -93,6 +93,21 @@ module.exports = class StreamRoutes extends BaseRoute {
     });
 
     this.router.addRoute({
+      method: 'GET',
+      path: this.prefix + '/produce/{resourceId}',
+      config: {
+        handler: (req, res) => {
+          this.controllers.produceOneStreamResourceById(req, res);
+        },
+        validate: {
+          params: {
+            resourceId: Joi.string(),
+          }
+        }
+      },
+    });
+
+    this.router.addRoute({
       method: 'POST',
       path: this.prefix + '/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}',
       config: {
