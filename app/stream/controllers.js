@@ -92,9 +92,9 @@ module.exports = class Controllers {
         'video',
         description,
         hashtags
-      ).then((gCloudStoragePath) => {
+      ).then((uploadedVideo) => {
         fs.unlink(uploadedFilePath, () => {
-          res({url: gCloudStoragePath});
+          res(uploadedVideo);
         });
       }, (error) => {
         fs.unlink(uploadedFilePath, () => {
