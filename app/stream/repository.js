@@ -7,9 +7,9 @@ const https   = require('https');
 const uuid    = require('uuid');
 const path    = require('path');
 
-const ResourcesModel                = require('../models/resources');
-const ResourcesReactsModel          = require('../models/resources-reacts');
-const ResourcesVideoThumbnailsModel = require('../models/resources-video-thumbnails');
+const ResourcesModel                = require('../models-mongo/resources');
+const ResourcesReactsModel          = require('../models-mongo/resources-reacts');
+const ResourcesVideoThumbnailsModel = require('../models-mongo/resources-video-thumbnails');
 
 module.exports = class Repository {
   constructor(env) {

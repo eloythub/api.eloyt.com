@@ -1,9 +1,8 @@
 'use strict';
 
-module.exports = class Router {
-  constructor(env) {
+export default class Router {
+  constructor() {
     this.routes = [];
-    this.env    = env;
   }
 
   addRoute(route) {

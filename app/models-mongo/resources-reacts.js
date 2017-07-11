@@ -1,11 +1,7 @@
 'use strict';
 
-const BaseModel = require('../base-model');
-
-module.exports = class ResourcesReactsModel extends BaseModel {
+module.exports = class ResourcesReactsModel {
   constructor(env) {
-    super(env);
-
     this.model = this.registerSchema('resources_react', 'resources_react', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,

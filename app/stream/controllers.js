@@ -5,14 +5,14 @@ const uuid              = require('uuid');
 const https             = require('https');
 const ffmpeg            = require('fluent-ffmpeg');
 
-module.exports = class Controllers {
+export default class StreamController {
   constructor(env) {
     this.env         = env;
     this.repos       = new Repository(env);
     this.transformer = new StreamTransformer();
   }
 
-  videoUploadHandle(req, res) {
+  static videoUploadHandle(req, res) {
     const uploadFile           = req.payload.file;
     const userId               = req.payload.userId;
     const description          = req.payload.description;
@@ -107,7 +107,7 @@ module.exports = class Controllers {
     });
   }
 
-  streamResource(req, res) {
+  static streamResource(req, res) {
     const userId       = req.params.userId;
     const resourceId   = req.params.resourceId;
     const resourceType = req.params.resourceType;
@@ -141,7 +141,7 @@ module.exports = class Controllers {
   }
 
 
-  streamThumbnailResource(req, res) {
+  static streamThumbnailResource(req, res) {
     const userId       = req.params.userId;
     const resourceId   = req.params.resourceId;
     const resourceType = req.params.resourceType;
@@ -204,7 +204,7 @@ module.exports = class Controllers {
       })
   }
 
-  generateThumbnailFromLink(res, resource, imageSize) {
+  static generateThumbnailFromLink(res, resource, imageSize) {
     const tmpDir               = '/opt/app/tmp';
     const tmpDownloadDir       = tmpDir + '/' + uuid.v4() + '.mp4';
     const tmpThumbnailFileName = uuid.v4() + '.png';
@@ -291,7 +291,7 @@ module.exports = class Controllers {
     });
   }
 
-  produceStreamResources(req, res) {
+  static produceStreamResources(req, res) {
     const userId = req.params.userId;
     const offset = req.params.offset;
 
@@ -314,7 +314,7 @@ module.exports = class Controllers {
       })
   }
 
-  produceOneStreamResourceById(req, res) {
+  static produceOneStreamResourceById(req, res) {
     const { resourceId } = req.params;
 
     this.repos.produceOneStreamResourceById(resourceId)
@@ -332,7 +332,7 @@ module.exports = class Controllers {
       })
   }
 
-  streamResourceReact(req, res) {
+  static streamResourceReact(req, res) {
     const {userId, resourceId, resourceOwnerUserId, reactType} = req.params;
 
     let response;

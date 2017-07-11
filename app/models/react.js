@@ -3,7 +3,7 @@
 import Sequelize from 'sequelize';
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define("resources", {
+  return sequelize.define("react", {
     id: {
       field: 'id',
       primaryKey: true,
@@ -13,7 +13,7 @@ export default function (sequelize, DataTypes) {
     },
     type: {
       field: 'type',
-      type: DataTypes.ENUM('avatar', 'video', 'thumbnail'),
+      type: DataTypes.ENUM('skip', 'like', 'dislike'),
       allowNull: true,
     },
     userId: {
@@ -26,23 +26,23 @@ export default function (sequelize, DataTypes) {
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
     },
-    url: {
-      field: 'url',
+    resourceId: {
+      field: 'resource_id',
+      type: DataTypes.UUID,
       allowNull: false,
-      type: DataTypes.STRING,
+      references: {
+        model: 'resources',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+      },
     },
-    geoLocation: {
-      field: 'geo_location',
-      allowNull: false,
-      type: DataTypes.GEOMETRY,
-    },
-    updatedAt: {
-      field: 'updated_at',
+    reactedAt: {
+      field: 'reacted_at',
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
   }, {
-    tableName: 'resources'
+    tableName: 'react'
   });
 }

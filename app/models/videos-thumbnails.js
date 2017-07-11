@@ -3,7 +3,7 @@
 import Sequelize from 'sequelize';
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define("resources", {
+  return sequelize.define("videosThumbnails", {
     id: {
       field: 'id',
       primaryKey: true,
@@ -11,30 +11,30 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
-    type: {
-      field: 'type',
-      type: DataTypes.ENUM('avatar', 'video', 'thumbnail'),
-      allowNull: true,
-    },
-    userId: {
-      field: 'user_id',
+    videoResourceId: {
+      field: 'video_resource_id',
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'resources',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
     },
-    url: {
-      field: 'url',
+    thumbnailResourceId: {
+      field: 'thumbnail_resource_id',
+      type: DataTypes.UUID,
       allowNull: false,
-      type: DataTypes.STRING,
+      references: {
+        model: 'resources',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+      },
     },
-    geoLocation: {
-      field: 'geo_location',
+    imageSize: {
+      field: 'image_size',
       allowNull: false,
-      type: DataTypes.GEOMETRY,
+      type: DataTypes.INTEGER,
     },
     updatedAt: {
       field: 'updated_at',
@@ -43,6 +43,6 @@ export default function (sequelize, DataTypes) {
       defaultValue: Sequelize.NOW,
     },
   }, {
-    tableName: 'resources'
+    tableName: 'videos_thumbnails'
   });
 }

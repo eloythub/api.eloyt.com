@@ -1,33 +1,39 @@
 'use strict';
 
-const debug  = require('debug');
-const Hapi   = require('hapi');
-const Router = require('./router');
-const Routes = require('./app/routes');
+import env from './configs';
+import Hapi from 'hapi';
+import * as Models from './app/models';
+import Router from './router';
+import Routes from './app/routes';
 
-module.exports = class Server {
-  constructor(env) {
+const debug = require('debug');
+
+export default class Server {
+  constructor() {
     this.server = new Hapi.Server();
 
     // server connection config
     this.server.connection({port: env.exposePort || 80});
 
     // router setup
-    const router = new Router(env);
+    const router = new Router();
 
     // handle the routes
-    new Routes(router, env);
+    new Routes(router);
 
     this.server.route(router.getRoutes());
   }
 
   fireUp() {
+    const debugLog = debug(`${env.debugZone}:fireUp`);
+
     this.server.start((err) => {
       if (err) {
         throw err;
       }
 
-      debug(`Server running at: ${this.server.info.uri}`);
+      debugLog(`Start running at: ${this.server.info.uri}`);
     });
+
   }
-}
+};

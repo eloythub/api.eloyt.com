@@ -1,13 +1,9 @@
 'use strict';
 
-const BaseModel = require('../base-model');
-
 const ResourcesModel = require('./resources');
 
-module.exports = class ResourcesVideoThumbnailsModel extends BaseModel {
+module.exports = class ResourcesVideoThumbnailsModel {
   constructor(env) {
-    super(env);
-
     this.model = this.registerSchema('resources_video_thumbnail', 'resources_video_thumbnail', {
       sourceResourceId: {
         type: this.mongoose.Schema.ObjectId,

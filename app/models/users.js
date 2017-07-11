@@ -1,177 +1,84 @@
 'use strict';
 
-const BaseModel = require('../base-model');
+import Sequelize from 'sequelize';
 
-module.exports = class UsersModel extends BaseModel {
-  constructor(env) {
-    super(env);
-
-    this.model = this.registerSchema('users', 'users', {
-      email: {
-        type: String,
-        trim: true,
-        index: {
-          unique: true
-        }
+export default function (sequelize, DataTypes) {
+  return sequelize.define("users", {
+    id: {
+      field: 'id',
+      primaryKey: true,
+      allowNull: false,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    email: {
+      field: 'email',
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    name: {
+      field: 'name',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    mobile: {
+      field: 'mobile',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    firstName: {
+      field: 'first_name',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    lastName: {
+      field: 'last_name',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    dateOfBirth: {
+      field: 'date_of_birth',
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    gender: {
+      field: 'gender',
+      type: DataTypes.ENUM('male', 'female', 'other'),
+      allowNull: true,
+    },
+    avatarResourceId: {
+      field: 'avatar_resource_id',
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: 'resources',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
-      name: {
-        trim: true,
-        type: String,
-      },
-      firstName: {
-        trim: true,
-        type: String,
-      },
-      lastName: {
-        trim: true,
-        type: String,
-      },
-      aboutMe: {
-        trim: true,
-        type: String,
-        default: ''
-      },
-      gender: {
-        trim: true,
-        type: String,
-      },
-      country: {
-        trim: true,
-        type: String,
-      },
-      mobile: {
-        trim: true,
-        type: String,
-      },
-      hashtags: {
-        type: Array,
-        default: []
-      },
-      avatar: {
-        type: this.mongoose.Schema.ObjectId,
-        ref: 'resources',
-      },
-      activated: {
-        type: Boolean,
-        default: false
-      },
-      birthday: {
-        type: Date,
-        default: null,
-      },
-      registerAt: {
-        type: Date,
-        default: Date.now
-      }
-    });
-  }
-
-  getUserByEmail(email) {
-    const Model = this.model;
-
-    return new Promise((fulfill, reject) => {
-      Model.find({
-        email
-      }, (err, res) => {
-        if (err) {
-          reject(err);
-
-          return;
-        }
-
-        fulfill(res[0] || null);
-      });
-    });
-  }
-
-  getUserById(userId) {
-    const Model = this.model;
-
-    return new Promise((fulfill, reject) => {
-      Model.find({
-        _id: this.mongoose.Types.ObjectId(userId),
-      }, (err, res) => {
-        if (err) {
-          reject(err);
-
-          return;
-        }
-
-        fulfill(res[0] || null);
-      });
-    });
-  }
-
-  create(email, name, firstName, lastName, gender, birthday, avatar) {
-    const Model = this.model;
-
-    const Users = new Model({email, name, firstName, lastName, gender, birthday, avatar});
-
-    return new Promise((fulfill, reject) => {
-      Users.save((err, res) => {
-        if (err) {
-          reject(err);
-
-          return;
-        }
-
-        fulfill(res);
-      });
-    });
-  }
-
-  update(userId, attributes) {
-    const Model = this.model;
-    const Users = new Model();
-
-    // check if avatar is being updated in attributes, then convert to ObjectId
-    if (typeof attributes.avatar === 'string') {
-      attributes.avatar = this.mongoose.Types.ObjectId(attributes.avatar);
-    }
-
-    return new Promise((fulfill, reject) => {
-      this.model.findByIdAndUpdate(
-        this.mongoose.Types.ObjectId(userId),
-        {
-          $set: attributes
-        },
-        (err, res) => {
-          if (err) {
-            reject(err);
-
-            return;
-          }
-
-          this.getUserById(userId).then(fulfill).catch(reject);
-        }
-      );
-    });
-  }
-
-  delete(userId) {
-    const Model = this.model;
-    const Users = new Model();
-
-    return new Promise((fulfill, reject) => {
-      Users.find({
-          _id: this.mongoose.Types.ObjectId(userId)
-        })
-        .remove(function (err, res) {
-          if (err) {
-            reject(err);
-
-            return;
-          }
-
-          if (res.result.ok === 0) {
-            reject();
-
-            return;
-          }
-
-          fulfill();
-        })
-        .exec();
-    });
-  }
-};
+    },
+    aboutMe: {
+      field: 'about_me',
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    isActivated: {
+      field: 'is_activated',
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    registeredAt: {
+      field: 'registered_at',
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.NOW,
+    },
+    updatedAt: {
+      field: 'updated_at',
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.NOW,
+    },
+  }, {
+    tableName: 'users'
+  });
+}

@@ -1,12 +1,12 @@
 'use strict';
 
-const BaseRoute = require('../base-router');
-const Joi       = require('joi');
+import StreamController from './controllers';
 
-module.exports = class StreamRoutes extends BaseRoute {
-  constructor(router, env, routerBaseUrl) {
-    super(router, env, routerBaseUrl);
+const Joi = require('joi');
 
+export default class StreamRoutes {
+  constructor(router, prefix) {
+    this.prefix = `/${prefix}`;
     this.router = router;
 
     this.setRoutes();
@@ -25,7 +25,7 @@ module.exports = class StreamRoutes extends BaseRoute {
           parse: true,
         },
         handler: (req, res) => {
-          this.controllers.videoUploadHandle(req, res);
+          StreamController.videoUploadHandle(req, res);
         },
         validate: {
           payload: {
@@ -45,7 +45,7 @@ module.exports = class StreamRoutes extends BaseRoute {
       path: this.prefix + '/{userId}/{resourceType}/{resourceId}',
       config: {
         handler: (req, res) => {
-          this.controllers.streamResource(req, res);
+          StreamController.streamResource(req, res);
         },
         validate: {
           params: {
@@ -63,7 +63,7 @@ module.exports = class StreamRoutes extends BaseRoute {
       path: this.prefix + '/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}',
       config: {
         handler: (req, res) => {
-          this.controllers.streamThumbnailResource(req, res);
+          StreamController.streamThumbnailResource(req, res);
         },
         validate: {
           params: {
@@ -81,7 +81,7 @@ module.exports = class StreamRoutes extends BaseRoute {
       path: this.prefix + '/produce/{userId}/{offset}',
       config: {
         handler: (req, res) => {
-          this.controllers.produceStreamResources(req, res);
+          StreamController.produceStreamResources(req, res);
         },
         validate: {
           params: {
@@ -97,7 +97,7 @@ module.exports = class StreamRoutes extends BaseRoute {
       path: this.prefix + '/produce/{resourceId}',
       config: {
         handler: (req, res) => {
-          this.controllers.produceOneStreamResourceById(req, res);
+          StreamController.produceOneStreamResourceById(req, res);
         },
         validate: {
           params: {
@@ -112,7 +112,7 @@ module.exports = class StreamRoutes extends BaseRoute {
       path: this.prefix + '/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}',
       config: {
         handler: (req, res) => {
-          this.controllers.streamResourceReact(req, res);
+          StreamController.streamResourceReact(req, res);
         },
         validate: {
           params: {

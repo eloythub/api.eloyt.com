@@ -1,7 +1,7 @@
 'use strict';
 
 const StreamRepository = require('../stream/repository');
-const UsersModel       = require('../models/users');
+const UsersModel       = require('../models-mongo/users');
 const graph            = require('fbgraph');
 const uuid             = require('uuid');
 

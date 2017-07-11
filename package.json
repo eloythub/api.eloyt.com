@@ -4,7 +4,7 @@
   "description": "eloyt server app",
   "main": "built/app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "DEBUG=ELOYT-ZONE:* ./node_modules/babel-cli/bin/babel-node.js ./app.js",
     "test": "./node_modules/.bin/mocha --compilers js:babel-register --require babel-polyfill ./tests --watch --recursive",
     "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com"
   },
@@ -21,25 +21,31 @@
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",
     "babel": "^6.5.2",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.18.2",
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "babel-preset-react-native": "^2.1.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
+    "dotenv": "^4.0.0",
     "fbgraph": "^1.3.0",
     "fluent-ffmpeg": "^2.1.0",
     "hapi": "^16.0.1",
     "mongoose": "^4.7.1",
     "node-json-transform": "^1.0.13",
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
     "pm2": "^2.1.6",
     "promise": "^7.1.1",
+    "sequelize": "^4.2.1",
     "uuid": "^3.0.1",
-    "yarn": "^0.17.10"
+    "yarn": "^0.17.10",
+    "debug": "^2.6.8"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "debug": "^2.3.3",
     "mocha": "^3.2.0",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6"

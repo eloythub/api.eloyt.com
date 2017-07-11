@@ -2,13 +2,13 @@
 
 const Repository = require('./repository');
 
-module.exports = class Controllers {
+export default class UserController {
   constructor(env) {
     this.env   = env;
     this.repos = new Repository(env);
   }
 
-  createOrGet(req, res) {
+  static createOrGet(req, res) {
     if (!req.payload.credentials) {
       return res({
         statusCode: 403,
@@ -32,7 +32,7 @@ module.exports = class Controllers {
     });
   }
 
-  profileUpdate(req, res) {
+  static profileUpdate(req, res) {
     if (!req.payload.credentials.userId) {
       return res({
         statusCode: 403,
@@ -56,7 +56,7 @@ module.exports = class Controllers {
     });
   }
 
-  getProfile(req, res) {
+  static getProfile(req, res) {
     if (!req.params.userId) {
       return res({
         statusCode: 403,

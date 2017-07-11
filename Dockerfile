@@ -1,4 +1,4 @@
-FROM node:6.9
+FROM node:8.1
 MAINTAINER Mahan Hazrati<eng.mahan.hazrati@gmail.com>
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
@@ -61,7 +61,7 @@ CMD cd $PROD_DIR && \
 	ln -sf /tmp/node_modules && \
 	rm -rf .pm2 && \
     pm2 start \
-        --no-daemon ./app.js \
+        --no-daemon npm start \
         --watch \
         --silent \
         --no-vizion \

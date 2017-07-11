@@ -1,13 +1,12 @@
 'use strict';
 
-const UsersRoutes    = require('./users/routes');
-const SettingsRoutes = require('./settings/routes');
-const StreamRoutes   = require('./stream/routes');
+import UsersRoutes from './users/routes';
+import StreamRoutes from './stream/routes';
+import * as Models from '../app/models';
 
-module.exports = class Routes {
-  constructor(router, env) {
+export default class Routes {
+  constructor(router) {
     this.router = router;
-    this.env    = env;
 
     this.setRootRoutes();
     this.setRoutes();
@@ -27,8 +26,7 @@ module.exports = class Routes {
   }
 
   setRoutes() {
-    new UsersRoutes(this.router, this.env, 'users');
-    new SettingsRoutes(this.router, this.env, 'settings');
-    new StreamRoutes(this.router, this.env, 'stream');
+    new UsersRoutes(this.router, 'users');
+    new StreamRoutes(this.router, 'stream');
   }
 };

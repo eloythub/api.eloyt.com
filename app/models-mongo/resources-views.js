@@ -1,11 +1,7 @@
 'use strict';
 
-const BaseModel = require('../base-model');
-
-module.exports = class ResourcesViewsModel extends BaseModel {
+module.exports = class ResourcesViewsModel {
   constructor(env) {
-    super(env);
-
     this.model = this.registerSchema('resources_views', 'resources_views', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,
