@@ -5,8 +5,11 @@
   "main": "built/app.js",
   "scripts": {
     "start": "DEBUG=ELOYT-ZONE:* ./node_modules/babel-cli/bin/babel-node.js ./app.js",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-register --require babel-polyfill ./tests --watch --recursive",
-    "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com"
+    "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com",
+    "standard": "standard ./app/**/*.js --verbose",
+    "standard-fix": "standard ./app/**/*.js --fix --verbose",
+    "test": "npm run standard && npm run mocha",
+    "mocha": "NODE_ENV=test mocha ./tests/**/*.spec.js --compilers js:babel-core/register --watch --recursive"
   },
   "repository": {
     "type": "git",
@@ -29,6 +32,7 @@
     "babel-preset-react-native": "^2.1.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
+    "debug": "^2.6.8",
     "dotenv": "^4.0.0",
     "fbgraph": "^1.3.0",
     "fluent-ffmpeg": "^2.1.0",
@@ -41,13 +45,22 @@
     "promise": "^7.1.1",
     "sequelize": "^4.2.1",
     "uuid": "^3.0.1",
-    "yarn": "^0.17.10",
-    "debug": "^2.6.8"
+    "yarn": "^*"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "proxyquire": "^1.7.10",
-    "sinon": "^1.17.6"
+    "chai": "*",
+    "mocha": "*",
+    "proxyquire": "*",
+    "sinon": "*",
+    "standard": "*"
+  },
+  "engines": {
+    "node": ">=7.6"
+  },
+  "standard": {
+    "ignore": [
+      "/tests/",
+      "/app/models-mongo/"
+    ]
   }
 }

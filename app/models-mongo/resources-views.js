@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = class ResourcesViewsModel {
-  constructor(env) {
+  constructor (env) {
     this.model = this.registerSchema('resources_views', 'resources_views', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,
@@ -17,8 +17,8 @@ module.exports = class ResourcesViewsModel {
       },
       viewedAt: {
         type: Date,
-        default: Date.now,
-      },
-    });
+        default: Date.now
+      }
+    })
   }
-};
+}

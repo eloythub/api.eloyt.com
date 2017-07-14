@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import Sequelize from 'sequelize';
+import Sequelize from 'sequelize'
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define("usersHashtags", {
+  return sequelize.define('usersHashtags', {
     hashtagId: {
       field: 'hashtag_id',
       type: DataTypes.UUID,
@@ -11,8 +11,8 @@ export default function (sequelize, DataTypes) {
       references: {
         model: 'hashtags',
         key: 'id',
-        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
-      },
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
     },
     userId: {
       field: 'user_id',
@@ -21,10 +21,12 @@ export default function (sequelize, DataTypes) {
       references: {
         model: 'users',
         key: 'id',
-        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
-      },
-    },
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
+    }
   }, {
-    tableName: 'users_hashtags'
-  });
+    tableName: 'users_hashtags',
+    timestamps: false,
+    underscored: true
+  })
 }

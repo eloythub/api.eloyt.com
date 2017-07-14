@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = class UsersModel {
-  constructor(env) {
+  constructor (env) {
     this.model = this.registerSchema('users', 'users', {
       email: {
         type: String,
@@ -12,15 +12,15 @@ module.exports = class UsersModel {
       },
       name: {
         trim: true,
-        type: String,
+        type: String
       },
       firstName: {
         trim: true,
-        type: String,
+        type: String
       },
       lastName: {
         trim: true,
-        type: String,
+        type: String
       },
       aboutMe: {
         trim: true,
@@ -29,15 +29,15 @@ module.exports = class UsersModel {
       },
       gender: {
         trim: true,
-        type: String,
+        type: String
       },
       country: {
         trim: true,
-        type: String,
+        type: String
       },
       mobile: {
         trim: true,
-        type: String,
+        type: String
       },
       hashtags: {
         type: Array,
@@ -45,7 +45,7 @@ module.exports = class UsersModel {
       },
       avatar: {
         type: this.mongoose.Schema.ObjectId,
-        ref: 'resources',
+        ref: 'resources'
       },
       activated: {
         type: Boolean,
@@ -53,76 +53,76 @@ module.exports = class UsersModel {
       },
       birthday: {
         type: Date,
-        default: null,
+        default: null
       },
       registerAt: {
         type: Date,
         default: Date.now
       }
-    });
+    })
   }
 
-  getUserByEmail(email) {
-    const Model = this.model;
+  getUserByEmail (email) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
         email
       }, (err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res[0] || null);
-      });
-    });
+        fulfill(res[0] || null)
+      })
+    })
   }
 
-  getUserById(userId) {
-    const Model = this.model;
+  getUserById (userId) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
-        _id: this.mongoose.Types.ObjectId(userId),
+        _id: this.mongoose.Types.ObjectId(userId)
       }, (err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res[0] || null);
-      });
-    });
+        fulfill(res[0] || null)
+      })
+    })
   }
 
-  create(email, name, firstName, lastName, gender, birthday, avatar) {
-    const Model = this.model;
+  create (email, name, firstName, lastName, gender, birthday, avatar) {
+    const Model = this.model
 
-    const Users = new Model({email, name, firstName, lastName, gender, birthday, avatar});
+    const Users = new Model({email, name, firstName, lastName, gender, birthday, avatar})
 
     return new Promise((fulfill, reject) => {
       Users.save((err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res);
-      });
-    });
+        fulfill(res)
+      })
+    })
   }
 
-  update(userId, attributes) {
-    const Model = this.model;
-    const Users = new Model();
+  update (userId, attributes) {
+    const Model = this.model
+    const Users = new Model()
 
     // check if avatar is being updated in attributes, then convert to ObjectId
     if (typeof attributes.avatar === 'string') {
-      attributes.avatar = this.mongoose.Types.ObjectId(attributes.avatar);
+      attributes.avatar = this.mongoose.Types.ObjectId(attributes.avatar)
     }
 
     return new Promise((fulfill, reject) => {
@@ -133,41 +133,41 @@ module.exports = class UsersModel {
         },
         (err, res) => {
           if (err) {
-            reject(err);
+            reject(err)
 
-            return;
+            return
           }
 
-          this.getUserById(userId).then(fulfill).catch(reject);
+          this.getUserById(userId).then(fulfill).catch(reject)
         }
-      );
-    });
+      )
+    })
   }
 
-  delete(userId) {
-    const Model = this.model;
-    const Users = new Model();
+  delete (userId) {
+    const Model = this.model
+    const Users = new Model()
 
     return new Promise((fulfill, reject) => {
       Users.find({
-          _id: this.mongoose.Types.ObjectId(userId)
-        })
+        _id: this.mongoose.Types.ObjectId(userId)
+      })
         .remove(function (err, res) {
           if (err) {
-            reject(err);
+            reject(err)
 
-            return;
+            return
           }
 
           if (res.result.ok === 0) {
-            reject();
+            reject()
 
-            return;
+            return
           }
 
-          fulfill();
+          fulfill()
         })
-        .exec();
-    });
+        .exec()
+    })
   }
-};
+}

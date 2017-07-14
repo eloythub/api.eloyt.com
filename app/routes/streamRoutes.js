@@ -1,31 +1,24 @@
-'use strict';
+'use strict'
 
-import StreamController from './controllers';
+import StreamController from '../controllers/streamController'
 
-const Joi = require('joi');
+const Joi = require('joi')
 
 export default class StreamRoutes {
-  constructor(router, prefix) {
-    this.prefix = `/${prefix}`;
-    this.router = router;
-
-    this.setRoutes();
-  }
-
-  setRoutes() {
-    this.router.addRoute({
+  static setRoutes (router, prefix) {
+    router.addRoute({
       method: 'POST',
-      path: this.prefix + '/upload/video',
+      path: `/${prefix}/upload/video`,
       config: {
         payload: {
           timeout: 30034,
           allow: 'multipart/form-data',
           maxBytes: 2097152000, // almost 2GB
           output: 'stream',
-          parse: true,
+          parse: true
         },
         handler: (req, res) => {
-          StreamController.videoUploadHandle(req, res);
+          StreamController.videoUploadHandle(req, res)
         },
         validate: {
           payload: {
@@ -34,95 +27,95 @@ export default class StreamRoutes {
             description: Joi.string(),
             hashtags: Joi.string(),
             geoLocationLatitude: Joi.number(),
-            geoLocationLongitude: Joi.number(),
+            geoLocationLongitude: Joi.number()
           }
         }
-      },
-    });
+      }
+    })
 
-    this.router.addRoute({
+    router.addRoute({
       method: 'GET',
-      path: this.prefix + '/{userId}/{resourceType}/{resourceId}',
+      path: `/${prefix}/{userId}/{resourceType}/{resourceId}`,
       config: {
         handler: (req, res) => {
-          StreamController.streamResource(req, res);
+          StreamController.streamResource(req, res)
         },
         validate: {
           params: {
             userId: Joi.string(),
             resourceType: Joi.string(),
-            resourceId: Joi.string(),
+            resourceId: Joi.string()
           }
         }
-      },
-    });
+      }
+    })
 
     // thumbnail route
-    this.router.addRoute({
+    router.addRoute({
       method: 'GET',
-      path: this.prefix + '/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}',
+      path: `/${prefix}/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}`,
       config: {
         handler: (req, res) => {
-          StreamController.streamThumbnailResource(req, res);
+          StreamController.streamThumbnailResource(req, res)
         },
         validate: {
           params: {
             userId: Joi.string(),
             resourceType: Joi.string(),
             resourceId: Joi.string(),
-            imageSize: Joi.string(),
+            imageSize: Joi.string()
           }
         }
-      },
-    });
+      }
+    })
 
-    this.router.addRoute({
+    router.addRoute({
       method: 'GET',
-      path: this.prefix + '/produce/{userId}/{offset}',
+      path: `/${prefix}/produce/{userId}/{offset}`,
       config: {
         handler: (req, res) => {
-          StreamController.produceStreamResources(req, res);
+          StreamController.produceStreamResources(req, res)
         },
         validate: {
           params: {
             userId: Joi.string(),
-            offset: Joi.number().integer().min(1).max(100),
+            offset: Joi.number().integer().min(1).max(100)
           }
         }
-      },
-    });
+      }
+    })
 
-    this.router.addRoute({
+    router.addRoute({
       method: 'GET',
-      path: this.prefix + '/produce/{resourceId}',
+      path: `/${prefix}/produce/{resourceId}`,
       config: {
         handler: (req, res) => {
-          StreamController.produceOneStreamResourceById(req, res);
+          StreamController.produceOneStreamResourceById(req, res)
         },
         validate: {
           params: {
-            resourceId: Joi.string(),
+            resourceId: Joi.string()
           }
         }
-      },
-    });
+      }
+    })
 
-    this.router.addRoute({
+    router.addRoute({
       method: 'POST',
-      path: this.prefix + '/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}',
+      path: `/${prefix}/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}`,
       config: {
         handler: (req, res) => {
-          StreamController.streamResourceReact(req, res);
+          StreamController.streamResourceReact(req, res)
         },
         validate: {
           params: {
             userId: Joi.string(),
             resourceId: Joi.string(),
             resourceOwnerUserId: Joi.string(),
-            reactType: Joi.string(),
+            reactType: Joi.string()
           }
         }
-      },
-    });
+      }
+    })
   }
 };

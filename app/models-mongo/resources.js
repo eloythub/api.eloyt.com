@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = class ResourcesModel {
-  constructor(env) {
+  constructor (env) {
     this.model = this.registerSchema('resources', 'resources', {
       userId: {
         type: this.mongoose.Schema.ObjectId,
@@ -12,25 +12,25 @@ module.exports = class ResourcesModel {
         index: '2d'      // create the geospatial index
       },
       resourceUrl: {
-        type: String,
+        type: String
       },
       resourceType: {
-        type: String,
+        type: String
       },
       thumbsUpCount: {
         type: Number,
-        default: 0,
+        default: 0
       },
       thumbsDownCount: {
         type: Number,
-        default: 0,
+        default: 0
       },
       viewsCount: {
         type: Number,
-        default: 0,
+        default: 0
       },
       description: {
-        type: String,
+        type: String
       },
       hashtags: {
         type: Array,
@@ -38,142 +38,142 @@ module.exports = class ResourcesModel {
       },
       uploadedAt: {
         type: Date,
-        default: Date.now,
-      },
-    });
+        default: Date.now
+      }
+    })
   }
 
-  create(userId, geoLocation, resourceUrl, resourceType, description, hashtags) {
-    const Model     = this.model;
+  create (userId, geoLocation, resourceUrl, resourceType, description, hashtags) {
+    const Model = this.model
     const Resources = new Model({
       userId: this.mongoose.Types.ObjectId(userId),
       geoLocation,
       resourceUrl,
       resourceType,
       description,
-      hashtags,
-    });
+      hashtags
+    })
 
     return new Promise((fulfill, reject) => {
       Resources.save((err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res);
-      });
-    });
+        fulfill(res)
+      })
+    })
   }
 
-  findResource(userId, resourceId, resourceType) {
-    const Model = this.model;
+  findResource (userId, resourceId, resourceType) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
         _id: this.mongoose.Types.ObjectId(resourceId),
         userId: this.mongoose.Types.ObjectId(userId),
-        resourceType: resourceType,
+        resourceType: resourceType
       }, (err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res[0] || null);
-      });
-    });
+        fulfill(res[0] || null)
+      })
+    })
   }
 
-  findResourceById(resourceId) {
-    const Model = this.model;
+  findResourceById (resourceId) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
-        _id: this.mongoose.Types.ObjectId(resourceId),
+        _id: this.mongoose.Types.ObjectId(resourceId)
       }, (err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res[0] || null);
-      });
-    });
+        fulfill(res[0] || null)
+      })
+    })
   }
 
-  produceStreamResource(resourceType, offset) {
-    const Model = this.model;
+  produceStreamResource (resourceType, offset) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
-          resourceType,
-        })
+        resourceType
+      })
         .select('_id userId')
         .lean()
         .populate({
-          path: 'userId',
+          path: 'userId'
         })
         .limit(parseInt(offset))
         .sort({uploadedAt: 'desc'})
         .exec((err1, streamResources) => {
           if (err1) {
-            reject(err1);
+            reject(err1)
 
-            return;
+            return
           }
 
           Model.populate(streamResources, {
             path: '_id userId.avatar',
-            model: 'resources',
+            model: 'resources'
           }, (err2, res) => {
             if (err2) {
-              reject(err2);
+              reject(err2)
 
-              return;
+              return
             }
 
-            fulfill(streamResources);
-          });
-        });
-    });
+            fulfill(streamResources)
+          })
+        })
+    })
   }
 
-  findOneStreamResourceById(resourceId) {
-    const Model = this.model;
+  findOneStreamResourceById (resourceId) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
-          _id: this.mongoose.Types.ObjectId(resourceId),
-        })
+        _id: this.mongoose.Types.ObjectId(resourceId)
+      })
         .select('_id userId')
         .lean()
         .populate({
-          path: 'userId',
+          path: 'userId'
         })
         .exec((err1, streamResources) => {
           if (err1) {
-            reject(err1);
+            reject(err1)
 
-            return;
+            return
           }
 
           Model.populate(streamResources, {
             path: '_id userId.avatar',
-            model: 'resources',
+            model: 'resources'
           }, (err2, res) => {
             if (err2) {
-              reject(err2);
+              reject(err2)
 
-              return;
+              return
             }
 
-            fulfill(streamResources);
-          });
-        });
-    });
+            fulfill(streamResources)
+          })
+        })
+    })
   }
-};
+}

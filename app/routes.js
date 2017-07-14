@@ -1,32 +1,28 @@
-'use strict';
+'use strict'
 
-import UsersRoutes from './users/routes';
-import StreamRoutes from './stream/routes';
-import * as Models from '../app/models';
+import UsersRoutes from './routes/usersRoutes'
+import StreamRoutes from './routes/streamRoutes'
 
 export default class Routes {
-  constructor(router) {
-    this.router = router;
+  constructor (router) {
+    this.router = router
 
-    this.setRootRoutes();
-    this.setRoutes();
+    this.setRootRoutes()
+
+    UsersRoutes.setRoutes(this.router, 'users')
+    StreamRoutes.setRoutes(this.router, 'stream')
   }
 
-  setRootRoutes() {
+  setRootRoutes () {
     this.router.addRoute({
       method: 'GET',
       path: '/',
-      handler: function (request, reply) {
+      handler: (request, reply) => {
         reply({
           status: true,
           message: 'service is up and running'
-        });
+        })
       }
-    });
-  }
-
-  setRoutes() {
-    new UsersRoutes(this.router, 'users');
-    new StreamRoutes(this.router, 'stream');
+    })
   }
 };

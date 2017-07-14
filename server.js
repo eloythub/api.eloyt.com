@@ -35,5 +35,6 @@ export default class Server {
       debugLog(`Start running at: ${this.server.info.uri}`);
     });
 
+    return this.server;
   }
 };

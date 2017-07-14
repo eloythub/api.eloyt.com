@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-const ResourcesModel = require('./resources');
+const ResourcesModel = require('./resources')
 
 module.exports = class ResourcesVideoThumbnailsModel {
-  constructor(env) {
+  constructor (env) {
     this.model = this.registerSchema('resources_video_thumbnail', 'resources_video_thumbnail', {
       sourceResourceId: {
         type: this.mongoose.Schema.ObjectId,
@@ -15,66 +15,66 @@ module.exports = class ResourcesVideoThumbnailsModel {
       },
       imageSize: {
         type: String,
-        default: 'original',
+        default: 'original'
       },
       createdAt: {
         type: Date,
-        default: Date.now,
-      },
-    });
+        default: Date.now
+      }
+    })
 
-    this.resourcesModel = new ResourcesModel(env);
+    this.resourcesModel = new ResourcesModel(env)
   }
 
-  findResource(sourceResourceId, imageSize) {
-    const Model = this.model;
+  findResource (sourceResourceId, imageSize) {
+    const Model = this.model
 
     return new Promise((fulfill, reject) => {
       Model.find({
         sourceResourceId: this.mongoose.Types.ObjectId(sourceResourceId),
-        imageSize,
+        imageSize
       }, (err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
         if (!res) {
-          reject(null);
+          reject(null)
 
-          return;
+          return
         }
 
         if (typeof res[0] !== 'object') {
-          reject('no-thumbnail-found');
+          reject('no-thumbnail-found')
 
-          return;
+          return
         }
 
-        this.resourcesModel.findResourceById(res[0].thumbnailResourceId).then(fulfill, reject);
-      });
-    });
+        this.resourcesModel.findResourceById(res[0].thumbnailResourceId).then(fulfill, reject)
+      })
+    })
   }
 
-  create(sourceResourceId, thumbnailResourceId, imageSize) {
-    const Model     = this.model;
+  create (sourceResourceId, thumbnailResourceId, imageSize) {
+    const Model = this.model
     const Resources = new Model({
       sourceResourceId: this.mongoose.Types.ObjectId(sourceResourceId),
       thumbnailResourceId: this.mongoose.Types.ObjectId(thumbnailResourceId),
-      imageSize,
-    });
+      imageSize
+    })
 
     return new Promise((fulfill, reject) => {
       Resources.save((err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        fulfill(res);
-      });
-    });
+        fulfill(res)
+      })
+    })
   }
-};
+}

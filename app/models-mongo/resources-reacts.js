@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
 module.exports = class ResourcesReactsModel {
-  constructor(env) {
+  constructor (env) {
     this.model = this.registerSchema('resources_react', 'resources_react', {
       resourceId: {
         type: this.mongoose.Schema.ObjectId,
@@ -16,40 +16,40 @@ module.exports = class ResourcesReactsModel {
         ref: 'users'
       },
       reactType: {
-        type: String,
+        type: String
       },
       reactedAt: {
         type: Date,
-        default: Date.now,
-      },
-    });
+        default: Date.now
+      }
+    })
   }
 
-  createReactLike(resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'like');
+  createReactLike (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
+    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'like')
   }
 
-  createReactDislike(resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'dislike');
+  createReactDislike (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
+    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'dislike')
   }
-  createReactSkip(resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'skip');
+  createReactSkip (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
+    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'skip')
   }
 
-  create(resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType) {
-    const Model           = this.model;
-    const ResourcesReacts = new Model({resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType});
+  create (resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType) {
+    const Model = this.model
+    const ResourcesReacts = new Model({resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType})
 
     return new Promise((fulfill, reject) => {
       return ResourcesReacts.save((err, res) => {
         if (err) {
-          reject(err);
+          reject(err)
 
-          return;
+          return
         }
 
-        return fulfill(res);
-      });
-    });
+        return fulfill(res)
+      })
+    })
   }
-};
+}
