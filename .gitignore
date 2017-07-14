@@ -44,4 +44,7 @@ tmp/*.mp4
 .pm2
 .config
 
-keys/gcs/*.json
+Keys/gcs/*.json
+
+.env
+.env.test

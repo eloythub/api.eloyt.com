@@ -45,6 +45,11 @@ RUN mkdir software && \
     make && \
     make install && \
     /sbin/ldconfig
+
+RUN apt-get remove npm
+RUN apt-get update
+RUN apt-get install -y npm
+
 RUN npm install -g pm2 yarn
 
 ENV TMP_DIR=/tmp
@@ -61,11 +66,11 @@ CMD cd $PROD_DIR && \
 	ln -sf /tmp/node_modules && \
 	rm -rf .pm2 && \
     pm2 start \
-        --no-daemon npm start \
+        --no-daemon npm -- start \
         --watch \
         --silent \
         --no-vizion \
         --instances 1 \
-        --ignore-watch "tmp/* .pm2 .config"
+        --ignore-watch "tmp/* Tests/* .pm2 .config"
 
 EXPOSE 80
