@@ -3,5 +3,5 @@
 export default {
   skip: 'skip',
   like: 'like',
-  dislike: 'dislike',
+  dislike: 'dislike'
 }

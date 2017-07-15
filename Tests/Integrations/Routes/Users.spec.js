@@ -3,6 +3,7 @@
 import app from '../../../App'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
+import AuthFixture from '../../Fixtures/Integrations/AuthFixture'
 
 const should = chai.should()
 const expect = chai.expect
@@ -10,27 +11,31 @@ const expect = chai.expect
 chai.use(chaiHttp)
 
 describe('Integration >> Routes >> Users', () => {
-  it.skip('upload video', (done) => {
+  beforeEach(async () => {
+    await AuthFixture.cleanUp()
+  })
+
+  it.skip('create new users if user is not existed and return registered data', (done) => {
+    chai.request(app)
+      .put('/users/create-or-get')
+      .end((err, res) => {
+        expect(res).to.be.json
+
+        res.should.have.status(200)
+
+        expect(res.body).to.include({
+          statusCode: 200,
+        })
+
+        done()
+      })
+  })
+
+  it.skip('update user profile', (done) => {
     done()
   })
 
-  it.skip('returns stream resource data', (done) => {
-    done()
-  })
-
-  it.skip('returns stream resource thumbnail data', (done) => {
-    done()
-  })
-
-  it.skip('returns produced stream resources by user id', (done) => {
-    done()
-  })
-
-  it.skip('returns produced stream resource by resource id', (done) => {
-    done()
-  })
-
-  it.skip('react to resource', (done) => {
+  it.skip('returns the user profile by user id', (done) => {
     done()
   })
 })

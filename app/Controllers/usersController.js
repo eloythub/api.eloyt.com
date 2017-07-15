@@ -9,27 +9,24 @@ export default class UserController {
   }
 
   static createOrGet (req, res) {
-    if (!req.payload.credentials) {
-      return res({
-        statusCode: 403,
-        error: 'credential is not valid'
-      }).code(403)
-    }
+    const {token} = req.payload
 
-    this.repos.fetchOrCreateUser(
-      req.payload.credentials.token,
-      req.payload.credentials.userId
-    ).then((data) => {
-      res({
-        statusCode: 200,
-        data: data
-      })
-    }, (error) => {
-      res({
-        statusCode: 500,
-        error
-      }).code(500)
-    })
+    res({
+      statusCode: 200,
+      data: {token}
+    }).code(200)
+
+    // this.repos.fetchOrCreateUser(
+    //  token,
+    //  user.id
+    // ).then((data) => {
+    //
+    // }, (error) => {
+    //  res({
+    //    statusCode: 500,
+    //    error
+    //  }).code(500)
+    // })
   }
 
   static profileUpdate (req, res) {

@@ -29,4 +29,22 @@ export default class AuthController {
       tokenId
     })
   }
+
+  static async validateToken (req, res) {
+    const {user} = req.auth.credentials
+
+    if (!user) {
+      return res({
+        statusCode: 400,
+        error: 'token validation failed - no user'
+      }).code(400)
+    }
+
+    return res({
+      statusCode: 200,
+      data: {
+        userId: user.id
+      }
+    })
+  }
 }

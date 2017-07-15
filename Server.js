@@ -5,6 +5,7 @@ import Hapi from 'hapi';
 import * as Models from './App/Models'; // please don't remove this line, it initiate the db connection
 import Router from './Router';
 import Routes from './App/Routes';
+import Schemas from './App/Schemas';
 import debug from 'debug';
 
 export default class Server {
@@ -13,6 +14,8 @@ export default class Server {
 
     // server connection config
     this.server.connection({port: configs.exposePort || 80});
+
+    Schemas.authentication(this.server);
 
     // router setup
     const router = new Router();

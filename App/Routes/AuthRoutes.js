@@ -17,5 +17,14 @@ export default class AuthRoutes {
         }
       }
     })
+
+    router.addRoute({
+      method: 'GET',
+      path: `/${prefix}/token/validate`,
+      config: {
+        auth: 'token',
+        handler: (req, res) => AuthController.validateToken(req, res)
+      }
+    })
   }
 };

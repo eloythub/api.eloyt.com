@@ -10,15 +10,27 @@ const expect = chai.expect
 chai.use(chaiHttp)
 
 describe('Integration >> Routes >> Stream', () => {
-  it.skip('create new users if user is not existed and return registered data', (done) => {
+  it.skip('upload video', (done) => {
     done()
   })
 
-  it.skip('update user profile', (done) => {
+  it.skip('returns stream resource data', (done) => {
     done()
   })
 
-  it.skip('returns the user profile by user id', (done) => {
+  it.skip('returns stream resource thumbnail data', (done) => {
+    done()
+  })
+
+  it.skip('returns produced stream resources by user id', (done) => {
+    done()
+  })
+
+  it.skip('returns produced stream resource by resource id', (done) => {
+    done()
+  })
+
+  it.skip('react to resource', (done) => {
     done()
   })
 })

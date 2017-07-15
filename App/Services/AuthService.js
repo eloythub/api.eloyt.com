@@ -4,7 +4,7 @@ import AuthRepository from '../Repositories/AuthRepository'
 
 export default class AuthService {
   static async generateTokenByUserId (userId) {
-    let tokenId = await AuthRepository.getTokenIdByUserId(userId)
+    let tokenId = await AuthRepository.fetchTokenIdByUserId(userId)
 
     if (tokenId) {
       return tokenId
