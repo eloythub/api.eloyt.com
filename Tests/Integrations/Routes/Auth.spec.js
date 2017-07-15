@@ -12,34 +12,32 @@ const expect = chai.expect
 chai.use(chaiHttp)
 chai.use(chaiUuid)
 
-describe('Integration >> Routes >> Auth', () => {
+describe('Integration >> Routes >> Auth >>', () => {
   beforeEach(async () => {
     await AuthFixture.cleanUp()
   })
 
-  after(async () => {
-    await AuthFixture.cleanUp()
-  })
+  it('return generated token id by user id', (done) => {
+    (async () => {
+      await AuthFixture.generateTokenSeeder()
 
-  it('return generated token id by user id', async () => {
-    await AuthFixture.generateTokenSeeder()
+      chai.request(app)
+        .post('/auth/token/generate')
+        .field('userId', AuthFixture.mockedUser.id)
+        .end((err, res) => {
+          expect(res).to.be.json
 
-    chai.request(app)
-      .post('/auth/token/generate')
-      .field('userId', AuthFixture.mockedUser.id)
-      .end((err, res) => {
-        expect(res).to.be.json
+          res.should.have.status(200)
 
-        res.should.have.status(200)
+          expect(res.body).to.include({
+            statusCode: 200,
+          })
 
-        expect(res.body).to.include({
-          statusCode: 200,
+          expect(res.body.tokenId).to.be.a.uuid('v4')
+
+          done()
         })
-
-        expect(res.body.tokenId).to.be.a.uuid('v4')
-
-        //done()
-      })
+    })()
   })
 
   it('check token validation - no authentication header', (done) => {
@@ -113,23 +111,27 @@ describe('Integration >> Routes >> Auth', () => {
       })
   })
 
-  it('check token validation - correct token', async () => {
-    await AuthFixture.authenticationSeeder()
+  it('check token validation - correct token', (done) => {
+    (async () => {
+      await AuthFixture.authenticationSeeder()
 
-    chai.request(app)
-      .get('/auth/token/validate')
-      .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
-      .end((err, res) => {
-        expect(res).to.be.json
+      chai.request(app)
+        .get('/auth/token/validate')
+        .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
+        .end((err, res) => {
+          expect(res).to.be.json
 
-        res.should.have.status(200)
+          res.should.have.status(200)
 
-        expect(res.body).to.deep.equal({
-          statusCode: 200,
-          data: {
-            userId: AuthFixture.mockedUser.id,
-          },
+          expect(res.body).to.deep.equal({
+            statusCode: 200,
+            data: {
+              userId: AuthFixture.mockedUser.id,
+            },
+          })
+
+          done()
         })
-      })
+    })()
   })
 })

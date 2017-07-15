@@ -1,5 +1,8 @@
 'use strict'
 
+import debug from 'debug'
+import configs from '../../Configs'
+import UsersService from '../Services/UsersService'
 import UsersRepository from '../Repositories/UsersRepository'
 
 export default class UserController {
@@ -8,25 +11,27 @@ export default class UserController {
     this.repos = new UsersRepository(env)
   }
 
-  static createOrGet (req, res) {
-    const {token} = req.payload
+  static async createOrGet (req, res) {
+    const error = debug(`${configs.debugZone}:UserController:createOrGet`)
 
-    res({
-      statusCode: 200,
-      data: {token}
-    }).code(200)
+    const {accessToken, facebookUserId} = req.payload
 
-    // this.repos.fetchOrCreateUser(
-    //  token,
-    //  user.id
-    // ).then((data) => {
-    //
-    // }, (error) => {
-    //  res({
-    //    statusCode: 500,
-    //    error
-    //  }).code(500)
-    // })
+    try {
+      const {data, action} = await UsersService.findOrCreateUser(accessToken, facebookUserId)
+
+      res({
+        statusCode: 200,
+        data,
+        action
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
   }
 
   static profileUpdate (req, res) {

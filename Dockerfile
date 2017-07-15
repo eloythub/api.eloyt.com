@@ -71,6 +71,6 @@ CMD cd $PROD_DIR && \
         --silent \
         --no-vizion \
         --instances 1 \
-        --ignore-watch "tmp/* Tests/* .pm2 .config"
+        --ignore-watch "./tmp/* ./Tests/* .pm2 .config"
 
 EXPOSE 80

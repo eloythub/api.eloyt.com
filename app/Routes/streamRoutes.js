@@ -1,8 +1,7 @@
 'use strict'
 
 import StreamController from '../Controllers/StreamController'
-
-const Joi = require('joi')
+import * as Joi from 'joi'
 
 export default class StreamRoutes {
   static setRoutes (router, prefix) {

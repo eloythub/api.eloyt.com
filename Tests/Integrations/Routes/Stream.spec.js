@@ -9,7 +9,7 @@ const expect = chai.expect
 
 chai.use(chaiHttp)
 
-describe('Integration >> Routes >> Stream', () => {
+describe('Integration >> Routes >> Stream >>', () => {
   it.skip('upload video', (done) => {
     done()
   })

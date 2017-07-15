@@ -2,11 +2,12 @@
 
 import * as Model from '../../../App/Models'
 import GendersEnum from '../../../App/Enums/GendersEnum'
+import FacebookFixture from './FacebookFixture'
 
 export default class AuthFixture {
   static mockedUser = {
     id: 'edc08f41-8a6a-40fc-a0c2-fc1283677eef',
-    email: 'test@test.com',
+    email: FacebookFixture.mockedFacebookProfile.email,
     gender: GendersEnum.other,
   }
 
@@ -15,7 +16,31 @@ export default class AuthFixture {
     userId: 'edc08f41-8a6a-40fc-a0c2-fc1283677eef',
   }
 
-  static mockedFacebookTokenId = '1234567890'
+  static mockedRegisteredUser = {
+    email: FacebookFixture.mockedFacebookProfile.email,
+    name: null,
+    firstName: null,
+    lastName: null,
+    gender: GendersEnum.other,
+    mobile: null,
+    aboutMe: null,
+    avatarResourceId: null,
+    dateOfBirth: null,
+    isActivated: false,
+  }
+
+  static mockedRegisteredFacebookUser = {
+    email: FacebookFixture.mockedFacebookProfile.email,
+    name: FacebookFixture.mockedFacebookProfile.name,
+    firstName: FacebookFixture.mockedFacebookProfile.first_name,
+    lastName: FacebookFixture.mockedFacebookProfile.last_name,
+    gender: FacebookFixture.mockedFacebookProfile.gender,
+    mobile: null,
+    aboutMe: null,
+    avatarResourceId: null,
+    dateOfBirth: "1992-08-08",
+    isActivated: false,
+  }
 
   static async cleanUp () {
     await Model.AuthTokens.destroy({ where: {} })

@@ -1,8 +1,7 @@
 'use strict'
 
 import UserController from '../Controllers/UsersController'
-
-const Joi = require('joi')
+import * as Joi from 'joi'
 
 export default class UsersRoutes {
   static setRoutes (router, prefix) {
@@ -13,7 +12,8 @@ export default class UsersRoutes {
         handler: (req, res) => UserController.createOrGet(req, res),
         validate: {
           payload: {
-            token: Joi.string()
+            accessToken: Joi.string().required(),
+            facebookUserId: Joi.string().required()
           }
         }
       }
