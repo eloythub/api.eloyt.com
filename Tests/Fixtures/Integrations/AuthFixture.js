@@ -42,6 +42,18 @@ export default class AuthFixture {
     isActivated: false,
   }
 
+  static mockedUpdateUserAttributes = {
+    name: 'Will Smith',
+    firstName: 'Will',
+    lastName: 'Smith',
+    gender: GendersEnum.other,
+    mobile: '0971317415',
+    aboutMe: 'there is something new',
+    dateOfBirth: "1992-08-09",
+  }
+
+  static mockedNotFoundUserId = 'a5fde33b-8f37-42ac-ad95-c0918a858070'
+
   static async cleanUp () {
     await Model.AuthTokens.destroy({ where: {} })
     await Model.Users.destroy({ where: {} })

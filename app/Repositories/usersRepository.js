@@ -32,4 +32,14 @@ export default class UsersRepository {
 
     return user.dataValues
   }
+
+  static async updateUser (userId, attributes) {
+    const user = await Models.Users.update(attributes, { where: { id: userId } })
+
+    if (!user) {
+      return null
+    }
+
+    return user.dataValues
+  }
 };

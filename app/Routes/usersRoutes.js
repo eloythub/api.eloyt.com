@@ -24,7 +24,24 @@ export default class UsersRoutes {
       path: `/${prefix}/profile-update`,
       config: {
         auth: 'token',
-        handler: (req, res) => UserController.profileUpdate(req, res)
+        handler: (req, res) => UserController.profileUpdate(req, res),
+        validate: {
+          payload: {
+            attributes: Joi.object()
+              .keys({
+                name: Joi.string().required(),
+                firstName: Joi.string().required(),
+                lastName: Joi.string().required(),
+                gender: Joi.string().required(),
+                aboutMe: Joi.string().required(),
+                mobile: Joi.string().required(),
+                dateOfBirth: Joi.string().required()
+              })
+              .optionalKeys('name', 'firstName', 'lastName', 'gender', 'aboutMe', 'mobile', 'dateOfBirth')
+              .min(1)
+              .required()
+          }
+        }
       }
     })
 

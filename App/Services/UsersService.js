@@ -22,6 +22,8 @@ export default class UsersService {
     if (!user) {
       user = await UsersService.createUser(profile)
 
+      // TODO update profile picture before return
+
       return {
         action: 'create',
         data: user
@@ -45,6 +47,18 @@ export default class UsersService {
     } = profile
 
     let user = await UsersRepository.createUser(email, name, firstName, lastName, gender, dateOfBirth)
+
+    return user
+  }
+
+  static async updateUser (userId, attributes) {
+    let user = await UsersRepository.updateUser(userId, attributes)
+
+    return user
+  }
+
+  static async findUser (userId) {
+    let user = await UsersRepository.fetchUserIdById(userId)
 
     return user
   }

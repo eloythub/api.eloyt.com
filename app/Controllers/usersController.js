@@ -34,49 +34,55 @@ export default class UserController {
     }
   }
 
-  static profileUpdate (req, res) {
-    if (!req.payload.credentials.userId) {
-      return res({
-        statusCode: 403,
-        error: 'userId is not valid'
-      }).code(403)
-    }
+  static async profileUpdate (req, res) {
+    const error = debug(`${configs.debugZone}:UserController:profileUpdate`)
 
-    this.repos.updateUserProfile(
-      req.payload.credentials.userId,
-      req.payload.credentials.attributes
-    ).then((data) => {
-      return res({
+    const {user} = req.auth.credentials
+    const {attributes} = req.payload
+
+    try {
+      const data = await UsersService.updateUser(user.id, attributes)
+
+      res({
         statusCode: 200,
-        data: data
-      })
-    }, (error) => {
-      return res({
+        data
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
         statusCode: 500,
-        error
+        error: e.message
       }).code(500)
-    })
+    }
   }
 
-  static getProfile (req, res) {
-    if (!req.params.userId) {
-      return res({
-        statusCode: 403,
-        error: 'userId is not valid'
-      }).code(403)
-    }
+  static async getProfile (req, res) {
+    const error = debug(`${configs.debugZone}:UserController:getProfile`)
 
-    this.repos.getUserProfileById(req.params.userId)
-      .then((data) => {
+    const {userId} = req.params
+
+    try {
+      const data = await UsersService.findUser(userId)
+
+      if (!data) {
         return res({
-          statusCode: 200,
-          data: data
-        })
-      }, (error) => {
-        return res({
-          statusCode: 500,
-          error
-        }).code(500)
-      })
+          statusCode: 404,
+          message: 'there is no user with requested id'
+        }).code(404)
+      }
+
+      res({
+        statusCode: 200,
+        data
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
   }
 };
