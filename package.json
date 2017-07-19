@@ -6,9 +6,9 @@
   "scripts": {
     "start": "DEBUG=ELOYT-ZONE:* NODE_ENV=dev  ./node_modules/babel-cli/bin/babel-node.js ./App.js",
     "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com",
-    "test": "npm run standard && npm run mocha-integrations",
+    "test": "npm run standard -s && npm run mocha-integrations -s",
     "mocha-integrations": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",
-    "mocha-integrations-watch": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive --watch --verbose",
+    "mocha-integrations-watch": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive --watch --verbose",
     "mocha-unit-tests": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",
     "mocha-unit-tests-watch": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive --watch",
     "standard": "standard ./App/**/*.js --verbose",
@@ -56,6 +56,7 @@
     "chai-spies": "^0.7.1",
     "chai-uuid": "^1.0.6",
     "mocha": "*",
+    "nock": "^9.0.14",
     "proxyquire": "^1.8.0",
     "sinon": "*",
     "standard": "*"

@@ -9,8 +9,10 @@ const options = {
   headers: {connection: 'keep-alive'}
 }
 
+graph.setVersion(graphVersion).setOptions(options)
+
 export default class FacebookService {
-  static requestProfile (accessToken, facebookUserId) {
+  static requestProfileUrl(accessToken, facebookUserId) {
     const fields = [
       'id',
       'email',
@@ -22,38 +24,38 @@ export default class FacebookService {
       'birthday'
     ]
 
-    const api = `${facebookUserId}?fields=${fields.join(',')}&access_token=${accessToken}`
+    return `${facebookUserId}?fields=${fields.join(',')}&access_token=${accessToken}`
+  }
 
+  static requestProfile (accessToken, facebookUserId) {
     return new Promise((resolve, reject) => {
-      graph.setVersion(graphVersion)
+      graph.get(FacebookService.requestProfileUrl(accessToken, facebookUserId), (error, res) => {
+          if (error) {
+            reject(error)
 
-      graph.setOptions(options).get(api, (error, res) => {
-        if (error) {
-          reject(error)
+            return
+          }
 
-          return
-        }
-
-        resolve(res)
-      })
+          resolve(res)
+        })
     })
   }
 
+  static requestProfilePictureUrl(accessToken, facebookUserId) {
+    return `${facebookUserId}/picture?&access_token=${accessToken}&width=1024&redirect=false`
+  }
+
   static requestProfilePicture (accessToken, facebookUserId) {
-    const api = `${facebookUserId}/picture?&access_token=${accessToken}&width=1024&redirect=false`
-
     return new Promise((resolve, reject) => {
-      graph.setVersion(graphVersion)
+      graph.get(FacebookService.requestProfilePictureUrl(accessToken, facebookUserId), (error, res) => {
+          if (error) {
+            reject(error)
 
-      graph.setOptions(options).get(api, (error, res) => {
-        if (error) {
-          reject(error)
+            return
+          }
 
-          return
-        }
-
-        resolve(res)
-      })
+          resolve(res)
+        })
     })
   }
 };

@@ -1,6 +1,7 @@
 'use strict'
 
 import FacebookService from '../Services/FacebookService'
+import StorageService from '../Services/StorageService'
 import AuthRepository from '../Repositories/AuthRepository'
 import UsersRepository from '../Repositories/UsersRepository'
 
@@ -15,14 +16,13 @@ export default class UsersService {
 
   static async findOrCreateUser (accessToken, facebookUserId) {
     const profile = await FacebookService.requestProfile(accessToken, facebookUserId)
-    // const profilePicture = await FacebookService.requestProfilePicture(accessToken, facebookUserId)
 
     let user = await UsersRepository.fetchUserIdByEmail(profile.email)
 
     if (!user) {
       user = await UsersService.createUser(profile)
 
-      // TODO update profile picture before return
+      await UsersService.updateUserAvatarByFacebookPicture(accessToken, facebookUserId, user)
 
       return {
         action: 'create',
@@ -34,6 +34,20 @@ export default class UsersService {
       action: 'find',
       data: user
     }
+  }
+
+  static async updateUserAvatarByFacebookPicture (accessToken, facebookUserId, user) {
+    const profilePicture = await FacebookService.requestProfilePicture(accessToken, facebookUserId)
+
+    //StorageService.downloadProfilePicture()
+
+    // TODO update profile picture before return
+    // 1 - upload fb avatar to cloud storage
+    // 2 - create resource
+
+    // 2 - update user avatar
+
+
   }
 
   static async createUser (profile) {

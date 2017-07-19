@@ -12,4 +12,13 @@ export default class FacebookFixture {
     last_name: 'Doe',
     birthday: '08/09/1992'
   }
+
+  static mockedFacebookPicture = {
+    data: {
+      height: 959,
+      is_silhouette: false,
+      url: 'https://z-m-scontent.xx.fbcdn.net/v/t1.0-1/18446841_1504120496299342_7868434953193313882_n.jpg?_nc_ad=z-m&oh=5aafc64a7bd8cd92a9c86263f8e5ac97&oe=59F96B40',
+      width: 959
+    }
+  }
 }

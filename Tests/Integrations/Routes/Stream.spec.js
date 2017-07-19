@@ -1,11 +1,8 @@
 'use strict'
 
 import app from '../../../App'
-import chai from 'chai'
+import chai, {should, expect} from 'chai'
 import chaiHttp from 'chai-http'
-
-const should = chai.should()
-const expect = chai.expect
 
 chai.use(chaiHttp)
 

@@ -16,27 +16,27 @@ chai.use(chaiSpies)
 chai.use(chaiHttp)
 
 describe('Integration >> Routes >> Users >>', () => {
-  let sinonStub
+  let sandbox
 
   before(async () => {
-    sinonStub = sinon.stub(graph, 'get').callsFake((api, fn) => {
-      fn(null, FacebookFixture.mockedFacebookProfile)
-    })
+    sandbox = sinon.sandbox.create()
   })
 
   beforeEach(async () => {
     await AuthFixture.cleanUp()
   })
 
-  after(async () => {
-    sinonStub.restore()
-
-    //await AuthFixture.cleanUp()
+  afterEach(async () => {
+    sandbox.restore()
   })
 
-  it('get registered user data', (done) => {
+  it.skip('get registered user data', (done) => {
     (async () => {
       await AuthFixture.authenticationSeeder()
+
+      sandbox.stub(graph, 'get').callsFake((api, fn) => {
+        fn(null, FacebookFixture.mockedFacebookProfile)
+      })
 
       chai.request(app)
         .put('/users/create-or-get')
@@ -58,24 +58,41 @@ describe('Integration >> Routes >> Users >>', () => {
     })()
   })
 
-  it('register new user and return it\'s data', (done) => {
-    chai.request(app)
-      .put('/users/create-or-get')
-      .send({
-        accessToken: FacebookFixture.mockedFacebookAccessToken,
-        facebookUserId: FacebookFixture.mockedFacebookProfile.id
-      })
-      .end((err, res) => {
-        expect(res).to.be.json
+  it('register new user and return data', (done) => {
+    (async () => {
+      let position = 1
 
-        res.should.have.status(200)
+      const stub = sandbox.stub(graph, 'get')
+        .callsFake((api, fn) => {
+          fn(
+            null,
+            position++ === 1
+              ? FacebookFixture.mockedFacebookProfile
+              : FacebookFixture.mockedFacebookPicture
+          )
+        })
 
-        expect(res.body.statusCode).to.equal(200)
-        expect(res.body.data).to.include(AuthFixture.mockedRegisteredFacebookUser)
-        expect(res.body.action).to.equal('create')
+      // add more mocks
 
-        done()
-      })
+
+      chai.request(app)
+        .put('/users/create-or-get')
+        .send({
+          accessToken: FacebookFixture.mockedFacebookAccessToken,
+          facebookUserId: FacebookFixture.mockedFacebookProfile.id
+        })
+        .end((err, res) => {
+          expect(res).to.be.json
+
+          res.should.have.status(200)
+
+          expect(res.body.statusCode).to.equal(200)
+          expect(res.body.data).to.include(AuthFixture.mockedRegisteredFacebookUser)
+          expect(res.body.action).to.equal('create')
+
+          done()
+        })
+    })()
   })
 
   it('update user profile - no attributes', (done) => {
