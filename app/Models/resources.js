@@ -26,25 +26,28 @@ export default function (sequelize, DataTypes) {
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
       }
     },
-    url: {
-      field: 'url',
+    cloudUrl: {
+      field: 'cloud_url',
       allowNull: false,
       type: DataTypes.STRING
     },
     geoLocation: {
       field: 'geo_location',
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.GEOMETRY
     },
-    updatedAt: {
-      field: 'updated_at',
+    createdAt: {
+      field: 'created_at',
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
     }
   }, {
     tableName: 'resources',
-    timestamps: false,
-    underscored: true
+    underscored: true,
+    timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: false,
+    deletedAt: false,
   })
 }

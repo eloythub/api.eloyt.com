@@ -40,7 +40,7 @@ CREATE TABLE resources (
   id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   type         resource_types NOT NULL,
   user_id      UUID                           NOT NULL REFERENCES users (id),
-  url          TEXT                           NOT NULL CHECK (trim(url) <> ''),
+  cloud_url    TEXT                           NOT NULL CHECK (trim(cloud_url) <> ''),
   geo_location POINT                          ,
   updated_at   TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
@@ -50,7 +50,7 @@ CREATE TABLE videos_thumbnails (
   video_resource_id     UUID                           NOT NULL REFERENCES resources (id),
   thumbnail_resource_id UUID                           NOT NULL REFERENCES resources (id),
   image_size            NUMERIC                        NOT NULL DEFAULT 0,
-  updated_at            TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
+  created_at            TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
 
 CREATE TABLE hashtags (

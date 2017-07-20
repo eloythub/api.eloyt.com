@@ -30,7 +30,7 @@ describe('Integration >> Routes >> Users >>', () => {
     sandbox.restore()
   })
 
-  it.skip('get registered user data', (done) => {
+  it('get registered user data', (done) => {
     (async () => {
       await AuthFixture.authenticationSeeder()
 
@@ -58,7 +58,7 @@ describe('Integration >> Routes >> Users >>', () => {
     })()
   })
 
-  it('register new user and return data', (done) => {
+  it.skip('register new user and return data', (done) => {
     (async () => {
       let position = 1
 
@@ -73,7 +73,6 @@ describe('Integration >> Routes >> Users >>', () => {
         })
 
       // add more mocks
-
 
       chai.request(app)
         .put('/users/create-or-get')

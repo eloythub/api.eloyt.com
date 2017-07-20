@@ -1,6 +1,6 @@
 'use strict'
 
-import StreamRepository from './streamRepository'
+import StreamRepository from './ResourceRepository'
 const UsersModel = require('../models-mongo/users')
 const graph = require('fbgraph')
 

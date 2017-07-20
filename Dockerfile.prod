@@ -61,6 +61,6 @@ WORKDIR $PROD_DIR
 COPY $TMP_DIR $PROD_DIR
 COPY . $PROD_DIR/
 
-CMD ["pm2-docker", "app.js"]
+CMD ["yarn", "&&", "pm2", "start", "pm2.prod.config.js", "--no-daemon"]
 
 EXPOSE 80

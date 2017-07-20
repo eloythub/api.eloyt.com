@@ -9,7 +9,7 @@ export default class UsersService {
   static async getUserByTokenId (tokenId) {
     const authToken = await AuthRepository.fetchAuthTokenById(tokenId)
 
-    const user = await UsersRepository.fetchUserIdById(authToken.userId)
+    const user = await UsersRepository.fetchUserById(authToken.userId)
 
     return user
   }
@@ -22,7 +22,7 @@ export default class UsersService {
     if (!user) {
       user = await UsersService.createUser(profile)
 
-      await UsersService.updateUserAvatarByFacebookPicture(accessToken, facebookUserId, user)
+      user = await UsersService.updateUserAvatarByFacebookPicture(accessToken, facebookUserId, user)
 
       return {
         action: 'create',
@@ -39,15 +39,13 @@ export default class UsersService {
   static async updateUserAvatarByFacebookPicture (accessToken, facebookUserId, user) {
     const profilePicture = await FacebookService.requestProfilePicture(accessToken, facebookUserId)
 
-    //StorageService.downloadProfilePicture()
+    const avatarResource = await StorageService.downloadPictureFromFacebookAndUploadToCloud(user.id, profilePicture)
 
-    // TODO update profile picture before return
-    // 1 - upload fb avatar to cloud storage
-    // 2 - create resource
+    const updatedUser = await UsersService.updateUser(user.id, {
+      avatarResourceId: avatarResource.id
+    })
 
-    // 2 - update user avatar
-
-
+    return updatedUser
   }
 
   static async createUser (profile) {
@@ -72,7 +70,7 @@ export default class UsersService {
   }
 
   static async findUser (userId) {
-    let user = await UsersRepository.fetchUserIdById(userId)
+    let user = await UsersRepository.fetchUserById(userId)
 
     return user
   }

@@ -3,7 +3,7 @@
 import * as Models from '../Models'
 
 export default class UsersRepository {
-  static async fetchUserIdById (id) {
+  static async fetchUserById (id) {
     const user = await Models.Users.findOne({ where: { id } })
 
     if (!user) {
@@ -34,12 +34,14 @@ export default class UsersRepository {
   }
 
   static async updateUser (userId, attributes) {
-    const user = await Models.Users.update(attributes, { where: { id: userId } })
+    let user = await Models.Users.update(attributes, { where: { id: userId } })
 
     if (!user) {
       return null
     }
 
-    return user.dataValues
+    user = await UsersRepository.fetchUserById(userId)
+
+    return user
   }
 };

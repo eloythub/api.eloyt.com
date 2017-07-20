@@ -14,7 +14,7 @@ export default function (sequelize, DataTypes) {
     userId: {
       field: 'user_id',
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'Users',
         key: 'id',
@@ -29,7 +29,10 @@ export default function (sequelize, DataTypes) {
     }
   }, {
     tableName: 'auth_tokens',
-    timestamps: false,
-    underscored: true
+    underscored: true,
+    timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: false,
+    deletedAt: false,
   })
 }

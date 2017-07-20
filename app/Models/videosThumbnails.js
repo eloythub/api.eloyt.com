@@ -36,15 +36,18 @@ export default function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.INTEGER
     },
-    updatedAt: {
-      field: 'updated_at',
+    createdAt: {
+      field: 'created_at',
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
     }
   }, {
     tableName: 'videos_thumbnails',
-    timestamps: false,
-    underscored: true
+    underscored: true,
+    timestamps: true,
+    createdAt: 'createdAt',
+    updatedAt: false,
+    deletedAt: false
   })
 }

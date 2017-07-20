@@ -55,6 +55,8 @@ export default class AuthFixture {
   static mockedNotFoundUserId = 'a5fde33b-8f37-42ac-ad95-c0918a858070'
 
   static async cleanUp () {
+    await Model.Users.update({ avatarResourceId: null }, { where: {} })
+    await Model.Resources.destroy({ where: {} })
     await Model.AuthTokens.destroy({ where: {} })
     await Model.Users.destroy({ where: {} })
   }

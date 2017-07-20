@@ -44,7 +44,10 @@ export default function (sequelize, DataTypes) {
     }
   }, {
     tableName: 'react',
-    timestamps: false,
-    underscored: true
+    underscored: true,
+    timestamps: true,
+    createdAt: 'reactedAt',
+    updatedAt: false,
+    deletedAt: false,
   })
 }

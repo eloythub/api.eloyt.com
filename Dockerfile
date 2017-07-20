@@ -62,16 +62,19 @@ ENV PROD_DIR=/opt/app
 
 WORKDIR $PROD_DIR
 
-CMD cd $PROD_DIR && \
-#	ln -sf /tmp/node_modules && \
-	rm -rf .pm2 && \
-	yarn && \
-    pm2 start \
-        --no-daemon npm -- start \
-        --watch \
-        --silent \
-        --no-vizion \
-        --instances 1 \
-        --ignore-watch "./tmp/* ./Tests/* .pm2 .config"
+CMD ["yarn"]
+CMD ["pm2", "start", "pm2.config.js", "--no-daemon"]
+
+#CMD cd $PROD_DIR && \
+##	ln -sf /tmp/node_modules && \
+#	rm -rf .pm2 && \
+#	yarn && \
+#    pm2 start \
+#        --no-daemon npm -- start \
+#        --watch \
+#        --silent \
+#        --no-vizion \
+#        --instances 1 \
+#        --ignore-watch "tmp Tests Dockerfile .pm2 .config"
 
 EXPOSE 80

@@ -1,13 +1,23 @@
 'use strict'
 
 import Promise from 'promise'
+import { format } from 'util'
 import fs from 'fs'
 import https from 'https'
 import uuid from 'uuid'
 import path from 'path'
+import Configs from '../../Configs'
+import GoogleStorage from '@google-cloud/storage'
+import ResourceRepository from '../Repositories/ResourceRepository'
+import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
+
+const googleStorage = GoogleStorage({
+  projectId: Configs.googleCloudProjectId,
+  keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-234bb463581d.json')
+}).bucket(Configs.googleCloudStorageBucket)
 
 export default class StorageService {
-  static downloadProfilePicture (userId, profilePicture) {
+  static downloadPictureFromFacebookAndUploadToCloud (userId, profilePicture) {
     const {url} = profilePicture.data
 
     const tmpFileName = `${uuid.v4()}.jpg`
@@ -21,15 +31,18 @@ export default class StorageService {
         response.pipe(fileStream)
 
         fileStream.on('finish', () => {
-          fileStream.close(() => {
-            StorageService.uploadToGoogleCloudStorage()
-            this.uploadToGCLOUD(userId, geoLocation, tmpFileName, tmpFilePath, fileStream, resourceType, description, hashtags)
-              .then((res) => {
-                fs.unlink(tmpFilePath)
+          fileStream.close(async () => {
+            const resource = await StorageService.uploadToGoogleCloudStorage(
+              tmpFileName,
+              tmpFilePath,
+              userId,
+              ResourceTypesEnum.avatar,
+              null
+            )
 
-                resolve(res)
-              })
-              .catch(reject)
+            fs.unlink(tmpFilePath, () => {
+              resolve(resource)
+            })
           })
         })
       }).on('error', (err) => {
@@ -40,7 +53,42 @@ export default class StorageService {
     })
   }
 
-  static uploadToGoogleCloudStorage () {
+  static uploadToGoogleCloudStorage (fileName, filePath, userId, type, geoLocation) {
+    return new Promise((resolve, reject) => {
+      googleStorage.upload(filePath, (err) => {
+        if (err) {
+          reject(err)
 
+          return
+        }
+
+        // Give read access to all the users
+        googleStorage.file(fileName)
+          .acl
+          .readers
+          .addAllUsers(async (aclError) => {
+            if (aclError) {
+              // Delete file from the gcs bucket in case of failure
+              googleStorage.file(fileName).delete()
+
+              reject(aclError)
+
+              return
+            }
+
+            const cloudUrl = format(`https://storage.googleapis.com/${Configs.googleCloudStorageBucket}/${fileName}`)
+
+            const resource = await ResourceRepository.createResource(userId, type, cloudUrl, geoLocation)
+
+            if (!resource) {
+              this.bucket.file(fileName).delete()
+
+              reject(new Error('create resource has been failed'))
+            }
+
+            resolve(resource)
+          })
+      })
+    })
   }
 };

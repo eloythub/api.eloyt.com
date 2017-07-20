@@ -4,7 +4,7 @@
   "description": "Eloyt API server",
   "main": "Built/App.js",
   "scripts": {
-    "start": "DEBUG=ELOYT-ZONE:* NODE_ENV=dev  ./node_modules/babel-cli/bin/babel-node.js ./App.js",
+    "start": "DEBUG=ELOYT-ZONE:* NODE_ENV=dev ./node_modules/babel-cli/bin/babel-node.js ./App.js",
     "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com",
     "test": "npm run standard -s && npm run mocha-integrations -s",
     "mocha-integrations": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",

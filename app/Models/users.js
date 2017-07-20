@@ -80,7 +80,10 @@ export default function (sequelize, DataTypes) {
     }
   }, {
     tableName: 'users',
-    timestamps: false,
-    underscored: true
+    underscored: true,
+    timestamps: true,
+    createdAt: 'registeredAt',
+    updatedAt: "updatedAt",
+    deletedAt: false
   })
 }

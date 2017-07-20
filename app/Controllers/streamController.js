@@ -1,6 +1,6 @@
 'use strict'
 
-import StreamRepository from '../Repositories/StreamRepository'
+import StreamRepository from '../Repositories/ResourceRepository'
 import StreamTransformer from '../Transformers/StreamTransformer'
 
 const fs = require('fs')
