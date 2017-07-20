@@ -9,6 +9,7 @@ export default class StreamRoutes {
       method: 'POST',
       path: `/${prefix}/upload/video`,
       config: {
+        auth: 'token',
         payload: {
           timeout: 30034,
           allow: 'multipart/form-data',
@@ -25,8 +26,12 @@ export default class StreamRoutes {
             userId: Joi.string(),
             description: Joi.string(),
             hashtags: Joi.string(),
-            geoLocationLatitude: Joi.number(),
-            geoLocationLongitude: Joi.number()
+            geoLocation: Joi.object()
+              .keys({
+                latitude: Joi.number().required(),
+                longitude: Joi.number().required(),
+              })
+              .required()
           }
         }
       }
@@ -36,6 +41,7 @@ export default class StreamRoutes {
       method: 'GET',
       path: `/${prefix}/{userId}/{resourceType}/{resourceId}`,
       config: {
+        auth: 'token',
         handler: (req, res) => {
           StreamController.streamResource(req, res)
         },
@@ -54,6 +60,7 @@ export default class StreamRoutes {
       method: 'GET',
       path: `/${prefix}/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}`,
       config: {
+        auth: 'token',
         handler: (req, res) => {
           StreamController.streamThumbnailResource(req, res)
         },
@@ -72,6 +79,7 @@ export default class StreamRoutes {
       method: 'GET',
       path: `/${prefix}/produce/{userId}/{offset}`,
       config: {
+        auth: 'token',
         handler: (req, res) => {
           StreamController.produceStreamResources(req, res)
         },
@@ -88,6 +96,7 @@ export default class StreamRoutes {
       method: 'GET',
       path: `/${prefix}/produce/{resourceId}`,
       config: {
+        auth: 'token',
         handler: (req, res) => {
           StreamController.produceOneStreamResourceById(req, res)
         },
@@ -103,6 +112,7 @@ export default class StreamRoutes {
       method: 'POST',
       path: `/${prefix}/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}`,
       config: {
+        auth: 'token',
         handler: (req, res) => {
           StreamController.streamResourceReact(req, res)
         },
