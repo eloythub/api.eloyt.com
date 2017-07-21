@@ -12,7 +12,7 @@ const options = {
 graph.setVersion(graphVersion).setOptions(options)
 
 export default class FacebookService {
-  static requestProfileUrl(accessToken, facebookUserId) {
+  static requestProfileUrl (accessToken, facebookUserId) {
     const fields = [
       'id',
       'email',
@@ -30,32 +30,32 @@ export default class FacebookService {
   static requestProfile (accessToken, facebookUserId) {
     return new Promise((resolve, reject) => {
       graph.get(FacebookService.requestProfileUrl(accessToken, facebookUserId), (error, res) => {
-          if (error) {
-            reject(error)
+        if (error) {
+          reject(error)
 
-            return
-          }
+          return
+        }
 
-          resolve(res)
-        })
+        resolve(res)
+      })
     })
   }
 
-  static requestProfilePictureUrl(accessToken, facebookUserId) {
+  static requestProfilePictureUrl (accessToken, facebookUserId) {
     return `${facebookUserId}/picture?&access_token=${accessToken}&width=1024&redirect=false`
   }
 
   static requestProfilePicture (accessToken, facebookUserId) {
     return new Promise((resolve, reject) => {
       graph.get(FacebookService.requestProfilePictureUrl(accessToken, facebookUserId), (error, res) => {
-          if (error) {
-            reject(error)
+        if (error) {
+          reject(error)
 
-            return
-          }
+          return
+        }
 
-          resolve(res)
-        })
+        resolve(res)
+      })
     })
   }
 };

@@ -36,7 +36,7 @@ export default class UsersRepository {
       this.usersModel.create(email, name, firstName, lastName, gender, birthday)
         .then((user) => {
           // upload to cloud storage
-            this.streamRepository.uploadToGCLOUDFromUrl(profilePicture.data.url, 'jpg', user._id, null, 'avatar')
+          this.streamRepository.uploadToGCLOUDFromUrl(profilePicture.data.url, 'jpg', user._id, null, 'avatar')
             .then((gCloudResponse) => {
               // update the avatar of the user
               this.usersModel.update(user._id, {avatar: gCloudResponse._id})

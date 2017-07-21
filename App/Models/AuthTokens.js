@@ -33,6 +33,6 @@ export default function (sequelize, DataTypes) {
     timestamps: true,
     createdAt: 'createdAt',
     updatedAt: false,
-    deletedAt: false,
+    deletedAt: false
   })
 }

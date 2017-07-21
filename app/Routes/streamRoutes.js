@@ -29,7 +29,7 @@ export default class StreamRoutes {
             geoLocation: Joi.object()
               .keys({
                 latitude: Joi.number().required(),
-                longitude: Joi.number().required(),
+                longitude: Joi.number().required()
               })
               .required()
           }

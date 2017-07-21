@@ -83,7 +83,7 @@ export default function (sequelize, DataTypes) {
     underscored: true,
     timestamps: true,
     createdAt: 'registeredAt',
-    updatedAt: "updatedAt",
+    updatedAt: 'updatedAt',
     deletedAt: false
   })
 }

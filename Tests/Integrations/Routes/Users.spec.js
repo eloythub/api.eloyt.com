@@ -58,7 +58,7 @@ describe('Integration >> Routes >> Users >>', () => {
     })()
   })
 
-  it.skip('register new user and return data', (done) => {
+  it('register new user and return data', (done) => {
     (async () => {
       let position = 1
 
