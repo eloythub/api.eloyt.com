@@ -10,8 +10,8 @@ export default class Routes {
     this.router = router
 
     HealthCheckRoutes.setRoutes(this.router, 'health-check')
-    AuthRoutes.setRoutes(this.router, 'auth')
-    UsersRoutes.setRoutes(this.router, 'users')
-    StreamRoutes.setRoutes(this.router, 'stream')
+    AuthRoutes.setRoutes(this.router)
+    UsersRoutes.setRoutes(this.router)
+    StreamRoutes.setRoutes(this.router)
   }
 };

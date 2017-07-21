@@ -1,23 +1,28 @@
 'use strict'
 
+import debug from 'debug'
 import Promise from 'promise'
 import { format } from 'util'
 import fs from 'fs'
 import https from 'https'
 import uuid from 'uuid'
 import path from 'path'
-import Configs from '../../Configs'
+import configs from '../../Configs'
 import GoogleStorage from '@google-cloud/storage'
 import ResourceRepository from '../Repositories/ResourceRepository'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
 const googleStorage = GoogleStorage({
-  projectId: Configs.googleCloudProjectId,
+  projectId: configs.googleCloudProjectId,
   keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-234bb463581d.json')
-}).bucket(Configs.googleCloudStorageBucket)
+}).bucket(configs.googleCloudStorageBucket)
 
 export default class StorageService {
   static downloadPictureFromFacebookAndUploadToCloud (userId, profilePicture) {
+    const log = debug(`${configs.debugZone}:StorageService:downloadPictureFromFacebookAndUploadToCloud`)
+
+    log('downloadPictureFromFacebookAndUploadToCloud')
+
     const {url} = profilePicture.data
 
     const tmpFileName = `${uuid.v4()}.jpg`
@@ -28,6 +33,7 @@ export default class StorageService {
     return new Promise((resolve, reject) => {
       // Get file from Facebook and store it into tmp directory
       https.get(url, (response) => {
+        console.log(response)
         response.pipe(fileStream)
 
         fileStream.on('finish', () => {
@@ -46,14 +52,18 @@ export default class StorageService {
           })
         })
       }).on('error', (err) => {
-        fs.unlink(tmpFilePath)
-
-        reject(err)
+        fs.unlink(tmpFilePath, () => {
+          reject(err)
+        })
       })
     })
   }
 
   static uploadToGoogleCloudStorage (fileName, filePath, userId, type, geoLocation) {
+    const log = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage`)
+
+    log('uploadToGoogleCloudStorage')
+
     return new Promise((resolve, reject) => {
       googleStorage.upload(filePath, (err) => {
         if (err) {
@@ -76,7 +86,7 @@ export default class StorageService {
               return
             }
 
-            const cloudUrl = format(`https://storage.googleapis.com/${Configs.googleCloudStorageBucket}/${fileName}`)
+            const cloudUrl = format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${fileName}`)
 
             const resource = await ResourceRepository.createResource(userId, type, cloudUrl, geoLocation)
 

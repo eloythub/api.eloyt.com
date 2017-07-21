@@ -4,10 +4,10 @@ import UserController from '../Controllers/UsersController'
 import * as Joi from 'joi'
 
 export default class UsersRoutes {
-  static setRoutes (router, prefix) {
+  static setRoutes (router) {
     router.addRoute({
       method: 'PUT',
-      path: `/${prefix}/create-or-get`,
+      path: `/users/create-or-get`,
       config: {
         handler: (req, res) => UserController.createOrGet(req, res),
         validate: {
@@ -21,7 +21,7 @@ export default class UsersRoutes {
 
     router.addRoute({
       method: 'POST',
-      path: `/${prefix}/profile-update`,
+      path: `/users/profile-update`,
       config: {
         auth: 'token',
         handler: (req, res) => UserController.profileUpdate(req, res),
@@ -47,7 +47,7 @@ export default class UsersRoutes {
 
     router.addRoute({
       method: 'GET',
-      path: `/${prefix}/{userId}`,
+      path: `/users/{userId}`,
       config: {
         auth: 'token',
         handler: (req, res) => UserController.getProfile(req, res),

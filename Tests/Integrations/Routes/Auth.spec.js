@@ -27,7 +27,7 @@ describe('Integration >> Routes >> Auth >>', () => {
         .end((err, res) => {
           expect(res).to.be.json
 
-          res.should.have.status(200)
+          expect(res.status).to.equal(200)
 
           expect(res.body).to.include({
             statusCode: 200,
@@ -121,7 +121,7 @@ describe('Integration >> Routes >> Auth >>', () => {
         .end((err, res) => {
           expect(res).to.be.json
 
-          res.should.have.status(200)
+          expect(res.status).to.equal(200)
 
           expect(res.body).to.deep.equal({
             statusCode: 200,

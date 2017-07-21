@@ -4,10 +4,10 @@ import StreamController from '../Controllers/StreamController'
 import * as Joi from 'joi'
 
 export default class StreamRoutes {
-  static setRoutes (router, prefix) {
+  static setRoutes (router) {
     router.addRoute({
       method: 'POST',
-      path: `/${prefix}/upload/video`,
+      path: `/stream/upload/video`,
       config: {
         auth: 'token',
         payload: {
@@ -39,7 +39,7 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'GET',
-      path: `/${prefix}/{userId}/{resourceType}/{resourceId}`,
+      path: `/stream/{userId}/{resourceType}/{resourceId}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -58,7 +58,7 @@ export default class StreamRoutes {
     // thumbnail route
     router.addRoute({
       method: 'GET',
-      path: `/${prefix}/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}`,
+      path: `/stream/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -77,7 +77,7 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'GET',
-      path: `/${prefix}/produce/{userId}/{offset}`,
+      path: `/stream/produce/{userId}/{offset}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -94,7 +94,7 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'GET',
-      path: `/${prefix}/produce/{resourceId}`,
+      path: `/stream/produce/{resourceId}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -110,7 +110,7 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'POST',
-      path: `/${prefix}/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}`,
+      path: `/stream/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}`,
       config: {
         auth: 'token',
         handler: (req, res) => {

@@ -14,7 +14,7 @@ describe('Integration >> HealthCheck >> App', () => {
     chai.request(app)
       .get('/health-check/app')
       .end((err, res) => {
-        res.should.have.status(200)
+        expect(res.status).to.equal(200)
         expect(res).to.be.json
 
         expect(res.body).to.deep.equal({

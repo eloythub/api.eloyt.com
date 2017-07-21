@@ -1,12 +1,12 @@
 'use strict';
 
-import configs from './Configs';
 import Hapi from 'hapi';
 import * as Models from './App/Models'; // please don't remove this line, it initiate the db connection
 import Router from './Router';
 import Routes from './App/Routes';
 import Schemas from './App/Schemas';
 import debug from 'debug';
+import configs from './Configs';
 
 export default class Server {
   constructor() {
