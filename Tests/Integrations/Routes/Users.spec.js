@@ -60,7 +60,7 @@ describe('Integration >> Routes >> Users >>', () => {
     })()
   })
 
-  it.skip('register new user and return data', (done) => {
+  it('register new user and return data', (done) => {
     (async () => {
       let position = 1
 
@@ -76,9 +76,9 @@ describe('Integration >> Routes >> Users >>', () => {
 
       // add more mocks
 
-      //nock(FacebookFixture.mockedFacebookPictureBaseUrl)
-      //  .get(FacebookFixture.mockedFacebookPictureUrlRoute)
-      //  .replyWithFile(200, path.join(__dirname, '../../Fixtures/Assets/FacebookPicture.jpg'))
+      nock(FacebookFixture.mockedFacebookPictureBaseUrl)
+        .get(FacebookFixture.mockedFacebookPictureUrlRoute)
+        .replyWithFile(200, path.join(__dirname, '../../Fixtures/Assets/FacebookPicture.jpg'))
 
       chai.request(app)
         .put('/users/create-or-get')

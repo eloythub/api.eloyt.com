@@ -20,6 +20,7 @@ const googleStorage = GoogleStorage({
 export default class StorageService {
   static downloadPictureFromFacebookAndUploadToCloud (userId, profilePicture) {
     const log = debug(`${configs.debugZone}:StorageService:downloadPictureFromFacebookAndUploadToCloud`)
+    const error = debug(`${configs.debugZone}:StorageService:downloadPictureFromFacebookAndUploadToCloud:error`)
 
     log('downloadPictureFromFacebookAndUploadToCloud')
 
@@ -33,7 +34,6 @@ export default class StorageService {
     return new Promise((resolve, reject) => {
       // Get file from Facebook and store it into tmp directory
       https.get(url, (response) => {
-        console.log(response)
         response.pipe(fileStream)
 
         fileStream.on('finish', () => {
@@ -52,6 +52,8 @@ export default class StorageService {
           })
         })
       }).on('error', (err) => {
+        error(err.message)
+
         fs.unlink(tmpFilePath, () => {
           reject(err)
         })
@@ -61,15 +63,17 @@ export default class StorageService {
 
   static uploadToGoogleCloudStorage (fileName, filePath, userId, type, geoLocation) {
     const log = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage`)
+    const error = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage:error`)
+
 
     log('uploadToGoogleCloudStorage')
 
     return new Promise((resolve, reject) => {
       googleStorage.upload(filePath, (err) => {
         if (err) {
-          reject(err)
+          error(err.message)
 
-          return
+          return reject(err)
         }
 
         // Give read access to all the users
@@ -81,9 +85,9 @@ export default class StorageService {
               // Delete file from the gcs bucket in case of failure
               googleStorage.file(fileName).delete()
 
-              reject(aclError)
+              error(aclError)
 
-              return
+              return reject(aclError)
             }
 
             const cloudUrl = format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${fileName}`)
@@ -93,7 +97,9 @@ export default class StorageService {
             if (!resource) {
               this.bucket.file(fileName).delete()
 
-              reject(new Error('create resource has been failed'))
+              error('create resource has been failed')
+
+              return reject(new Error('create resource has been failed'))
             }
 
             resolve(resource)
