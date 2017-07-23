@@ -46,7 +46,7 @@ describe('Integration >> Routes >> Auth >>', () => {
       .end((err, res) => {
         expect(res).to.be.json
 
-        res.should.have.status(401)
+        expect(res.status).to.equal(401)
 
         expect(res.body).to.deep.equal({
           statusCode: 401,
@@ -64,7 +64,7 @@ describe('Integration >> Routes >> Auth >>', () => {
       .end((err, res) => {
         expect(res).to.be.json
 
-        res.should.have.status(401)
+        expect(res.status).to.equal(401)
 
         expect(res.body).to.deep.equal({
           statusCode: 401,
@@ -82,7 +82,7 @@ describe('Integration >> Routes >> Auth >>', () => {
       .end((err, res) => {
         expect(res).to.be.json
 
-        res.should.have.status(401)
+        expect(res.status).to.equal(401)
 
         expect(res.body).to.include({
           statusCode: 401,
@@ -100,7 +100,7 @@ describe('Integration >> Routes >> Auth >>', () => {
       .end((err, res) => {
         expect(res).to.be.json
 
-        res.should.have.status(401)
+        expect(res.status).to.equal(401)
 
         expect(res.body).to.include({
           statusCode: 401,

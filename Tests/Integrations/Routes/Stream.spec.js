@@ -1,12 +1,23 @@
 'use strict'
 
 import app from '../../../App'
-import chai, {should, expect} from 'chai'
+import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
+import graph from 'fbgraph'
+import sinon from 'sinon'
+import nock from 'nock'
+import path from 'path'
+import AuthFixture from '../../Fixtures/Integrations/AuthFixture'
+import FacebookFixture from '../../Fixtures/Integrations/FacebookFixture'
+import ReactTypesEnum from '../../../App/Enums/ReactTypesEnum'
 
 chai.use(chaiHttp)
 
 describe('Integration >> Routes >> Stream >>', () => {
+  beforeEach(async () => {
+    await AuthFixture.cleanUp()
+  })
+
   it.skip('upload video', (done) => {
     done()
   })
@@ -27,7 +38,27 @@ describe('Integration >> Routes >> Stream >>', () => {
     done()
   })
 
-  it.skip('react to resource', (done) => {
-    done()
+  it('react to resource', (done) => {
+    (async () => {
+      await AuthFixture.reactSeeder()
+
+      chai.request(app)
+        .post('/stream/react')
+        .send({
+          resourceId: AuthFixture.mockedResource.id,
+          reactType: ReactTypesEnum.like
+        })
+        .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
+        .end((err, res) => {
+          expect(res).to.be.json
+
+          expect(res.status).to.equal(200)
+
+          expect(res.body.statusCode).to.equal(200)
+          expect(res.body.data).to.include(AuthFixture.mockedReact)
+
+          done()
+        })
+    })()
   })
 })

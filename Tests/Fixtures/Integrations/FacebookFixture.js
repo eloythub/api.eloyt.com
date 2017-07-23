@@ -17,7 +17,7 @@ export default class FacebookFixture {
 
   static mockedFacebookPictureBaseUrl = 'https://z-m-scontent.xx.fbcdn.net'
 
-  static mockedFacebookPictureUrlRoute = '/1/v/t1.0-1/18446841_1504120496299342_7868434953193313882_n.jpg?_nc_ad=z-m&oh=5aafc64a7bd8cd92a9c86263f8e5ac97&oe=59F96B40'
+  static mockedFacebookPictureUrlRoute = '/v/t1.0-1/18446841_1504120496299342_7868434953193313882_n.jpg?_nc_ad=z-m&oh=5aafc64a7bd8cd92a9c86263f8e5ac97&oe=59F96B40'
 
   static mockedFacebookPictureUrl = path.join(
     FacebookFixture.mockedFacebookPictureBaseUrl,

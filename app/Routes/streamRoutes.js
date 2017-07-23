@@ -1,7 +1,8 @@
 'use strict'
 
-import StreamController from '../Controllers/StreamController'
 import * as Joi from 'joi'
+import StreamController from '../Controllers/StreamController'
+import ReactTypesEnum from '../Enums/ReactTypesEnum'
 
 export default class StreamRoutes {
   static setRoutes (router) {
@@ -22,16 +23,10 @@ export default class StreamRoutes {
         },
         validate: {
           payload: {
-            file: Joi.any(),
-            userId: Joi.string(),
-            description: Joi.string(),
-            hashtags: Joi.string(),
-            geoLocation: Joi.object()
-              .keys({
-                latitude: Joi.number().required(),
-                longitude: Joi.number().required()
-              })
-              .required()
+            file: Joi.any().required(),
+            userId: Joi.string().required(),
+            description: Joi.string().required(),
+            hashtags: Joi.string().required()
           }
         }
       }
@@ -110,18 +105,16 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'POST',
-      path: `/stream/{userId}/{resourceId}/{resourceOwnerUserId}/{reactType}`,
+      path: `/stream/react`,
       config: {
         auth: 'token',
         handler: (req, res) => {
           StreamController.streamResourceReact(req, res)
         },
         validate: {
-          params: {
-            userId: Joi.string(),
-            resourceId: Joi.string(),
-            resourceOwnerUserId: Joi.string(),
-            reactType: Joi.string()
+          payload: {
+            resourceId: Joi.string().required(),
+            reactType: Joi.string().allow(['like', 'dislike', 'skip']).required()
           }
         }
       }

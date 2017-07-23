@@ -11,11 +11,6 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    type: {
-      field: 'type',
-      type: DataTypes.ENUM('skip', 'like', 'dislike'),
-      allowNull: true
-    },
     userId: {
       field: 'user_id',
       type: DataTypes.UUID,
@@ -35,6 +30,11 @@ export default function (sequelize, DataTypes) {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
       }
+    },
+    type: {
+      field: 'type',
+      type: DataTypes.ENUM('skip', 'like', 'dislike'),
+      allowNull: true
     },
     reactedAt: {
       field: 'reacted_at',

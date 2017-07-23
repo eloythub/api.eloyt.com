@@ -25,6 +25,7 @@ export default class UserController {
         action
       }).code(200)
     } catch (e) {
+      console.error(e)
       error(e.message)
 
       res({

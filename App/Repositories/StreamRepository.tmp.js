@@ -113,16 +113,4 @@ export default class StreamRepository {
   createThumbnailRecord (sourceResourceId, thumbnailResourceId, imageSize) {
     return this.resourcesVideoThumbnailsModel.create(sourceResourceId, thumbnailResourceId, imageSize)
   }
-
-  resourceReactLike (userId, resourceId, resourceOwnerUserId) {
-    return this.resourcesReactsModel.createReactLike(userId, resourceId, resourceOwnerUserId)
-  }
-
-  resourceReactDislike (userId, resourceId, resourceOwnerUserId) {
-    return this.resourcesReactsModel.createReactDislike(userId, resourceId, resourceOwnerUserId)
-  }
-
-  resourceReactSkip (userId, resourceId, resourceOwnerUserId) {
-    return this.resourcesReactsModel.createReactSkip(userId, resourceId, resourceOwnerUserId)
-  }
 };

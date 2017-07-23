@@ -1,6 +1,9 @@
 'use strict'
 
+import debug from 'debug'
+import configs from '../../Configs'
 import StreamRepository from '../Repositories/ResourceRepository'
+import StreamService from '../Services/StreamService'
 import StreamTransformer from '../Transformers/StreamTransformer'
 
 const fs = require('fs')
@@ -331,41 +334,26 @@ export default class StreamController {
       })
   }
 
-  static streamResourceReact (req, res) {
-    const {userId, resourceId, resourceOwnerUserId, reactType} = req.params
+  static async streamResourceReact (req, res) {
+    const error = debug(`${configs.debugZone}:StreamController:streamResourceReact`)
 
-    let response
+    const { user } = req.auth.credentials
+    const { resourceId, reactType } = req.payload
 
-    switch (reactType) {
-      case 'like':
-        response = this.repos.resourceReactLike(userId, resourceId, resourceOwnerUserId)
-        break
-      case 'dislike':
-        response = this.repos.resourceReactDislike(userId, resourceId, resourceOwnerUserId)
-        break
-      case 'skip':
-        response = this.repos.resourceReactSkip(userId, resourceId, resourceOwnerUserId)
-        break
-    }
+    try {
+      const data = await StreamService.reactToResource(user.id, resourceId, reactType)
 
-    if (!response) {
-      return res({
-        statusCode: 500,
-        error: 'react type is wrong or empty'
-      }).code(500)
-    }
-
-    return response.then((data) => {
-      return res({
+      res({
         statusCode: 200,
         data
       }).code(200)
-    })
-      .catch((error) => {
-        return res({
-          statusCode: 500,
-          error
-        }).code(500)
-      })
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
   }
 };

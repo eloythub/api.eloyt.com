@@ -7,6 +7,7 @@ import fs from 'fs'
 import https from 'https'
 import uuid from 'uuid'
 import path from 'path'
+import { URL } from 'url'
 import configs from '../../Configs'
 import GoogleStorage from '@google-cloud/storage'
 import ResourceRepository from '../Repositories/ResourceRepository'
@@ -32,79 +33,100 @@ export default class StorageService {
     const fileStream = fs.createWriteStream(tmpFilePath)
 
     return new Promise((resolve, reject) => {
-      // Get file from Facebook and store it into tmp directory
-      https.get(url, (response) => {
-        response.pipe(fileStream)
-
-        fileStream.on('finish', () => {
-          fileStream.close(async () => {
-            const resource = await StorageService.uploadToGoogleCloudStorage(
-              tmpFileName,
-              tmpFilePath,
-              userId,
-              ResourceTypesEnum.avatar,
-              null
-            )
+      try {
+        https.get(new URL(url), (res) => {
+          if (parseInt(res.statusCode) !== 200) {
+            error('failed to fetch picture from facebook')
 
             fs.unlink(tmpFilePath, () => {
-              resolve(resource)
+              reject(new Error('failed to fetch picture from facebook'))
+            })
+
+            return
+          }
+
+          res.pipe(fileStream)
+
+          fileStream.on('finish', () => {
+            fileStream.close(async () => {
+              const resource = await StorageService.uploadToGoogleCloudStorage(
+                tmpFileName,
+                tmpFilePath,
+                userId,
+                ResourceTypesEnum.avatar
+              )
+
+              fs.unlink(tmpFilePath, () => {
+                resolve(resource)
+              })
             })
           })
+        }).on('error', (err) => {
+          error(err.message)
+
+          fs.unlink(tmpFilePath, () => {
+            reject(err)
+          })
         })
-      }).on('error', (err) => {
+      } catch (err) {
         error(err.message)
 
         fs.unlink(tmpFilePath, () => {
           reject(err)
         })
-      })
+      }
     })
   }
 
-  static uploadToGoogleCloudStorage (fileName, filePath, userId, type, geoLocation) {
+  static uploadToGoogleCloudStorage (fileName, filePath, userId, type) {
     const log = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage`)
     const error = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage:error`)
-
 
     log('uploadToGoogleCloudStorage')
 
     return new Promise((resolve, reject) => {
-      googleStorage.upload(filePath, (err) => {
-        if (err) {
-          error(err.message)
+      try {
+        googleStorage.upload(filePath, (err) => {
+          if (err) {
+            error(err.message)
 
-          return reject(err)
-        }
+            return reject(err)
+          }
 
-        // Give read access to all the users
-        googleStorage.file(fileName)
-          .acl
-          .readers
-          .addAllUsers(async (aclError) => {
-            if (aclError) {
-              // Delete file from the gcs bucket in case of failure
-              googleStorage.file(fileName).delete()
+          // Give read access to all the users
+          googleStorage.file(fileName)
+            .acl
+            .readers
+            .addAllUsers(async (aclError) => {
+              if (aclError) {
+                // Delete file from the gcs bucket in case of failure
+                googleStorage.file(fileName).delete()
 
-              error(aclError)
+                error(aclError)
 
-              return reject(aclError)
-            }
+                return reject(aclError)
+              }
 
-            const cloudUrl = format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${fileName}`)
+              const cloudUrl = format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${fileName}`)
 
-            const resource = await ResourceRepository.createResource(userId, type, cloudUrl, geoLocation)
+              const resource = await ResourceRepository.createResource(userId, type, cloudUrl)
 
-            if (!resource) {
-              this.bucket.file(fileName).delete()
+              if (!resource) {
+                googleStorage.file(fileName).delete()
 
-              error('create resource has been failed')
+                error('create resource has been failed')
 
-              return reject(new Error('create resource has been failed'))
-            }
+                return reject(new Error('create resource has been failed'))
+              }
 
-            resolve(resource)
-          })
-      })
+              resolve(resource)
+            })
+        })
+      } catch (err) {
+        error(err.message)
+
+        return reject(err)
+      }
     })
   }
 };

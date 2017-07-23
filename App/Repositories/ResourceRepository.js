@@ -5,12 +5,12 @@ import configs from '../../Configs'
 import * as Models from '../Models'
 
 export default class ResourceRepository {
-  static async createResource (userId, type, cloudUrl, geoLocation) {
+  static async createResource (userId, type, cloudUrl) {
     const log = debug(`${configs.debugZone}:UsersRepository:createResource`)
 
     log('createResource')
 
-    const resource = await Models.Resources.create({ userId, type, cloudUrl, geoLocation })
+    const resource = await Models.Resources.create({ userId, type, cloudUrl })
 
     if (!resource) {
       return null

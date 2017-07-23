@@ -41,7 +41,6 @@ CREATE TABLE resources (
   type         resource_types NOT NULL,
   user_id      UUID                           NOT NULL REFERENCES users (id),
   cloud_url    TEXT                           NOT NULL CHECK (trim(cloud_url) <> ''),
-  geo_location POINT                          ,
   updated_at   TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
 

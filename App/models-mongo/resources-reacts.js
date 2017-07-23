@@ -24,32 +24,4 @@ module.exports = class ResourcesReactsModel {
       }
     })
   }
-
-  createReactLike (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'like')
-  }
-
-  createReactDislike (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'dislike')
-  }
-  createReactSkip (resourceReactedByUserId, resourceId, resourceOwnerUserId) {
-    return this.create(resourceReactedByUserId, resourceId, resourceOwnerUserId, 'skip')
-  }
-
-  create (resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType) {
-    const Model = this.model
-    const ResourcesReacts = new Model({resourceReactedByUserId, resourceId, resourceOwnerUserId, reactType})
-
-    return new Promise((fulfill, reject) => {
-      return ResourcesReacts.save((err, res) => {
-        if (err) {
-          reject(err)
-
-          return
-        }
-
-        return fulfill(res)
-      })
-    })
-  }
 }

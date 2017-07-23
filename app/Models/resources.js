@@ -31,11 +31,6 @@ export default function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING
     },
-    geoLocation: {
-      field: 'geo_location',
-      allowNull: true,
-      type: DataTypes.GEOMETRY
-    },
     createdAt: {
       field: 'created_at',
       type: DataTypes.DATE,
