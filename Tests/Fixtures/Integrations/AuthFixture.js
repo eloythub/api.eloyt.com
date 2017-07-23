@@ -98,4 +98,12 @@ export default class AuthFixture {
     await Model.AuthTokens.create(AuthFixture.mockedAuthToken)
     await Model.Resources.create(AuthFixture.mockedResource)
   }
+
+  static async alreadyReactedSeeder () {
+    await Model.Users.create(AuthFixture.mockedUser)
+    await Model.Users.create(AuthFixture.mockedUser1)
+    await Model.AuthTokens.create(AuthFixture.mockedAuthToken)
+    await Model.Resources.create(AuthFixture.mockedResource)
+    await Model.React.create(AuthFixture.mockedReact)
+  }
 }

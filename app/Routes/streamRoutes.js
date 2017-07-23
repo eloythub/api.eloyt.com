@@ -2,7 +2,6 @@
 
 import * as Joi from 'joi'
 import StreamController from '../Controllers/StreamController'
-import ReactTypesEnum from '../Enums/ReactTypesEnum'
 
 export default class StreamRoutes {
   static setRoutes (router) {

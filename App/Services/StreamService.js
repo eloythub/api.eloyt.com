@@ -13,13 +13,13 @@ export default class StreamService {
     const isAlreadyReacted = await ReactRepository.isAlreadyReacted(userId, resourceId, type)
 
     if (isAlreadyReacted) {
-      const react = await ReactRepository.fetchReactByAttributes({userId, resourceId, type})
+      const data = await ReactRepository.fetchReactByAttributes({userId, resourceId, type})
 
-      return react
+      return { data, action: 'find' }
     }
 
-    const react = await ReactRepository.createReact(userId, resourceId, type)
+    const data = await ReactRepository.createReact(userId, resourceId, type)
 
-    return react
+    return { data, action: 'create' }
   }
 };

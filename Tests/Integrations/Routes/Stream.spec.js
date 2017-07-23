@@ -56,6 +56,32 @@ describe('Integration >> Routes >> Stream >>', () => {
 
           expect(res.body.statusCode).to.equal(200)
           expect(res.body.data).to.include(AuthFixture.mockedReact)
+          expect(res.body.action).to.equal('create')
+
+          done()
+        })
+    })()
+  })
+
+  it('react to resource - already reacted', (done) => {
+    (async () => {
+      await AuthFixture.alreadyReactedSeeder()
+
+      chai.request(app)
+        .post('/stream/react')
+        .send({
+          resourceId: AuthFixture.mockedResource.id,
+          reactType: ReactTypesEnum.like
+        })
+        .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
+        .end((err, res) => {
+          expect(res).to.be.json
+
+          expect(res.status).to.equal(200)
+
+          expect(res.body.statusCode).to.equal(200)
+          expect(res.body.data).to.include(AuthFixture.mockedReact)
+          expect(res.body.action).to.equal('find')
 
           done()
         })

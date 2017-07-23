@@ -341,11 +341,12 @@ export default class StreamController {
     const { resourceId, reactType } = req.payload
 
     try {
-      const data = await StreamService.reactToResource(user.id, resourceId, reactType)
+      const { data, action } = await StreamService.reactToResource(user.id, resourceId, reactType)
 
       res({
         statusCode: 200,
-        data
+        data,
+        action
       }).code(200)
     } catch (e) {
       error(e.message)
