@@ -109,7 +109,7 @@ export default class StorageService {
 
               const cloudUrl = format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${fileName}`)
 
-              const resource = await ResourceRepository.createResource(userId, type, cloudUrl)
+              const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
 
               if (!resource) {
                 googleStorage.file(fileName).delete()
@@ -122,6 +122,29 @@ export default class StorageService {
               resolve(resource)
             })
         })
+      } catch (err) {
+        error(err.message)
+
+        return reject(err)
+      }
+    })
+  }
+
+  static deleteVideoResource (videoResourceId) {
+    const log = debug(`${configs.debugZone}:StorageService:deleteVideoResource`)
+    const error = debug(`${configs.debugZone}:StorageService:deleteVideoResource:error`)
+
+    log('deleteVideoResource')
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const videoResource = await ResourceRepository.fetchResourceById(videoResourceId)
+
+        googleStorage.file(videoResource.cloudFilename).delete()
+
+        await ResourceRepository.deleteResource(videoResourceId)
+
+        resolve(true)
       } catch (err) {
         error(err.message)
 

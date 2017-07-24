@@ -4,6 +4,13 @@ import Sequelize from 'sequelize'
 
 export default function (sequelize, DataTypes) {
   return sequelize.define('UsersHashtags', {
+    id: {
+      field: 'id',
+      primaryKey: true,
+      allowNull: false,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4
+    },
     hashtagId: {
       field: 'hashtag_id',
       type: DataTypes.UUID,

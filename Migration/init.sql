@@ -37,11 +37,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE resources (
-  id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  type         resource_types NOT NULL,
-  user_id      UUID                           NOT NULL REFERENCES users (id),
-  cloud_url    TEXT                           NOT NULL CHECK (trim(cloud_url) <> ''),
-  updated_at   TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
+  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  type              resource_types NOT NULL,
+  user_id           UUID                           NOT NULL REFERENCES users (id),
+  cloud_url         TEXT                           NOT NULL CHECK (trim(cloud_url) <> ''),
+  cloud_filename    TEXT                           NOT NULL CHECK (trim(cloud_filename) <> ''),
+  updated_at        TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
 
 CREATE TABLE videos_thumbnails (
@@ -59,6 +60,7 @@ CREATE TABLE hashtags (
 );
 
 CREATE TABLE users_hashtags (
+  id         UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   hashtag_id UUID NOT NULL  REFERENCES hashtags (id),
   user_id    UUID NOT NULL  REFERENCES users (id)
 );
@@ -76,6 +78,19 @@ CREATE TABLE auth_tokens (
   user_id     UUID                           NOT NULL REFERENCES users (id),
   created_at  TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
+
+CREATE TABLE videos_properties (
+  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  video_resource_id UUID NOT NULL REFERENCES resources (id),
+  description       TEXT NOT NULL CHECK (trim(description) <> '')
+);
+
+CREATE TABLE videos_hashtags (
+  id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  hashtag_id        UUID NOT NULL  REFERENCES hashtags (id),
+  video_resource_id UUID NOT NULL REFERENCES resources (id)
+);
+
 
 -- indices
 CREATE INDEX users_avatar_resource_id_index

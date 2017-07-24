@@ -1,16 +1,15 @@
 'use strict'
 
 import debug from 'debug'
+import fs from 'fs'
+import uuid from 'uuid'
+import https from 'https'
 import configs from '../../Configs'
 import StreamRepository from '../Repositories/ResourceRepository'
 import StreamService from '../Services/StreamService'
 import StreamTransformer from '../Transformers/StreamTransformer'
 
-const fs = require('fs')
-const uuid = require('uuid')
-const https = require('https')
 const ffmpeg = require('fluent-ffmpeg')
-const path = require('path')
 
 export default class StreamController {
   constructor (env) {
@@ -19,13 +18,11 @@ export default class StreamController {
     this.transformer = new StreamTransformer()
   }
 
-  static videoUploadHandle (req, res) {
-    const uploadFile = req.payload.file
-    const userId = req.payload.userId
-    const description = req.payload.description
-    const hashtagsRaw = req.payload.hashtags
-    const geoLocationLatitude = req.payload.geoLocationLatitude
-    const geoLocationLongitude = req.payload.geoLocationLongitude
+  static async videoUploadHandle (req, res) {
+    const error = debug(`${configs.debugZone}:StreamController:videoUploadHandle`)
+
+    const { user } = req.auth.credentials
+    const { file: uploadFile, description, hashtags: implodedHashtags } = req.payload
 
     // Validate the File
     if (!uploadFile) {
@@ -35,80 +32,31 @@ export default class StreamController {
       }).code(400)
     }
 
-    // Validate the Description
-    if (!description) {
-      return res({
-        statusCode: 400,
-        message: `description is missing.`
-      }).code(400)
-    }
-
     // Validate the Interests
-    const hashtags = hashtagsRaw.split(',')
+    const hashtags = implodedHashtags.split(',')
 
-    if (!(hashtags.length >= 3 && hashtags.length <= 5)) {
+    if (!(hashtags.length >= 1 && hashtags.length <= 3)) {
       return res({
         statusCode: 400,
-        message: `hashtags must be in range of 3 to 5. ${hashtags.length} inserted.`
+        message: `hashtags must be in range of 1 to 3. ${hashtags.length} inserted.`
       }).code(400)
     }
 
-    // Validate the GEO location
-    if (!geoLocationLatitude || !geoLocationLongitude) {
+    try {
+      const data = await StreamService.uploadVideoResource(user.id, uploadFile, description, hashtags)
+
       res({
-        statusCode: 400,
-        message: 'GEO Location is missing.'
-      }).code(400)
+        statusCode: 200,
+        data
+      }).code(200)
+    } catch (e) {
+      error(e.message)
 
-      return
-    }
-
-    const uploadedFileName = uuid.v4() + '.mp4'
-    const uploadedFilePath = path.join(__dirname, '/../../tmp/', uploadedFileName)
-
-    const fileStream = fs.createWriteStream(uploadedFilePath)
-
-    fileStream.on('error', (err) => {
       res({
         statusCode: 500,
-        err
+        error: e.message
       }).code(500)
-    })
-
-    uploadFile.pipe(fileStream)
-
-    uploadFile.on('end', (err) => {
-      if (err) {
-        res({
-          statusCode: 500,
-          error: err
-        }).code(500)
-
-        return
-      }
-
-      this.repos.uploadToGCLOUD(
-        userId,
-        [geoLocationLatitude, geoLocationLongitude],
-        uploadedFileName,
-        uploadedFilePath,
-        fileStream,
-        'video',
-        description,
-        hashtags
-      ).then((uploadedVideo) => {
-        fs.unlink(uploadedFilePath, () => {
-          res(uploadedVideo)
-        })
-      }, (error) => {
-        fs.unlink(uploadedFilePath, () => {
-          res({
-            statusCode: 500,
-            error
-          }).code(500)
-        })
-      })
-    })
+    }
   }
 
   static streamResource (req, res) {

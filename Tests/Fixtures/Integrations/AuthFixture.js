@@ -66,6 +66,7 @@ export default class AuthFixture {
     id: '08dc07b2-dd0b-4fed-851f-aa43ea53c416',
     userId: AuthFixture.mockedUser.id,
     cloudUrl: 'https://dummyurl.com/demo.mp4',
+    cloudFilename: 'demo.mp4',
     type: ResourceTypesEnum.video,
   }
 
@@ -77,6 +78,8 @@ export default class AuthFixture {
 
   static async cleanUp () {
     await Model.Users.update({ avatarResourceId: null }, { where: {} })
+    await Model.VideosHashtags.destroy({ where: {} })
+    await Model.VideosProperties.destroy({ where: {} })
     await Model.React.destroy({ where: {} })
     await Model.Resources.destroy({ where: {} })
     await Model.AuthTokens.destroy({ where: {} })

@@ -23,7 +23,6 @@ export default class StreamRoutes {
         validate: {
           payload: {
             file: Joi.any().required(),
-            userId: Joi.string().required(),
             description: Joi.string().required(),
             hashtags: Joi.string().required()
           }

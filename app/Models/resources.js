@@ -31,6 +31,11 @@ export default function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING
     },
+    cloudFilename: {
+      field: 'cloud_filename',
+      allowNull: false,
+      type: DataTypes.STRING
+    },
     createdAt: {
       field: 'created_at',
       type: DataTypes.DATE,
