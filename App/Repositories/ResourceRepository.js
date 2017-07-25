@@ -5,7 +5,6 @@ import configs from '../../Configs'
 import * as Models from '../Models'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
-
 export default class ResourceRepository {
   static async fetchProducedVideoResourcesByLimit (offset, limit) {
     const log = debug(`${configs.debugZone}:ResourceRepository:fetchProducedVideoResourcesByLimit`)
