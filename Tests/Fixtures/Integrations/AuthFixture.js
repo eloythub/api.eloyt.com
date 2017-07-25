@@ -78,6 +78,7 @@ export default class AuthFixture {
 
   static async cleanUp () {
     await Model.Users.update({ avatarResourceId: null }, { where: {} })
+    await Model.VideosThumbnails.destroy({ where: {} })
     await Model.VideosHashtags.destroy({ where: {} })
     await Model.VideosProperties.destroy({ where: {} })
     await Model.React.destroy({ where: {} })
