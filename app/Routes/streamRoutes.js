@@ -30,24 +30,6 @@ export default class StreamRoutes {
       }
     })
 
-    router.addRoute({
-      method: 'GET',
-      path: `/stream/{userId}/{resourceType}/{resourceId}`,
-      config: {
-        auth: 'token',
-        handler: (req, res) => {
-          StreamController.streamResource(req, res)
-        },
-        validate: {
-          params: {
-            userId: Joi.string(),
-            resourceType: Joi.string(),
-            resourceId: Joi.string()
-          }
-        }
-      }
-    })
-
     // thumbnail route
     router.addRoute({
       method: 'GET',
@@ -68,24 +50,7 @@ export default class StreamRoutes {
 
     router.addRoute({
       method: 'GET',
-      path: `/stream/produce/{userId}/{offset}`,
-      config: {
-        auth: 'token',
-        handler: (req, res) => {
-          StreamController.produceStreamResources(req, res)
-        },
-        validate: {
-          params: {
-            userId: Joi.string(),
-            offset: Joi.number().integer().min(1).max(100)
-          }
-        }
-      }
-    })
-
-    router.addRoute({
-      method: 'GET',
-      path: `/stream/produce/{resourceId}`,
+      path: `/stream/produce/{videoResourceId}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -93,7 +58,24 @@ export default class StreamRoutes {
         },
         validate: {
           params: {
-            resourceId: Joi.string()
+            videoResourceId: Joi.string().required()
+          }
+        }
+      }
+    })
+
+    router.addRoute({
+      method: 'GET',
+      path: `/stream/produce`,
+      config: {
+        auth: 'token',
+        handler: (req, res) => {
+          StreamController.produceStreamResources(req, res)
+        },
+        validate: {
+          query: {
+            offset: Joi.number().integer().required(),
+            limit: Joi.number().integer().required()
           }
         }
       }

@@ -14,6 +14,26 @@ import VideosThumbnailsRepository from '../Repositories/VideosThumbnailsReposito
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
 export default class StreamService {
+  static async produceStreamResource (offset, limit) {
+    const log = debug(`${configs.debugZone}:StreamService:produceStreamResource`)
+
+    log('produceStreamResource')
+
+    const videoResources = await ResourceRepository.fetchProducedVideoResourcesByLimit(offset, limit)
+
+    return videoResources
+  }
+
+  static async produceStreamResourceById (videoResourceId) {
+    const log = debug(`${configs.debugZone}:StreamService:produceStreamResourceById`)
+
+    log('produceStreamResourceById')
+
+    const videoResources = await ResourceRepository.fetchProducedVideoResourcesByResourceId(videoResourceId)
+
+    return videoResources
+  }
+
   static async reactToResource (userId, resourceId, type) {
     const log = debug(`${configs.debugZone}:StreamService:reactToResource`)
 
