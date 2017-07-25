@@ -127,6 +127,13 @@ export default class StreamController {
     try {
       const data = await StreamService.produceStreamResourceById(videoResourceId)
 
+      if (!data) {
+        return res({
+          statusCode: 404,
+          message: 'video reference does not exists'
+        }).code(404)
+      }
+
       res({
         statusCode: 200,
         data

@@ -16,6 +16,7 @@ export default class ResourceRepository {
       'cloud_video_url': 'cloudVideoUrl',
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
+      'video_hashtags': 'hashtags',
       'created_at': 'createdAt'
     }
 
@@ -25,7 +26,15 @@ export default class ResourceRepository {
         r.created_at   AS created_at,
         r.cloud_url    AS cloud_video_url,
         vtr.cloud_url  AS cloud_thumbnail_url,
-        vp.description AS video_description
+        vp.description AS video_description,
+        (
+          SELECT array_to_json(array_agg(sh)) AS hashtags
+          FROM videos_hashtags AS svh
+            JOIN hashtags AS sh
+              ON svh.hashtag_id = sh.id
+          WHERE
+            svh.video_resource_id = r.id
+        )              AS video_hashtags
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id
@@ -64,6 +73,7 @@ export default class ResourceRepository {
       'cloud_video_url': 'cloudVideoUrl',
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
+      'video_hashtags': 'hashtags',
       'created_at': 'createdAt'
     }
 
@@ -73,7 +83,15 @@ export default class ResourceRepository {
         r.created_at   AS created_at,
         r.cloud_url    AS cloud_video_url,
         vtr.cloud_url  AS cloud_thumbnail_url,
-        vp.description AS video_description
+        vp.description AS video_description,
+        (
+          SELECT array_to_json(array_agg(sh)) AS hashtags
+          FROM videos_hashtags AS svh
+            JOIN hashtags AS sh
+              ON svh.hashtag_id = sh.id
+          WHERE
+            svh.video_resource_id = r.id
+        )              AS video_hashtags
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id
