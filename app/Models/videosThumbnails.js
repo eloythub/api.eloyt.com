@@ -3,7 +3,7 @@
 import Sequelize from 'sequelize'
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define('UideosThumbnails', {
+  return sequelize.define('VideosThumbnails', {
     id: {
       field: 'id',
       primaryKey: true,
@@ -33,8 +33,9 @@ export default function (sequelize, DataTypes) {
     },
     imageSize: {
       field: 'image_size',
-      allowNull: false,
-      type: DataTypes.INTEGER
+      allowNull: true,
+      type: DataTypes.INTEGER,
+      defaultValue: null
     },
     createdAt: {
       field: 'created_at',

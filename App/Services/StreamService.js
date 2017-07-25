@@ -6,8 +6,11 @@ import debug from 'debug'
 import path from 'path'
 import configs from '../../Configs'
 import StorageService from '../Services/StorageService'
+import VideoThumbnailService from '../Services/VideoThumbnailService'
+import ResourceRepository from '../Repositories/ResourceRepository'
 import ReactRepository from '../Repositories/ReactRepository'
 import VideosRepository from '../Repositories/VideosRepository'
+import VideosThumbnailsRepository from '../Repositories/VideosThumbnailsRepository'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
 export default class StreamService {
@@ -25,6 +28,28 @@ export default class StreamService {
     }
 
     const data = await ReactRepository.createReact(userId, resourceId, type)
+
+    return { data, action: 'create' }
+  }
+
+  static async getVideoThumbnailResource (videoResourceId) {
+    const log = debug(`${configs.debugZone}:StreamService:getVideoThumbnailResource`)
+
+    log('getVideoThumbnailResource')
+
+    const isThumbnailAlreadyExists = await VideosThumbnailsRepository.isAlreadyExists(videoResourceId)
+
+    if (isThumbnailAlreadyExists) {
+      const videoThumbnail = await VideosThumbnailsRepository.fetchThumbnailByVideoResourceId(videoResourceId)
+
+      const data = await ResourceRepository.fetchResourceById(videoThumbnail.thumbnailResourceId)
+
+      return { data, action: 'find' }
+    }
+
+    const videoResource = await ResourceRepository.fetchResourceById(videoResourceId)
+
+    const data = await VideoThumbnailService.createVideoThumbnail(videoResource)
 
     return { data, action: 'create' }
   }

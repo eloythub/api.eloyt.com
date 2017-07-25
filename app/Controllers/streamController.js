@@ -59,6 +59,53 @@ export default class StreamController {
     }
   }
 
+  static async streamResourceReact (req, res) {
+    const error = debug(`${configs.debugZone}:StreamController:streamResourceReact`)
+
+    const { user } = req.auth.credentials
+    const { resourceId, reactType } = req.payload
+
+    try {
+      const { data, action } = await StreamService.reactToResource(user.id, resourceId, reactType)
+
+      res({
+        statusCode: 200,
+        data,
+        action
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
+  }
+
+  static async streamThumbnailResource (req, res) {
+    const error = debug(`${configs.debugZone}:StreamController:streamThumbnailResource`)
+
+    const { videoResourceId } = req.params
+
+    try {
+      const { data, action } = await StreamService.getVideoThumbnailResource(videoResourceId)
+
+      res({
+        statusCode: 200,
+        data,
+        action
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
+  }
+
   static streamResource (req, res) {
     const userId = req.params.userId
     const resourceId = req.params.resourceId
@@ -92,59 +139,38 @@ export default class StreamController {
       })
   }
 
-  static streamThumbnailResource (req, res) {
+  static produceStreamResources (req, res) {
     const userId = req.params.userId
-    const resourceId = req.params.resourceId
-    const resourceType = req.params.resourceType
-    const imageSize = req.params.imageSize
+    const offset = req.params.offset
 
-    if (resourceType !== 'video') {
-      return res({
-        statusCode: 500,
-        error: {
-          message: 'At the moment only accept\'s the video as resource'
-        }
-      }).code(500)
+    const args = {
+      offset
     }
 
-    this.repos.findResource(userId, resourceId, resourceType)
-      .then((resource) => {
-        if (!resource) {
-          return res({
-            statusCode: 404
-          }).code(404)
-        }
+    this.repos.produceStreamResource(userId, args)
+      .then((data) => {
+        res({
+          statusCode: 200,
+          data: this.transformer.produceStreamResources(data)
+        }).code(200)
+      })
+      .catch((error) => {
+        res({
+          statusCode: 500,
+          error
+        }).code(500)
+      })
+  }
 
-        this.repos.findResourceThumb(resourceId, imageSize)
-          .then((thumbResource) => {
-            if (!thumbResource) {
-              return res({
-                statusCode: 404
-              }).code(404)
-            }
+  static produceOneStreamResourceById (req, res) {
+    const {resourceId} = req.params
 
-            https.get(thumbResource.resourceUrl, (proxyRes) => {
-              // pipe the resourceUrl to response
-              res(null, proxyRes).code(200)
-            }).on('error', (error) => {
-              res({
-                statusCode: 500,
-                error
-              }).code(500)
-            })
-          })
-          .catch((error) => {
-            if (error === 'no-thumbnail-found') {
-              // It needs to generate the thumbnail here and upload to cloud storage
-              // then pipe the uploaded resource from cloud storage to response here
-              return this.generateThumbnailFromLink(res, resource, imageSize)
-            }
-
-            res({
-              statusCode: 500,
-              error
-            }).code(500)
-          })
+    this.repos.produceOneStreamResourceById(resourceId)
+      .then((data) => {
+        res({
+          statusCode: 200,
+          data: this.transformer.produceStreamResources(data)[0]
+        }).code(200)
       })
       .catch((error) => {
         res({
@@ -239,70 +265,5 @@ export default class StreamController {
         error
       }).code(500)
     })
-  }
-
-  static produceStreamResources (req, res) {
-    const userId = req.params.userId
-    const offset = req.params.offset
-
-    const args = {
-      offset
-    }
-
-    this.repos.produceStreamResource(userId, args)
-      .then((data) => {
-        res({
-          statusCode: 200,
-          data: this.transformer.produceStreamResources(data)
-        }).code(200)
-      })
-      .catch((error) => {
-        res({
-          statusCode: 500,
-          error
-        }).code(500)
-      })
-  }
-
-  static produceOneStreamResourceById (req, res) {
-    const {resourceId} = req.params
-
-    this.repos.produceOneStreamResourceById(resourceId)
-      .then((data) => {
-        res({
-          statusCode: 200,
-          data: this.transformer.produceStreamResources(data)[0]
-        }).code(200)
-      })
-      .catch((error) => {
-        res({
-          statusCode: 500,
-          error
-        }).code(500)
-      })
-  }
-
-  static async streamResourceReact (req, res) {
-    const error = debug(`${configs.debugZone}:StreamController:streamResourceReact`)
-
-    const { user } = req.auth.credentials
-    const { resourceId, reactType } = req.payload
-
-    try {
-      const { data, action } = await StreamService.reactToResource(user.id, resourceId, reactType)
-
-      res({
-        statusCode: 200,
-        data,
-        action
-      }).code(200)
-    } catch (e) {
-      error(e.message)
-
-      res({
-        statusCode: 500,
-        error: e.message
-      }).code(500)
-    }
   }
 };

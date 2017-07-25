@@ -51,7 +51,7 @@ export default class StreamRoutes {
     // thumbnail route
     router.addRoute({
       method: 'GET',
-      path: `/stream/{userId}/{resourceType}/{resourceId}/thumbnail/{imageSize}`,
+      path: `/stream/thumbnail/{videoResourceId}/{imageSize}`,
       config: {
         auth: 'token',
         handler: (req, res) => {
@@ -59,10 +59,8 @@ export default class StreamRoutes {
         },
         validate: {
           params: {
-            userId: Joi.string(),
-            resourceType: Joi.string(),
-            resourceId: Joi.string(),
-            imageSize: Joi.string()
+            videoResourceId: Joi.string().required(),
+            imageSize: Joi.string().required()
           }
         }
       }

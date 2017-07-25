@@ -49,7 +49,7 @@ CREATE TABLE videos_thumbnails (
   id                    UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   video_resource_id     UUID                           NOT NULL REFERENCES resources (id),
   thumbnail_resource_id UUID                           NOT NULL REFERENCES resources (id),
-  image_size            NUMERIC                        NOT NULL DEFAULT 0,
+  image_size            NUMERIC                        NULL DEFAULT 0,
   created_at            TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
 );
 
