@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Exmaple
+#   ./bin/sequelize [args]
+#
+
+npm run sequelize -s -- $*

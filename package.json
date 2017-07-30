@@ -8,13 +8,15 @@
     "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com",
     "test": "npm run standard -s && npm run mocha-integrations -s",
     "mocha-integrations": "NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --reporter dot --compilers js:babel-core/register --recursive",
-    "mocha-integrations-verbos": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive",
+    "mocha-integrations-verbose": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive",
     "mocha-integrations-watch": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive --watch",
     "mocha-unit-tests": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter dot --compilers js:babel-core/register --recursive",
-    "mocha-unit-tests-verbos": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",
+    "mocha-unit-tests-verbose": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",
     "mocha-unit-tests-watch": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive --watch",
-    "standard": "standard ./App/**/*.js --verbose",
-    "standard-fix": "standard ./App/**/*.js --fix"
+    "standard": "standard ./App/**/*.js ./Migrations/**/*.js",
+    "standard-fix": "standard ./App/**/*.js  ./Migrations/**/*.js --fix",
+    "sequelize": "./node_modules/babel-cli/bin/babel-node.js ./node_modules/sequelize-cli/bin/sequelize $*",
+    "db-query": "./node_modules/babel-cli/bin/babel-node.js ./Migrations/Init/Query.js \"$*\""
   },
   "repository": {
     "type": "git",

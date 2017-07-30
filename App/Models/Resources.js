@@ -36,8 +36,8 @@ export default function (sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.STRING
     },
-    createdAt: {
-      field: 'created_at',
+    updated_at: {
+      field: 'updated_at',
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
@@ -46,7 +46,7 @@ export default function (sequelize, DataTypes) {
     tableName: 'resources',
     underscored: true,
     timestamps: true,
-    createdAt: 'createdAt',
+    createdAt: 'updated_at',
     updatedAt: false,
     deletedAt: false
   })
