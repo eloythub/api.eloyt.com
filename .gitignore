@@ -47,5 +47,4 @@ tmp/*.jpg
 
 Keys/gcs/*.json
 
-.env
-.env.test
+.env.production

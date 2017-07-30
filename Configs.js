@@ -2,10 +2,10 @@
 
 import dotenv from 'dotenv';
 
-let path
+let path = '.env'
 
-if (process.env.NODE_ENV === 'test') {
-  path = '.env.test'
+if (process.env.NODE_ENV !== 'dev') {
+  path = `.env.${process.env.NODE_ENV}`
 }
 
 dotenv.config({ path, silent: true })
