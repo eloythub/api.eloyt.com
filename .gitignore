@@ -48,3 +48,4 @@ tmp/*.jpg
 Keys/gcs/*.json
 
 .env.production
+.env.*.kube

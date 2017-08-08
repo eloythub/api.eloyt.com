@@ -13,7 +13,7 @@ module.exports = {
     "host": "postgresdb",
     "dialect": "postgres"
   },
-  "production": {
+  "prod": {
     "username": "prod-username",
     "password": "prod-password",
     "database": "prod-database",

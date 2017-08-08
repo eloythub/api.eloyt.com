@@ -62,11 +62,11 @@ RUN cd $TMP_DIR && yarn
 
 COPY $TMP_DIR $PROD_DIR
 COPY . $PROD_DIR/
-COPY ./.env.kube.prod $PROD_DIR/.env.prod
+COPY ./.env.kube.test $PROD_DIR/.env.test
 
 WORKDIR $PROD_DIR
 
-CMD ln -sf $TMP_DIR/node_modules && \
-	pm2 start pm2.prod.config.js --no-daemon
+CMD yarn && \
+	pm2 start pm2.test.config.js --no-daemon
 
 EXPOSE 80

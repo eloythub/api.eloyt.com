@@ -6,10 +6,12 @@ module.exports = {
       script: "App.js",
       watch: false,
       env: {
-        NODE_ENV: "prod"
+        DEBUG: 'ELOYT-ZONE:*',
+        NODE_ENV: "staging"
       },
       env_: {
-        NODE_ENV: "prod"
+        DEBUG: 'ELOYT-ZONE:*',
+        NODE_ENV: "staging"
       }
     }
   ]

@@ -6,10 +6,10 @@ module.exports = {
       script: "App.js",
       watch: false,
       env: {
-        NODE_ENV: "prod"
+        NODE_ENV: "test"
       },
       env_: {
-        NODE_ENV: "prod"
+        NODE_ENV: "test"
       }
     }
   ]
