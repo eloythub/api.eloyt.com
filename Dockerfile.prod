@@ -1,4 +1,4 @@
-FROM node:6.9
+FROM node:8.1
 MAINTAINER Mahan Hazrati<eng.mahan.hazrati@gmail.com>
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
@@ -46,7 +46,11 @@ RUN mkdir software && \
     make install && \
     /sbin/ldconfig
 
-RUN npm install -g pm2 yarn
+RUN apt-get remove npm
+RUN apt-get update
+RUN apt-get install -y npm
+
+RUN npm install -g pm2 yarn -s
 
 ENV TMP_DIR=/tmp
 ENV PROD_DIR=/opt/app
@@ -56,11 +60,13 @@ COPY yarn.lock $TMP_DIR/yarn.lock
 COPY package.json $TMP_DIR/package.json
 RUN cd $TMP_DIR && yarn
 
-WORKDIR $PROD_DIR
-
 COPY $TMP_DIR $PROD_DIR
 COPY . $PROD_DIR/
+COPY ./.env.kube.prod $PROD_DIR/.env.prod
 
-CMD ["pm2-docker", "app.js"]
+WORKDIR $PROD_DIR
+
+CMD ln -sf $TMP_DIR/node_modules && \
+	pm2 start pm2.prod.config.js --no-daemon
 
 EXPOSE 80

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Exmaple
+#   ./bin/db-query [args]
+#
+
+npm run db-query -s -- "${1}"

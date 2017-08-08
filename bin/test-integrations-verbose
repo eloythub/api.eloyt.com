@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Exmaple
+#   ./bin/test-integrations-verbose [args]
+#
+
+NODE_ENV=dev ./bin/db-query "DROP DATABASE IF EXISTS eloytdbtest;"
+NODE_ENV=dev ./bin/db-query "CREATE DATABASE eloytdbtest"
+
+./bin/sequelize db:migrate --env=test
+./bin/sequelize db:seed:all --env=test
+
+npm run mocha-integrations-verbose -s -- $*

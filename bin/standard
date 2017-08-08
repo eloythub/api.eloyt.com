@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Exmaple
+#   ./bin/standard [args]
+#
+
+npm run standard -s -- $*

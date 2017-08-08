@@ -1,12 +1,22 @@
 {
   "name": "api-eloyt-com",
   "version": "0.0.0",
-  "description": "eloyt server app",
-  "main": "built/app.js",
+  "description": "Eloyt API server",
+  "main": "Built/App.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-register --require babel-polyfill ./tests --watch --recursive",
-    "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com"
+    "start": "DEBUG=ELOYT-ZONE:* NODE_ENV=dev ./node_modules/babel-cli/bin/babel-node.js ./App.js",
+    "ngrok": "./ngrok http 8090 --region=ap --hostname=ngrok.api.eloyt.com",
+    "test": "npm run standard -s && npm run mocha-integrations -s",
+    "mocha-integrations": "NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --reporter dot --compilers js:babel-core/register --recursive",
+    "mocha-integrations-verbose": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive",
+    "mocha-integrations-watch": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/Integrations/**/*.spec.js --compilers js:babel-core/register --recursive --watch",
+    "mocha-unit-tests": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter dot --compilers js:babel-core/register --recursive",
+    "mocha-unit-tests-verbose": "DEBUG=ELOYT-ZONE:* NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive",
+    "mocha-unit-tests-watch": "NODE_ENV=test mocha ./Tests/UnitTests/**/*.spec.js --reporter list --compilers js:babel-core/register --recursive --watch",
+    "standard": "standard ./App/**/*.js ./Migrations/**/*.js",
+    "standard-fix": "standard ./App/**/*.js  ./Migrations/**/*.js --fix",
+    "sequelize": "./node_modules/babel-cli/bin/babel-node.js ./node_modules/sequelize-cli/bin/sequelize $*",
+    "db-query": "./node_modules/babel-cli/bin/babel-node.js ./Migrations/Init/Query.js \"$*\""
   },
   "repository": {
     "type": "git",
@@ -21,27 +31,48 @@
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",
     "babel": "^6.5.2",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.18.2",
     "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "babel-preset-react-native": "^2.1.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
+    "debug": "^2.6.8",
+    "dotenv": "^4.0.0",
     "fbgraph": "^1.3.0",
     "fluent-ffmpeg": "^2.1.0",
     "hapi": "^16.0.1",
     "mongoose": "^4.7.1",
     "node-json-transform": "^1.0.13",
+    "pg": "^6.4.0",
+    "pg-hstore": "^2.3.2",
     "pm2": "^2.1.6",
     "promise": "^7.1.1",
+    "sequelize": "^4.2.1",
+    "sequelize-cli": "^2.7.0",
     "uuid": "^3.0.1",
-    "yarn": "^0.17.10"
+    "yarn": "^*"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "debug": "^2.3.3",
-    "mocha": "^3.2.0",
-    "proxyquire": "^1.7.10",
-    "sinon": "^1.17.6"
+    "chai": "*",
+    "chai-http": "^3.0.0",
+    "chai-spies": "^0.7.1",
+    "chai-uuid": "^1.0.6",
+    "mocha": "*",
+    "nock": "^9.0.14",
+    "proxyquire": "^1.8.0",
+    "sinon": "*",
+    "standard": "*"
+  },
+  "engines": {
+    "node": ">=7.6"
+  },
+  "standard": {
+    "ignore": [
+      "/Tests/",
+      "/App/models-mongo/"
+    ]
   }
 }
