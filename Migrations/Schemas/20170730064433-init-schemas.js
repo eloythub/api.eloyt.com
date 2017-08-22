@@ -26,7 +26,7 @@ module.exports = {
         user_id           UUID                           NOT NULL REFERENCES users (id),
         cloud_url         TEXT                           NOT NULL CHECK (trim(cloud_url) <> ''),
         cloud_filename    TEXT                           NOT NULL CHECK (trim(cloud_filename) <> ''),
-        updated_at        TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
+        uploaded_at       TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT now()
       );
     `)
     await queryInterface.sequelize.query(`

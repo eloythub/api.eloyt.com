@@ -87,6 +87,13 @@ export default class StreamController {
         action
       }).code(200)
     } catch (e) {
+      if (e.message === 'not-found') {
+        return res({
+          statusCode: 404,
+          error: e.message
+        }).code(404)
+      }
+
       error(e.message)
 
       res({

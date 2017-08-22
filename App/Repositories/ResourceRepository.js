@@ -122,12 +122,12 @@ export default class ResourceRepository {
     return resources[0]
   }
 
-  static async fetchResourceById (id) {
+  static async fetchResourceById (id, type) {
     const log = debug(`${configs.debugZone}:ResourceRepository:fetchResourceById`)
 
     log('fetchResourceById')
 
-    const resource = await Models.Resources.findOne({ where: { id } })
+    const resource = await Models.Resources.findOne({ where: { id, type } })
 
     if (!resource) {
       return null

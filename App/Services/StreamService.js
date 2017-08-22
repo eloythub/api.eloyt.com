@@ -57,17 +57,21 @@ export default class StreamService {
 
     log('getVideoThumbnailResource')
 
-    const isThumbnailAlreadyExists = await VideosThumbnailsRepository.isAlreadyExists(videoResourceId)
+    const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
+
+    if (!videoResource) {
+      throw new Error('not-found')
+    }
+
+    const isThumbnailAlreadyExists = await VideosThumbnailsRepository.fetchThumbnailByVideoResourceId(videoResourceId)
 
     if (isThumbnailAlreadyExists) {
       const videoThumbnail = await VideosThumbnailsRepository.fetchThumbnailByVideoResourceId(videoResourceId)
 
-      const data = await ResourceRepository.fetchResourceById(videoThumbnail.thumbnailResourceId)
+      const data = await ResourceRepository.fetchResourceById(videoThumbnail.thumbnailResourceId, ResourceTypesEnum.thumbnail)
 
       return { data, action: 'find' }
     }
-
-    const videoResource = await ResourceRepository.fetchResourceById(videoResourceId)
 
     const data = await VideoThumbnailService.createVideoThumbnail(videoResource)
 
@@ -101,7 +105,7 @@ export default class StreamService {
           }
 
             // Add video Resource
-          const videoResource = await StorageService.uploadToGoogleCloudStorage(
+          const videoResource = await StorageService.uploadToAzureStorage(
               uploadedFileName,
               uploadedFilePath,
               userId,

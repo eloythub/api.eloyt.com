@@ -32,4 +32,6 @@ export default {
   },
   googleCloudProjectId: env['GCLOUD_PROJECT_ID'],
   googleCloudStorageBucket: env['GCLOUD_STORAGE_BUCKET'] || 'eloyt',
+  azureStorageKey: env['AZURE_STORAGE_KEY'],
+  azureStorageAccountName: env['AZURE_STORAGE_ACCOUNT_NAME'],
 };

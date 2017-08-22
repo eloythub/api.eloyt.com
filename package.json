@@ -30,6 +30,7 @@
   "homepage": "https://github.com/eloythub/api.eloyt.com#readme",
   "dependencies": {
     "@google-cloud/storage": "^0.5.0",
+    "azure-storage": "^2.3.0",
     "babel": "^6.5.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.18.2",

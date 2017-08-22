@@ -60,14 +60,14 @@ export default class VideoThumbnailService {
       try {
         ffmpeg(tmpDownloadPath)
           .on('error', (err) => {
-            error(err.message)
+            error('FFMPEG:', err.message)
 
             fs.unlink(tmpDownloadPath, () => {
               reject(err)
             })
           })
           .on('end', async () => {
-            const videoThumbnailResource = await StorageService.uploadToGoogleCloudStorage(
+            const videoThumbnailResource = await StorageService.uploadToAzureStorage(
               tmpThumbnailFileName,
               tmpThumbnailPath,
               videoResource.userId,
@@ -84,6 +84,7 @@ export default class VideoThumbnailService {
             })
           })
           .screenshots({
+            timestamps: ['01%'],
             count: 1,
             filename: tmpThumbnailFileName,
             folder: tmpDir

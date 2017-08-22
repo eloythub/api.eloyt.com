@@ -1,5 +1,12 @@
 module.exports = {
-  "development": {
+  "dev": {
+    "username": "eloyt-usr",
+    "password": "987987987",
+    "database": "eloytdb",
+    "host": "postgresdb",
+    "dialect": "postgres"
+  },
+  "dev": {
     "username": "eloyt-usr",
     "password": "987987987",
     "database": "eloytdb",
