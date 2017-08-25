@@ -76,7 +76,9 @@ export default class UsersService {
       birthday: dateOfBirth
     } = profile
 
-    let user = await UsersRepository.createUser(email, name, firstName, lastName, gender, dateOfBirth)
+    const username = null
+
+    let user = await UsersRepository.createUser(email, username, name, firstName, lastName, gender, dateOfBirth)
 
     return user
   }

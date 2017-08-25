@@ -6,11 +6,11 @@ module.exports = {
     "host": "postgresdb",
     "dialect": "postgres"
   },
-  "dev": {
+  "staging": {
     "username": "eloyt-usr",
     "password": "987987987",
     "database": "eloytdb",
-    "host": "postgresdb",
+    "host": "staging-postgres",
     "dialect": "postgres"
   },
   "test": {

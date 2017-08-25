@@ -33,12 +33,12 @@ export default class UsersRepository {
     return user.dataValues
   }
 
-  static async createUser (email, name, firstName, lastName, gender, dateOfBirth) {
+  static async createUser (email, username, name, firstName, lastName, gender, dateOfBirth) {
     const log = debug(`${configs.debugZone}:UsersRepository:createUser`)
 
     log('createUser')
 
-    const user = await Models.Users.create({ email, name, firstName, lastName, gender, dateOfBirth })
+    const user = await Models.Users.create({ email, username, name, firstName, lastName, gender, dateOfBirth })
 
     if (!user) {
       return null

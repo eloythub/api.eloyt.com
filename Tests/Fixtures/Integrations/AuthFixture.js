@@ -26,6 +26,7 @@ export default class AuthFixture {
 
   static mockedRegisteredUser = {
     email: FacebookFixture.mockedFacebookProfile.email,
+    username: null,
     name: null,
     firstName: null,
     lastName: null,
@@ -52,6 +53,7 @@ export default class AuthFixture {
 
   static mockedUpdateUserAttributes = {
     name: 'Will Smith',
+    username: 'willsmith',
     firstName: 'Will',
     lastName: 'Smith',
     gender: GendersEnum.other,

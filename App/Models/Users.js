@@ -16,6 +16,11 @@ export default function (sequelize, DataTypes) {
       allowNull: true,
       type: DataTypes.STRING
     },
+    username: {
+      field: 'username',
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     name: {
       field: 'name',
       type: DataTypes.STRING,
