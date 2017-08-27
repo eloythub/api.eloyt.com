@@ -93,6 +93,10 @@ export default class UsersService {
 
     log('updateUser')
 
+    if ('username' in attributes) {
+      attributes.username = attributes.username.replace(/\W/g, '')
+    }
+
     let user = await UsersRepository.updateUser(userId, attributes)
 
     return user
