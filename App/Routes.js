@@ -4,6 +4,7 @@ import HealthCheckRoutes from './Routes/HealthCheckRoutes'
 import AuthRoutes from './Routes/AuthRoutes'
 import UsersRoutes from './Routes/UsersRoutes'
 import StreamRoutes from './Routes/StreamRoutes'
+import HashtagsRoutes from './Routes/HashtagsRoutes'
 
 export default class Routes {
   constructor (router) {
@@ -13,5 +14,6 @@ export default class Routes {
     AuthRoutes.setRoutes(this.router)
     UsersRoutes.setRoutes(this.router)
     StreamRoutes.setRoutes(this.router)
+    HashtagsRoutes.setRoutes(this.router)
   }
 };

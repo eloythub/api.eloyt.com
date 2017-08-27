@@ -25,7 +25,8 @@ export default class UsersRepository {
       'user_about_me': 'aboutMe',
       'cloud_avatar_url': 'cloudAvatarUrl',
       'user_registered_at': 'registeredAt',
-      'user_updated_at': 'updatedAt'
+      'user_updated_at': 'updatedAt',
+      'user_hashtags': 'hashtags'
     }
 
     const users = await Models.sequelize.query(`
@@ -44,7 +45,15 @@ export default class UsersRepository {
         u.about_me      AS user_about_me,
         ar.cloud_url    AS cloud_avatar_url,
         u.registered_at AS user_registered_at,
-        u.updated_at    AS user_updated_at
+        u.updated_at    AS user_updated_at,
+        (
+          SELECT array_to_json(array_agg(h)) AS hashtags
+          FROM users_hashtags AS uh
+            JOIN hashtags AS h
+              ON uh.hashtag_id = h.id
+          WHERE
+            uh.user_id = u.id
+        )               AS user_hashtags
       FROM users AS u
         LEFT JOIN resources AS ar
           ON ar.id = u.avatar_resource_id
@@ -87,7 +96,8 @@ export default class UsersRepository {
       'user_about_me': 'aboutMe',
       'cloud_avatar_url': 'cloudAvatarUrl',
       'user_registered_at': 'registeredAt',
-      'user_updated_at': 'updatedAt'
+      'user_updated_at': 'updatedAt',
+      'user_hashtags': 'hashtags'
     }
 
     const users = await Models.sequelize.query(`
@@ -106,7 +116,15 @@ export default class UsersRepository {
         u.about_me      AS user_about_me,
         ar.cloud_url    AS cloud_avatar_url,
         u.registered_at AS user_registered_at,
-        u.updated_at    AS user_updated_at
+        u.updated_at    AS user_updated_at,
+        (
+          SELECT array_to_json(array_agg(h)) AS hashtags
+          FROM users_hashtags AS uh
+            JOIN hashtags AS h
+              ON uh.hashtag_id = h.id
+          WHERE
+            uh.user_id = u.id
+        )               AS user_hashtags
       FROM users AS u
         LEFT JOIN resources AS ar
           ON ar.id = u.avatar_resource_id

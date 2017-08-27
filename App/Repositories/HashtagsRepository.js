@@ -18,4 +18,18 @@ export default class HashtagsRepository {
 
     return hashtag.id
   }
+
+  static async fetchAll () {
+    const log = debug(`${configs.debugZone}:HashtagsRepository:fetchIdBySlug`)
+
+    log('fetchIdBySlug')
+
+    const hashtags = await Models.Hashtags.findAll()
+
+    if (!hashtags) {
+      return null
+    }
+
+    return hashtags
+  }
 }

@@ -6,11 +6,6 @@ import UsersService from '../Services/UsersService'
 import UsersRepository from '../Repositories/UsersRepository'
 
 export default class UserController {
-  constructor (env) {
-    this.env = env
-    this.repos = new UsersRepository(env)
-  }
-
   static async createOrGet (req, res) {
     const error = debug(`${configs.debugZone}:UserController:createOrGet`)
 
