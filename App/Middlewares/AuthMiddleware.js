@@ -38,6 +38,13 @@ export default class AuthMiddleware {
 
     const user = await UsersService.getUserByTokenId(tokenId)
 
+    if (!user) {
+      return reply({
+        statusCode: 401,
+        message: 'authorization failed'
+      }).code(401)
+    }
+
     return reply.continue({
       isAuthenticated: true,
       credentials: {

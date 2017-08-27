@@ -10,13 +10,61 @@ export default class UsersRepository {
 
     log('fetchUserById')
 
-    const user = await Models.Users.findOne({ where: { id } })
+    const ProducedMap = {
+      'user_facebook_id': 'facebookId',
+      'user_id': 'id',
+      'user_username': 'username',
+      'user_name': 'name',
+      'user_email': 'email',
+      'user_firstname': 'firstName',
+      'user_lastname': 'lastName',
+      'user_gender': 'gender',
+      'user_mobile': 'mobile',
+      'user_date_of_birth': 'dateOfBirth',
+      'user_is_activated': 'isActivated',
+      'user_about_me': 'aboutMe',
+      'cloud_avatar_url': 'cloudAvatarUrl',
+      'user_registered_at': 'registeredAt',
+      'user_updated_at': 'updatedAt'
+    }
 
-    if (!user) {
+    const users = await Models.sequelize.query(`
+      SELECT
+        u.facebook_id   AS user_facebook_id,
+        u.id            AS user_id,
+        u.username      AS user_username,
+        u.name          AS user_name,
+        u.email         AS user_email,
+        u.first_name    AS user_firstname,
+        u.last_name     AS user_lastname,
+        u.gender        AS user_gender,
+        u.mobile        AS user_mobile,
+        u.date_of_birth AS user_date_of_birth,
+        u.is_activated  AS user_is_activated,
+        u.about_me      AS user_about_me,
+        ar.cloud_url    AS cloud_avatar_url,
+        u.registered_at AS user_registered_at,
+        u.updated_at    AS user_updated_at
+      FROM users AS u
+        LEFT JOIN resources AS ar
+          ON ar.id = u.avatar_resource_id
+      WHERE
+        u.id = :id
+      OFFSET 0
+      LIMIT 1
+    `, {
+      replacements: {
+        id
+      },
+      fieldMap: ProducedMap,
+      type: Models.sequelize.QueryTypes.SELECT
+    })
+
+    if (users.length === 0) {
       return null
     }
 
-    return user.dataValues
+    return users[0]
   }
 
   static async fetchUserIdByEmail (email) {
@@ -24,27 +72,77 @@ export default class UsersRepository {
 
     log('fetchUserIdByEmail')
 
-    const user = await Models.Users.findOne({ where: { email } })
+    const ProducedMap = {
+      'user_facebook_id': 'facebookId',
+      'user_id': 'id',
+      'user_username': 'username',
+      'user_name': 'name',
+      'user_email': 'email',
+      'user_firstname': 'firstName',
+      'user_lastname': 'lastName',
+      'user_gender': 'gender',
+      'user_mobile': 'mobile',
+      'user_date_of_birth': 'dateOfBirth',
+      'user_is_activated': 'isActivated',
+      'user_about_me': 'aboutMe',
+      'cloud_avatar_url': 'cloudAvatarUrl',
+      'user_registered_at': 'registeredAt',
+      'user_updated_at': 'updatedAt'
+    }
 
-    if (!user) {
+    const users = await Models.sequelize.query(`
+      SELECT
+        u.facebook_id   AS user_facebook_id,
+        u.id            AS user_id,
+        u.username      AS user_username,
+        u.name          AS user_name,
+        u.email         AS user_email,
+        u.first_name    AS user_firstname,
+        u.last_name     AS user_lastname,
+        u.gender        AS user_gender,
+        u.mobile        AS user_mobile,
+        u.date_of_birth AS user_date_of_birth,
+        u.is_activated  AS user_is_activated,
+        u.about_me      AS user_about_me,
+        ar.cloud_url    AS cloud_avatar_url,
+        u.registered_at AS user_registered_at,
+        u.updated_at    AS user_updated_at
+      FROM users AS u
+        LEFT JOIN resources AS ar
+          ON ar.id = u.avatar_resource_id
+      WHERE
+        u.email = :email
+      OFFSET 0
+      LIMIT 1
+    `, {
+      replacements: {
+        email
+      },
+      fieldMap: ProducedMap,
+      type: Models.sequelize.QueryTypes.SELECT
+    })
+
+    if (users.length === 0) {
       return null
     }
 
-    return user.dataValues
+    return users[0]
   }
 
-  static async createUser (email, username, name, firstName, lastName, gender, dateOfBirth) {
+  static async createUser (facebookId, email, username, name, firstName, lastName, gender, dateOfBirth) {
     const log = debug(`${configs.debugZone}:UsersRepository:createUser`)
 
     log('createUser')
 
-    const user = await Models.Users.create({ email, username, name, firstName, lastName, gender, dateOfBirth })
+    let user = await Models.Users.create({ facebookId, username, name, firstName, lastName, gender, dateOfBirth })
 
     if (!user) {
       return null
     }
 
-    return user.dataValues
+    user = await UsersRepository.fetchUserById(user.dataValues.id)
+
+    return user
   }
 
   static async updateUser (userId, attributes) {

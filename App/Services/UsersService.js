@@ -15,6 +15,10 @@ export default class UsersService {
 
     const authToken = await AuthRepository.fetchAuthTokenById(tokenId)
 
+    if (!authToken) {
+      return null
+    }
+
     const user = await UsersRepository.fetchUserById(authToken.userId)
 
     return user
@@ -68,6 +72,7 @@ export default class UsersService {
     log('createUser')
 
     const {
+      id,
       email,
       name,
       first_name: firstName,
@@ -78,7 +83,7 @@ export default class UsersService {
 
     const username = null
 
-    let user = await UsersRepository.createUser(email, username, name, firstName, lastName, gender, dateOfBirth)
+    let user = await UsersRepository.createUser(id, email, username, name, firstName, lastName, gender, dateOfBirth)
 
     return user
   }

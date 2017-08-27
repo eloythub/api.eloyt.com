@@ -4,6 +4,11 @@ import Sequelize from 'sequelize'
 
 export default function (sequelize, DataTypes) {
   return sequelize.define('Users', {
+    facebookId: {
+      field: 'facebook_id',
+      allowNull: true,
+      type: DataTypes.BIGINT
+    },
     id: {
       field: 'id',
       primaryKey: true,
