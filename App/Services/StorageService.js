@@ -9,18 +9,18 @@ import path from 'path'
 import { URL } from 'url'
 import configs from '../../Configs'
 import azure from 'azure-storage'
-import GoogleStorage from '@google-cloud/storage'
+// import GoogleStorage from '@google-cloud/storage'
 import ResourceRepository from '../Repositories/ResourceRepository'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
-const googleStorage = GoogleStorage({
-  projectId: configs.googleCloudProjectId,
-  keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-234bb463581d.json')
-}).bucket(configs.googleCloudStorageBucket)
+// const googleStorage = GoogleStorage({
+//  projectId: configs.googleCloudProjectId,
+//  keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-234bb463581d.json')
+// }).bucket(configs.googleCloudStorageBucket)
 
 const blobService = azure.createBlobService(
   configs.azureStorageAccountName,
-  configs.azureStorageKey,
+  configs.azureStorageKey
 )
 
 export default class StorageService {

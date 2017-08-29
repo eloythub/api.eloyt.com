@@ -3,7 +3,6 @@
 import debug from 'debug'
 import configs from '../../Configs'
 import UsersService from '../Services/UsersService'
-import UsersRepository from '../Repositories/UsersRepository'
 
 export default class UserController {
   static async createOrGet (req, res) {
@@ -67,6 +66,43 @@ export default class UserController {
           message: 'there is no user with requested id'
         }).code(404)
       }
+
+      res({
+        statusCode: 200,
+        data
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
+  }
+
+  static async profileActivation (req, res) {
+    const error = debug(`${configs.debugZone}:UserController:profileActivation`)
+
+    const {user} = req.auth.credentials
+
+    try {
+      if (user.isActivated) {
+        return res({
+          statusCode: 200,
+          data: user
+        }).code(200)
+      }
+
+      const isActivable = await UsersService.isActivable(user.id)
+
+      if (!isActivable) {
+        throw new Error('user is not activable, please update the mandatory items')
+      }
+
+      const data = await UsersService.updateUser(user.id, {
+        isActivated: true
+      })
 
       res({
         statusCode: 200,

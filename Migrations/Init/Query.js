@@ -1,8 +1,5 @@
-import configs from '../../Configs'
+// import configs from '../../Configs'
 import * as Models from '../../App/Models'
-
-
-const {postgresDb} = configs
 
 if (!process.env.NODE_ENV) {
   console.log('NODE_ENV is missing')

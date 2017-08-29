@@ -10,7 +10,7 @@ export default class HashtagsRepository {
 
     log('fetchIdBySlug')
 
-    const hashtag = await Models.Hashtags.findOne({ where: { slug } })
+    const hashtag = await Models.Hashtags.findOne({where: {slug}})
 
     if (!hashtag) {
       return null
@@ -20,11 +20,25 @@ export default class HashtagsRepository {
   }
 
   static async fetchAll () {
-    const log = debug(`${configs.debugZone}:HashtagsRepository:fetchIdBySlug`)
+    const log = debug(`${configs.debugZone}:HashtagsRepository:fetchAll`)
 
-    log('fetchIdBySlug')
+    log('fetchAll')
 
     const hashtags = await Models.Hashtags.findAll()
+
+    if (!hashtags) {
+      return null
+    }
+
+    return hashtags
+  }
+
+  static async fetchAllByIds (ids) {
+    const log = debug(`${configs.debugZone}:HashtagsRepository:fetchAllByIds`)
+
+    log('fetchAllByIds')
+
+    const hashtags = await Models.Hashtags.findAll({where: {id: ids}})
 
     if (!hashtags) {
       return null

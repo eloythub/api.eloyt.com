@@ -59,5 +59,14 @@ export default class UsersRoutes {
         }
       }
     })
+
+    router.addRoute({
+      method: 'POST',
+      path: `/users/activate`,
+      config: {
+        auth: 'token',
+        handler: (req, res) => UserController.profileActivation(req, res)
+      }
+    })
   }
 };

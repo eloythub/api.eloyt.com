@@ -24,4 +24,27 @@ export default class HashtagsController {
       }).code(500)
     }
   }
+
+  static async updateUserHashtags (req, res) {
+    const error = debug(`${configs.debugZone}:HashtagsController:updateUserHashtags`)
+
+    const {user} = req.auth.credentials
+    const {ids} = req.payload
+
+    try {
+      const updateResult = await HashtagsService.updateUserHashtags(user.id, ids)
+
+      res({
+        statusCode: 200,
+        updateResult
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
+  }
 };

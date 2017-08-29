@@ -111,4 +111,21 @@ export default class UsersService {
 
     return user
   }
+
+  static async isActivable (userId) {
+    const log = debug(`${configs.debugZone}:UsersService:isActivable`)
+
+    log('isActivable')
+
+    let user = await UsersRepository.fetchUserById(userId)
+
+    return (
+      user.username &&
+      user.firstName &&
+      user.lastName &&
+      user.dateOfBirth &&
+      user.gender &&
+      (user.hashtags !== null && user.hashtags.length >= 1 && user.hashtags.length <= 5)
+    )
+  }
 };

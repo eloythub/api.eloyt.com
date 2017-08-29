@@ -33,4 +33,30 @@ describe('Integration >> Routes >> Hashtags >>', () => {
         })
     })()
   })
+
+  it.skip('update user\'s hashtags', (done) => {
+    (async () => {
+      await AuthFixture.authenticationSeeder()
+      // TODO: add hashtags seeds
+
+      chai.request(app)
+        .post('/hashtags/update/user')
+        .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
+        .send({
+          ids: [
+            // TODO: add hashtag ids
+          ]
+        })
+        .end((err, res) => {
+          expect(res).to.be.json
+
+          expect(res.status).to.equal(200)
+
+          expect(res.body.statusCode).to.equal(200)
+          //expect(res.body.data).to.include(AuthFixture.mockedRegisteredUser) // get user with new hashtags
+
+          done()
+        })
+    })()
+  })
 })

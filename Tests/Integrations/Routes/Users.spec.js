@@ -230,4 +230,25 @@ describe('Integration >> Routes >> Users >>', () => {
         })
     })()
   })
+
+  it.skip('activate user', (done) => {
+    (async () => {
+      await AuthFixture.authenticationSeeder()
+
+      chai.request(app)
+        .post('/users/activate')
+        .send()
+        .set('authorization', `bearer ${AuthFixture.mockedAuthToken.id}`)
+        .end((err, res) => {
+          expect(res).to.be.json
+
+          expect(res.status).to.equal(200)
+
+          expect(res.body.statusCode).to.equal(200)
+
+          done()
+        })
+    })()
+  })
+
 })
