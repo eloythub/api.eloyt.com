@@ -17,13 +17,13 @@ export default class ResourceRepository {
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
       'video_hashtags': 'hashtags',
-      'created_at': 'createdAt'
+      'uploaded_at': 'uploadedAt'
     }
 
     const resources = await Models.sequelize.query(`
       SELECT
         r.id           AS video_resource_id,
-        r.created_at   AS created_at,
+        r.uploaded_at  AS uploaded_at,
         r.cloud_url    AS cloud_video_url,
         vtr.cloud_url  AS cloud_thumbnail_url,
         vp.description AS video_description,
@@ -47,7 +47,7 @@ export default class ResourceRepository {
       WHERE
         r.type = :type
       ORDER BY
-        r.created_at DESC
+        r.uploaded_at DESC
       OFFSET :offset
       LIMIT :limit
     `, {
@@ -74,13 +74,13 @@ export default class ResourceRepository {
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
       'video_hashtags': 'hashtags',
-      'created_at': 'createdAt'
+      'uploaded_at': 'uploadedAt'
     }
 
     const resources = await Models.sequelize.query(`
       SELECT
         r.id           AS video_resource_id,
-        r.created_at   AS created_at,
+        r.uploaded_at  AS uploaded_at,
         r.cloud_url    AS cloud_video_url,
         vtr.cloud_url  AS cloud_thumbnail_url,
         vp.description AS video_description,
