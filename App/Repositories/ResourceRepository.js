@@ -17,7 +17,8 @@ export default class ResourceRepository {
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
       'video_hashtags': 'hashtags',
-      'uploaded_at': 'uploadedAt'
+      'uploaded_at': 'uploadedAt',
+      'user_info': 'videoOwner'
     }
 
     const resources = await Models.sequelize.query(`
@@ -34,7 +35,25 @@ export default class ResourceRepository {
               ON svh.hashtag_id = sh.id
           WHERE
             svh.video_resource_id = r.id
-        )              AS video_hashtags
+        )              AS video_hashtags,
+        (
+          SELECT row_to_json(s)
+          FROM (
+                 SELECT
+                   su.id AS id,
+                   su.username AS username,
+                   su.email AS email,
+                   su.first_name AS firstname,
+                   su.last_name AS lastname,
+                   su.gender AS gender,
+                   sr.cloud_url AS avatar
+                 FROM users AS su
+                   JOIN resources AS sr
+                     ON sr.id = su.avatar_resource_id
+                 WHERE
+                   su.id = u.id
+               ) AS s
+        )              AS user_info
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id
@@ -74,7 +93,8 @@ export default class ResourceRepository {
       'cloud_thumbnail_url': 'cloudThumbnailUrl',
       'video_description': 'description',
       'video_hashtags': 'hashtags',
-      'uploaded_at': 'uploadedAt'
+      'uploaded_at': 'uploadedAt',
+      'user_info': 'videoOwner'
     }
 
     const resources = await Models.sequelize.query(`
@@ -91,7 +111,25 @@ export default class ResourceRepository {
               ON svh.hashtag_id = sh.id
           WHERE
             svh.video_resource_id = r.id
-        )              AS video_hashtags
+        )              AS video_hashtags,
+        (
+          SELECT row_to_json(s)
+          FROM (
+                 SELECT
+                   su.id AS id,
+                   su.username AS username,
+                   su.email AS email,
+                   su.first_name AS firstname,
+                   su.last_name AS lastname,
+                   su.gender AS gender,
+                   sr.cloud_url AS avatar
+                 FROM users AS su
+                   JOIN resources AS sr
+                     ON sr.id = su.avatar_resource_id
+                 WHERE
+                   su.id = u.id
+               ) AS s
+        )              AS user_info
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id

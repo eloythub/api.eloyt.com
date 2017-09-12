@@ -74,6 +74,7 @@
     "ignore": [
       "/Tests/",
       "/App/models-mongo/"
+
     ]
   }
 }
