@@ -1,10 +1,10 @@
 'use strict'
 
 import Sequelize from 'sequelize'
-import ReactTypesEnum from '../Enums/ReactTypesEnum'
+import MessageTypesEnum from '../Enums/MessageTypesEnum'
 
 export default function (sequelize, DataTypes) {
-  return sequelize.define('React', {
+  return sequelize.define('Messages', {
     id: {
       field: 'id',
       primaryKey: true,
@@ -12,8 +12,8 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4
     },
-    userId: {
-      field: 'user_id',
+    senderUserId: {
+      field: 'sender_user_id',
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -22,12 +22,12 @@ export default function (sequelize, DataTypes) {
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
       }
     },
-    resourceId: {
-      field: 'resource_id',
+    receiverUserId: {
+      field: 'receiver_user_id',
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Resources',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
       }
@@ -35,23 +35,34 @@ export default function (sequelize, DataTypes) {
     type: {
       field: 'type',
       type: DataTypes.ENUM(
-        ReactTypesEnum.skip,
-        ReactTypesEnum.like,
-        ReactTypesEnum.dislike
+        MessageTypesEnum.text,
+        MessageTypesEnum.video,
+        MessageTypesEnum.image
       ),
-      allowNull: true
+      allowNull: false
     },
-    reactedAt: {
-      field: 'reacted_at',
+    message: {
+      field: 'message',
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    sentAt: {
+      field: 'sent_at',
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
+    },
+    seenAt: {
+      field: 'seen_at',
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.NOW
     }
   }, {
-    tableName: 'react',
+    tableName: 'messages',
     underscored: true,
     timestamps: true,
-    createdAt: 'reactedAt',
+    createdAt: 'sentAt',
     updatedAt: false,
     deletedAt: false
   })

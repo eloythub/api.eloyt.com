@@ -6,6 +6,7 @@ import UsersRoutes from './Routes/UsersRoutes'
 import StreamRoutes from './Routes/StreamRoutes'
 import HashtagsRoutes from './Routes/HashtagsRoutes'
 import SearchRoutes from './Routes/SearchRoutes'
+import MessagesRoutes from './Routes/MessagesRoutes'
 
 export default class Routes {
   constructor (router) {
@@ -17,5 +18,6 @@ export default class Routes {
     StreamRoutes.setRoutes(this.router)
     HashtagsRoutes.setRoutes(this.router)
     SearchRoutes.setRoutes(this.router)
+    MessagesRoutes.setRoutes(this.router)
   }
 };

@@ -1,6 +1,7 @@
 'use strict'
 
 import Sequelize from 'sequelize'
+import GendersEnum from '../Enums/GendersEnum'
 
 export default function (sequelize, DataTypes) {
   return sequelize.define('Users', {
@@ -53,7 +54,11 @@ export default function (sequelize, DataTypes) {
     },
     gender: {
       field: 'gender',
-      type: DataTypes.ENUM('male', 'female', 'other'),
+      type: DataTypes.ENUM(
+        GendersEnum.male,
+        GendersEnum.female,
+        GendersEnum.other
+      ),
       allowNull: true
     },
     avatarResourceId: {

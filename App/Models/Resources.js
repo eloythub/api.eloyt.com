@@ -1,6 +1,7 @@
 'use strict'
 
 import Sequelize from 'sequelize'
+import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
 export default function (sequelize, DataTypes) {
   return sequelize.define('Resources', {
@@ -13,7 +14,11 @@ export default function (sequelize, DataTypes) {
     },
     type: {
       field: 'type',
-      type: DataTypes.ENUM('avatar', 'video', 'thumbnail'),
+      type: DataTypes.ENUM(
+        ResourceTypesEnum.avatar,
+        ResourceTypesEnum.video,
+        ResourceTypesEnum.thumbnail
+      ),
       allowNull: true
     },
     userId: {
