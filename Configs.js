@@ -34,4 +34,5 @@ export default {
   googleCloudStorageBucket: env['GCLOUD_STORAGE_BUCKET'] || 'eloyt',
   azureStorageKey: env['AZURE_STORAGE_KEY'],
   azureStorageAccountName: env['AZURE_STORAGE_ACCOUNT_NAME'],
+  comServiceBaseUrl: env['COM_SERVICE_BASE_URL'],
 };

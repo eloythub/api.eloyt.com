@@ -6,7 +6,7 @@ import * as Models from '../Models'
 
 export default class AuthRepository {
   static async fetchTokenIdByUserId (userId) {
-    const log = debug(`${configs.debugZone}:UsersRepository:fetchTokenIdByUserId`)
+    const log = debug(`${configs.debugZone}:AuthRepository:fetchTokenIdByUserId`)
 
     log('fetchTokenIdByUserId')
 
@@ -20,7 +20,7 @@ export default class AuthRepository {
   }
 
   static async fetchAuthTokenById (id) {
-    const log = debug(`${configs.debugZone}:UsersRepository:fetchAuthTokenById`)
+    const log = debug(`${configs.debugZone}:AuthRepository:fetchAuthTokenById`)
 
     log('fetchAuthTokenById')
 
@@ -34,7 +34,7 @@ export default class AuthRepository {
   }
 
   static async createTokenId (userId) {
-    const log = debug(`${configs.debugZone}:UsersRepository:createTokenId`)
+    const log = debug(`${configs.debugZone}:AuthRepository:createTokenId`)
 
     log('createTokenId')
 

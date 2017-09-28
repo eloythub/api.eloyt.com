@@ -14,7 +14,8 @@ export default class MessagesRepository {
       senderUserId,
       receiverUserId,
       type,
-      message
+      message,
+      seenAt: null
     })
 
     if (!user) {

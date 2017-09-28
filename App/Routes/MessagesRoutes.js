@@ -4,7 +4,7 @@ import MessageTypesEnum from '../Enums/MessageTypesEnum'
 import MessagesController from '../Controllers/MessagesController'
 import * as Joi from 'joi'
 
-export default class SearchRoutes {
+export default class MessagesRoutes {
   static setRoutes (router) {
     router.addRoute({
       method: 'POST',

@@ -2,6 +2,7 @@
 
 import debug from 'debug'
 import configs from '../../Configs'
+import ComService from '../Services/ComService'
 import MessagesRepository from '../Repositories/MessagesRepository'
 import MessageTypesEnum from '../Enums/MessageTypesEnum'
 
@@ -30,6 +31,13 @@ export default class MessagesService {
     log('newTextMessage')
 
     const resultData = await MessagesRepository.newMessage(senderUserId, receiverUserId, MessageTypesEnum.text, message)
+
+    try {
+      await ComService.directMessageToUser(senderUserId, receiverUserId, resultData)
+    } catch (err) {
+      log(err.message)
+      // TODO: check if message has failed delete the message and return exception
+    }
 
     return resultData
   }
