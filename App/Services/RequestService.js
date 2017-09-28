@@ -28,8 +28,6 @@ export default class RequestService {
       }, options)
     }
 
-    console.log(options)
-
     return request(options)
   }
 };
