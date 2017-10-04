@@ -10,7 +10,7 @@ export default class MessagesRepository {
 
     log('newMessage')
 
-    let user = await Models.Messages.create({
+    let messageObj = await Models.Messages.create({
       senderUserId,
       receiverUserId,
       type,
@@ -18,10 +18,10 @@ export default class MessagesRepository {
       seenAt: null
     })
 
-    if (!user) {
+    if (!messageObj) {
       return null
     }
 
-    return user
+    return messageObj.dataValues
   }
 };

@@ -10,8 +10,6 @@ export default class MessagesService {
   static async newMessage (senderUserId, receiverUserId, type, message) {
     const log = debug(`${configs.debugZone}:MessagesService:newMessage`)
 
-    log('newMessage')
-
     let resultData
 
     switch (type) {
@@ -33,7 +31,11 @@ export default class MessagesService {
     const resultData = await MessagesRepository.newMessage(senderUserId, receiverUserId, MessageTypesEnum.text, message)
 
     try {
-      await ComService.directMessageToUser(senderUserId, receiverUserId, resultData)
+      console.log(senderUserId, receiverUserId, resultData)
+
+      const pushNotificationSummary = await ComService.directMessageToUser(senderUserId, receiverUserId, resultData)
+
+      log(pushNotificationSummary)
     } catch (err) {
       log(err.message)
       // TODO: check if message has failed delete the message and return exception
