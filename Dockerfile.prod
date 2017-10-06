@@ -27,7 +27,6 @@ RUN mkdir software && \
     cd src && \
     tar xvjf ../software/ffmpeg-3.2.2.tar.bz2 && \
     cd ffmpeg-3.2.2 && \
-
     ./configure \
         --enable-gpl \
         --enable-postproc \

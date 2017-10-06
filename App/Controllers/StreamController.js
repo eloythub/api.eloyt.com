@@ -52,7 +52,8 @@ export default class StreamController {
   }
 
   static async streamResourceReact (req, res) {
-    const error = debug(`${configs.debugZone}:StreamController:streamResourceReact`)
+    const log = debug(`${configs.debugZone}:StreamController:streamResourceReact`)
+    const error = debug(`${configs.debugZone}:StreamController:streamResourceReact:error`)
 
     const { user } = req.auth.credentials
     const { resourceId, reactType } = req.payload
