@@ -3,6 +3,8 @@
 import debug from 'debug'
 import configs from '../../Configs'
 import StreamService from '../Services/StreamService'
+import ComService from '../Services/ComService'
+import ReactTypesEnum from '../Enums/ReactTypesEnum'
 
 export default class StreamController {
   static async videoUploadHandle (req, res) {
@@ -57,6 +59,12 @@ export default class StreamController {
 
     try {
       const { data, action } = await StreamService.reactToResource(user.id, resourceId, reactType)
+
+      if (reactType === ReactTypesEnum.like) {
+        const reactLikeToUserSnapSummary = await ComService.reactLikeToUserSnap(user.id, resourceId, resourceId)
+
+        log(reactLikeToUserSnapSummary)
+      }
 
       res({
         statusCode: 200,

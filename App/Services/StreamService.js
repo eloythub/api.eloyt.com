@@ -7,6 +7,7 @@ import path from 'path'
 import configs from '../../Configs'
 import StorageService from '../Services/StorageService'
 import VideoThumbnailService from '../Services/VideoThumbnailService'
+import ChatRecipientsService from '../Services/ChatRecipientsService'
 import ResourceRepository from '../Repositories/ResourceRepository'
 import ReactRepository from '../Repositories/ReactRepository'
 import VideosRepository from '../Repositories/VideosRepository'
@@ -39,15 +40,22 @@ export default class StreamService {
 
     log('reactToResource')
 
+    // get resource's owner user id
+    const resourceOwnerUserId = await ResourceRepository.fetchUserIdFromResourceById(resourceId)
+
     const isAlreadyReacted = await ReactRepository.isAlreadyReacted(userId, resourceId, type)
 
     if (isAlreadyReacted) {
       const data = await ReactRepository.fetchReactByAttributes({userId, resourceId, type})
 
+      await ChatRecipientsService.addNewRecipients(userId, resourceOwnerUserId)
+
       return { data, action: 'find' }
     }
 
     const data = await ReactRepository.createReact(userId, resourceId, type)
+
+    await ChatRecipientsService.addNewRecipients(userId, resourceOwnerUserId)
 
     return { data, action: 'create' }
   }

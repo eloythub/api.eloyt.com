@@ -10,7 +10,7 @@ export default class ComService extends RequestService {
   static baseUrl = configs.comServiceBaseUrl
 
   static directMessageToUser (senderUserId, receiverUserId, messageObject) {
-    const log = debug(`${configs.debugZone}:ComService:directMessageToUser`)
+    const log = debug(`${configs.debugZone}:ComService`)
 
     log('directMessageToUser')
 
@@ -21,6 +21,24 @@ export default class ComService extends RequestService {
         senderUserId,
         receiverUserId,
         messageObject
+      }
+    )
+
+    return response
+  }
+
+  static reactLikeToUserSnap (senderUserId, receiverUserId, resourceId) {
+    const log = debug(`${configs.debugZone}:ComService`)
+
+    log('reactToUserSnap')
+
+    const response = this.dispatchRequest(
+      RequestEnum.post,
+      url.resolve(this.baseUrl, '/stream/react/like'),
+      {
+        senderUserId,
+        receiverUserId,
+        resourceId
       }
     )
 

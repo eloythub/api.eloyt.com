@@ -174,6 +174,23 @@ export default class ResourceRepository {
     return resource.dataValues
   }
 
+  static async fetchUserIdFromResourceById (id) {
+    const log = debug(`${configs.debugZone}:ResourceRepository:fetchUserIdFromResourceById`)
+
+    log('fetchUserIdFromResourceById')
+
+    const resource = await Models.Resources.findOne({
+      attributes: ['userId'],
+      where: { id }
+    })
+
+    if (!resource) {
+      return null
+    }
+
+    return resource.dataValues.userId
+  }
+
   static async createResource (userId, type, cloudUrl, cloudFilename) {
     const log = debug(`${configs.debugZone}:UsersRepository:createResource`)
 
