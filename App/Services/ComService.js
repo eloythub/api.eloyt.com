@@ -30,7 +30,7 @@ export default class ComService extends RequestService {
   static reactLikeToUserSnap (senderUserId, receiverUserId, resourceId) {
     const log = debug(`${configs.debugZone}:ComService`)
 
-    log('reactToUserSnap')
+    log('reactToUserSnap', senderUserId, receiverUserId, resourceId)
 
     const response = this.dispatchRequest(
       RequestEnum.post,

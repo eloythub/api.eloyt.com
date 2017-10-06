@@ -4,6 +4,7 @@ import debug from 'debug'
 import configs from '../../Configs'
 import StreamService from '../Services/StreamService'
 import ComService from '../Services/ComService'
+import ResourceRepository from '../Repositories/ResourceRepository'
 import ReactTypesEnum from '../Enums/ReactTypesEnum'
 
 export default class StreamController {
@@ -62,7 +63,9 @@ export default class StreamController {
       const { data, action } = await StreamService.reactToResource(user.id, resourceId, reactType)
 
       if (reactType === ReactTypesEnum.like) {
-        const reactLikeToUserSnapSummary = await ComService.reactLikeToUserSnap(user.id, resourceId, resourceId)
+        const resourceOwnerUserId = await ResourceRepository.fetchUserIdFromResourceById(resourceId)
+
+        const reactLikeToUserSnapSummary = await ComService.reactLikeToUserSnap(user.id, resourceOwnerUserId, resourceId)
 
         log(reactLikeToUserSnapSummary)
       }
