@@ -3,12 +3,15 @@
 import debug from 'debug'
 import configs from '../../Configs'
 import ComService from '../Services/ComService'
+import ChatRecipientsService from '../Services/ChatRecipientsService'
 import MessagesRepository from '../Repositories/MessagesRepository'
 import MessageTypesEnum from '../Enums/MessageTypesEnum'
 
+const log = debug(`${configs.debugZone}:MessagesService`)
+
 export default class MessagesService {
   static async newMessage (senderUserId, receiverUserId, type, message) {
-    const log = debug(`${configs.debugZone}:MessagesService:newMessage`)
+    log('newMessage')
 
     let resultData
 
@@ -24,11 +27,11 @@ export default class MessagesService {
   }
 
   static async newTextMessage (senderUserId, receiverUserId, message) {
-    const log = debug(`${configs.debugZone}:MessagesService:newTextMessage`)
-
     log('newTextMessage')
 
     const resultData = await MessagesRepository.newMessage(senderUserId, receiverUserId, MessageTypesEnum.text, message)
+
+    await ChatRecipientsService.updateLastMessage(receiverUserId, senderUserId, resultData)
 
     try {
       console.log(senderUserId, receiverUserId, resultData)
@@ -42,5 +45,13 @@ export default class MessagesService {
     }
 
     return resultData
+  }
+
+  static async getMessages (hostUserId, guestUserId, offset, limit) {
+    log('getMessages')
+
+    const messages = await MessagesRepository.fetchMessages(hostUserId, guestUserId, offset, limit)
+
+    return messages
   }
 };

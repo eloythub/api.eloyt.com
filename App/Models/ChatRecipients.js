@@ -31,6 +31,23 @@ export default function (sequelize, DataTypes) {
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
       }
     },
+    lastMessageAt: {
+      field: 'last_message_at',
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    lastMessageId: {
+      field: 'last_message_id',
+      type: DataTypes.UUID,
+      allowNull: true,
+      defaultValue: null,
+      references: {
+        model: 'Messages',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+      }
+    },
     sentAt: {
       field: 'sent_at',
       type: DataTypes.DATE,
