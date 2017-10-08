@@ -47,18 +47,18 @@ export default class MessagesRepository {
         m.seen_at           AS message_seen_at,
         (
         
-          SELECT array_to_json(array_agg(isu)) AS hashtags
+          SELECT row_to_json(isu)
           FROM
            (
               SELECT
                 su.id           AS id,
-                su.is_activated AS isActivated,
+                su.is_activated AS is_activated,
                 su.gender       AS gender,
                 su.email        AS email,
-                su.first_name   AS firstName,
-                su.last_name    AS lastName,
+                su.first_name   AS first_name,
+                su.last_name    AS last_name,
                 su.username     AS username,
-                r.cloud_url     AS cloudAvatarUrl
+                r.cloud_url     AS cloud_avatar_url
               FROM users AS su
                 LEFT JOIN resources AS r
                   ON r.id = su.avatar_resource_id 
@@ -69,18 +69,18 @@ export default class MessagesRepository {
         )                   AS message_sender_user,
         (
         
-          SELECT array_to_json(array_agg(isu)) AS hashtags
+          SELECT row_to_json(isu)
           FROM
            (
               SELECT
                 su.id           AS id,
-                su.is_activated AS isActivated,
+                su.is_activated AS is_activated,
                 su.gender       AS gender,
                 su.email        AS email,
-                su.first_name   AS firstName,
-                su.last_name    AS lastName,
+                su.first_name   AS first_name,
+                su.last_name    AS last_name,
                 su.username     AS username,
-                r.cloud_url     AS cloudAvatarUrl
+                r.cloud_url     AS cloud_avatar_url
               FROM users AS su
                 LEFT JOIN resources AS r
                   ON r.id = su.avatar_resource_id 
