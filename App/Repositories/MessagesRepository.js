@@ -29,6 +29,7 @@ export default class MessagesRepository {
     log('fetchMessages')
 
     const ProducedMap = {
+      'message_id': 'id',
       'message_sender_user_id': 'senderUserId',
       'message_receiver_user_id': 'receiverUserId',
       'message_message': 'message',
@@ -39,6 +40,7 @@ export default class MessagesRepository {
 
     const users = await Models.sequelize.query(`
       SELECT
+        m.id                AS message_id,
         m.sender_user_id    AS message_sender_user_id,
         m.receiver_user_id  AS message_receiver_user_id,
         m.message           AS message_message,
