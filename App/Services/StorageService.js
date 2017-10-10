@@ -227,7 +227,7 @@ export default class StorageService {
 
     return new Promise(async (resolve, reject) => {
       try {
-        const videoResource = await ResourceRepository.fetchResourceById(videoResourceId)
+        const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
 
         googleStorage.file(videoResource.cloudFilename).delete()
 
