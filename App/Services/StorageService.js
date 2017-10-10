@@ -6,22 +6,23 @@ import fs from 'fs'
 import https from 'https'
 import uuid from 'uuid'
 import path from 'path'
+import { format } from 'util'
 import { URL } from 'url'
 import configs from '../../Configs'
-import azure from 'azure-storage'
-// import GoogleStorage from '@google-cloud/storage'
+//import azure from 'azure-storage'
+import GoogleStorage from '@google-cloud/storage'
 import ResourceRepository from '../Repositories/ResourceRepository'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
-// const googleStorage = GoogleStorage({
-//  projectId: configs.googleCloudProjectId,
-//  keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-234bb463581d.json')
-// }).bucket(configs.googleCloudStorageBucket)
+const googleStorage = GoogleStorage({
+  projectId: configs.googleCloudProjectId,
+  keyFilename: path.join(__dirname, '../../Keys/gcs/Eloyt-e42d521d7bad.json')
+ }).bucket(configs.googleCloudStorageBucket)
 
-const blobService = azure.createBlobService(
-  configs.azureStorageAccountName,
-  configs.azureStorageKey
-)
+//const blobService = azure.createBlobService(
+//  configs.azureStorageAccountName,
+//  configs.azureStorageKey
+//)
 
 export default class StorageService {
   static downloadPictureFromFacebookAndUploadToCloud (userId, profilePicture) {
@@ -54,7 +55,7 @@ export default class StorageService {
 
           fileStream.on('finish', () => {
             fileStream.close(async () => {
-              const resource = await StorageService.uploadToAzureStorage(
+              const resource = await StorageService.uploadToGoogleCloudStorage(
                 tmpFileName,
                 tmpFilePath,
                 userId,
@@ -83,43 +84,97 @@ export default class StorageService {
     })
   }
 
-  static uploadToAzureStorage (fileName, filePath, userId, type) {
-    const log = debug(`${configs.debugZone}:StorageService:uploadToAzureStorage`)
-    const error = debug(`${configs.debugZone}:StorageService:uploadToAzureStorage:error`)
+  //static uploadToAzureStorage (fileName, filePath, userId, type) {
+  //  const log = debug(`${configs.debugZone}:StorageService:uploadToAzureStorage`)
+  //  const error = debug(`${configs.debugZone}:StorageService:uploadToAzureStorage:error`)
+  //
+  //  log('uploadToAzureStorage')
+  //
+  //  return new Promise((resolve, reject) => {
+  //    try {
+  //      // Create Container
+  //      blobService.createContainerIfNotExists(type, {
+  //        publicAccessLevel: 'blob'
+  //      }, (err1) => {
+  //        if (err1) {
+  //          return reject(err1)
+  //        }
+  //
+  //        // Upload file to container
+  //        blobService.createBlockBlobFromLocalFile(type, fileName, filePath, async (err2) => {
+  //          if (err2) {
+  //            return reject(err2)
+  //          }
+  //
+  //          // File has been uploaded
+  //          const cloudUrl = StorageService.getAzureUrl(type, fileName)
+  //
+  //          const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
+  //
+  //          if (resource) {
+  //            return resolve(resource)
+  //          }
+  //
+  //          blobService.deleteBlob(type, fileName, () => {
+  //            error('create resource has been failed')
+  //
+  //            reject(new Error('create resource has been failed'))
+  //          })
+  //        })
+  //      })
+  //    } catch (err) {
+  //      error(err.message)
+  //
+  //      return reject(err)
+  //    }
+  //  })
+  //}
 
-    log('uploadToAzureStorage')
+
+  static uploadToGoogleCloudStorage (fileName, filePath, userId, type) {
+    const log   = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage`)
+    const error = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage:error`)
+
+    log('uploadToGoogleCloudStorage')
 
     return new Promise((resolve, reject) => {
       try {
-        // Create Container
-        blobService.createContainerIfNotExists(type, {
-          publicAccessLevel: 'blob'
-        }, (err1) => {
-          if (err1) {
-            return reject(err1)
+        googleStorage.upload(filePath, (err) => {
+          if (err) {
+            error(err.message)
+
+            return reject(err)
           }
 
-          // Upload file to container
-          blobService.createBlockBlobFromLocalFile(type, fileName, filePath, async (err2) => {
-            if (err2) {
-              return reject(err2)
-            }
+          // Give read access to all the users
+          googleStorage.file(fileName)
+            .acl
+            .readers
+            .addAllUsers(async (aclError) => {
+              if (aclError) {
+                // Delete file from the gcs bucket in case of failure
+                googleStorage.file(fileName).delete()
 
-            // File has been uploaded
-            const cloudUrl = StorageService.getAzureUrl(type, fileName)
+                error(aclError)
 
-            const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
+                return reject(aclError)
+              }
 
-            if (resource) {
-              return resolve(resource)
-            }
 
-            blobService.deleteBlob(type, fileName, () => {
-              error('create resource has been failed')
+              const cloudUrl = StorageService.getGCloudUrl(type, fileName)
 
-              reject(new Error('create resource has been failed'))
+              const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
+
+              if (!resource) {
+                googleStorage.file(fileName).delete()
+
+                error('create resource has been failed')
+
+                return reject(new Error('create resource has been failed'))
+              }
+
+              resolve(resource)
             })
-          })
         })
       } catch (err) {
         error(err.message)
@@ -129,29 +184,56 @@ export default class StorageService {
     })
   }
 
-  static getAzureUrl (type, fileName) {
-    return `https://${configs.azureStorageAccountName}.blob.core.windows.net/${type}/${fileName}`
+  static getGCloudUrl (type, fileName) {
+    return format(`https://storage.googleapis.com/${configs.googleCloudStorageBucket}/${type}/${fileName}`)
   }
 
-  static deleteVideoResource (videoResourceId) {
-    const log = debug(`${configs.debugZone}:StorageService:deleteVideoResource`)
-    const error = debug(`${configs.debugZone}:StorageService:deleteVideoResource:error`)
+  //static getAzureUrl (type, fileName) {
+  //  return `https://${configs.azureStorageAccountName}.blob.core.windows.net/${type}/${fileName}`
+  //}
 
-    log('deleteVideoResource')
+  //static deleteVideoResourceFromAzure (videoResourceId) {
+  //  const log = debug(`${configs.debugZone}:StorageService:deleteVideoResource`)
+  //  const error = debug(`${configs.debugZone}:StorageService:deleteVideoResource:error`)
+  //
+  //  log('deleteVideoResource')
+  //
+  //  return new Promise(async (resolve, reject) => {
+  //    try {
+  //      const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
+  //
+  //      blobService.deleteBlob(videoResource.type, videoResource.cloudFilename, async (err) => {
+  //        if (err) {
+  //          return reject(err)
+  //        }
+  //
+  //        await ResourceRepository.deleteResource(videoResourceId)
+  //
+  //        resolve(true)
+  //      })
+  //    } catch (err) {
+  //      error(err.message)
+  //
+  //      return reject(err)
+  //    }
+  //  })
+  //}
+
+  static deleteVideoResourceFromGCloud (videoResourceId) {
+    const log   = debug(`${configs.debugZone}:StorageService:deleteVideoResourceFromGCloud`)
+    const error = debug(`${configs.debugZone}:StorageService:deleteVideoResourceFromGCloud:error`)
+
+    log('deleteVideoResourceFromGCloud')
 
     return new Promise(async (resolve, reject) => {
       try {
-        const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
+        const videoResource = await ResourceRepository.fetchResourceById(videoResourceId)
 
-        blobService.deleteBlob(videoResource.type, videoResource.cloudFilename, async (err) => {
-          if (err) {
-            return reject(err)
-          }
+        googleStorage.file(videoResource.cloudFilename).delete()
 
-          await ResourceRepository.deleteResource(videoResourceId)
+        await ResourceRepository.deleteResource(videoResourceId)
 
-          resolve(true)
-        })
+        resolve(true)
       } catch (err) {
         error(err.message)
 

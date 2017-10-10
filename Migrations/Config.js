@@ -7,10 +7,10 @@ module.exports = {
     "dialect": "postgres"
   },
   "staging": {
-    "username": "eloyt-usr",
-    "password": "987987987",
+    "username": "postgres",
+    "password": "cJp9y82AnrhmIsPM",
     "database": "eloytdb",
-    "host": "staging-postgres",
+    "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {

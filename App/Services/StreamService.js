@@ -138,7 +138,7 @@ export default class StreamService {
             fs.unlink(uploadedFilePath, async () => {
               await VideosRepository.deleteVideoHashtagsByVideoResourceId(videoResource.id)
               await VideosRepository.deleteVideoPropertyByVideoResourceId(videoResource.id)
-              await StorageService.deleteVideoResource(videoResource.id)
+              await StorageService.deleteVideoResourceFromGCloud(videoResource.id)
 
               reject(err)
             })
