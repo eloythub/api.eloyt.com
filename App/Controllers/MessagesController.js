@@ -74,4 +74,29 @@ export default class MessagesController {
       }).code(500)
     }
   }
+
+  static async readMessages (req, res) {
+    const error = debug(`${configs.debugZone}:MessagesController:readMessages`)
+
+    const {user} = req.auth.credentials
+    const {guestUserId} = req.params
+
+    try {
+      const [updatedMessages] = await MessagesService.readMessages(user.id, guestUserId)
+
+      res({
+        statusCode: 200,
+        data: {
+          updatedMessages
+        }
+      }).code(200)
+    } catch (e) {
+      error(e.message)
+
+      res({
+        statusCode: 500,
+        error: e.message
+      }).code(500)
+    }
+  }
 };

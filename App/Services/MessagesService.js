@@ -54,4 +54,12 @@ export default class MessagesService {
 
     return messages
   }
+
+  static async readMessages(hostUserId, guestUserId) {
+    log('getMessages')
+
+    const messages = await MessagesRepository.readMessages(hostUserId, guestUserId)
+
+    return messages
+  }
 };

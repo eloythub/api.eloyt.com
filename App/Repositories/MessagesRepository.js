@@ -25,6 +25,41 @@ export default class MessagesRepository {
     return this.fetchMessageById(messageObj.dataValues.id)
   }
 
+  static async readMessages (receiverUserId, senderUserId) {
+    log('readMessages')
+
+    let messagesObj = await Models.Messages.findAll({
+      attributes: ['id'],
+      where: {
+        senderUserId,
+        receiverUserId,
+        seenAt: null
+      },
+      raw: true
+    })
+
+    if (!messagesObj) {
+      return 0
+    }
+
+    let messages = []
+    for (let {id} of messagesObj) {
+      messages.push(id)
+    }
+
+    const updatedMessages = await Models.Messages.update({
+      seenAt: new Date()
+    }, {
+      where: {
+        id: {
+          $in: messages
+        },
+      }
+    })
+
+    return updatedMessages
+  }
+
   static async fetchMessages (hostUserId, guestUserId, offset, limit) {
     log('fetchMessages')
 

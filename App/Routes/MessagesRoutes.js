@@ -35,6 +35,20 @@ export default class MessagesRoutes {
 
     router.addRoute({
       method: 'POST',
+      path: `/messages/{guestUserId}/read`,
+      config: {
+        auth: 'token',
+        handler: (req, res) => MessagesController.readMessages(req, res),
+        validate: {
+          params: {
+            guestUserId: Joi.string().required(),
+          }
+        }
+      }
+    })
+
+    router.addRoute({
+      method: 'POST',
       path: `/messages/send`,
       config: {
         auth: 'token',

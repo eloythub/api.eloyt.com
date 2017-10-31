@@ -26,7 +26,9 @@ export default class ChatRecipientsRepository {
       'cloud_avatar_url': 'cloudAvatarUrl',
       'user_registered_at': 'registeredAt',
       'user_updated_at': 'updatedAt',
-      'user_hashtags': 'hashtags'
+      'user_hashtags': 'hashtags',
+      'user_unread_messages_count': 'unreadMessagesCount',
+      'test': 'testNumber'
     }
 
     const users = await Models.sequelize.query(`
@@ -53,7 +55,16 @@ export default class ChatRecipientsRepository {
               ON uh.hashtag_id = h.id
           WHERE
             uh.user_id = u.id
-        )               AS user_hashtags
+        )               AS user_hashtags,
+        (
+          SELECT COUNT(m.id)::int
+          FROM messages AS m
+          WHERE
+            m.sender_user_id = cr.guest_user_id AND
+            m.receiver_user_id = cr.host_user_id AND
+            m.seen_at IS NULL
+        )               AS user_unread_messages_count,
+        1 as test
       FROM chat_recipients AS cr
         LEFT JOIN users AS u
           ON u.id = cr.guest_user_id
