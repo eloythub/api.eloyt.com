@@ -57,9 +57,9 @@ export default class ResourceRepository {
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id
-        JOIN videos_thumbnails AS vt
+        LEFT JOIN videos_thumbnails AS vt
           ON r.id = vt.video_resource_id
-        JOIN resources AS vtr
+        LEFT JOIN resources AS vtr
           ON vtr.id = vt.thumbnail_resource_id
         JOIN videos_properties AS vp
           ON r.id = vp.video_resource_id
@@ -133,9 +133,9 @@ export default class ResourceRepository {
       FROM resources AS r
         JOIN users AS u
           ON r.user_id = u.id
-        JOIN videos_thumbnails AS vt
+        LEFT JOIN videos_thumbnails AS vt
           ON r.id = vt.video_resource_id
-        JOIN resources AS vtr
+        LEFT JOIN resources AS vtr
           ON vtr.id = vt.thumbnail_resource_id
         JOIN videos_properties AS vp
           ON r.id = vp.video_resource_id

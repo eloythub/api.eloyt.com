@@ -30,9 +30,17 @@ export default class VideoThumbnailService {
           res.pipe(fileStream)
 
           fileStream.on('finish', async () => {
-            const videoThumbnailResource = await VideoThumbnailService.generateThumbnail(videoResource, tmpDownloadPath)
+            try {
+              const videoThumbnailResource = await VideoThumbnailService.generateThumbnail(videoResource, tmpDownloadPath)
 
-            resolve(videoThumbnailResource)
+              resolve(videoThumbnailResource)
+            } catch (err) {
+              fs.unlink(tmpDownloadPath, () => {
+                error(err.message)
+
+                reject(err)
+              })
+            }
           })
         })
         .on('error', (err) => {
@@ -59,15 +67,16 @@ export default class VideoThumbnailService {
     return new Promise((resolve, reject) => {
       try {
         ffmpeg(tmpDownloadPath)
+          .inputFormat('mp4')
           .on('error', (err) => {
-            error('FFMPEG:', err.message)
+            error('FFMPEG:', err)
 
             fs.unlink(tmpDownloadPath, () => {
               reject(err)
             })
           })
           .on('end', async () => {
-            const videoThumbnailResource = await StorageService.uploadToAzureStorage(
+            const videoThumbnailResource = await StorageService.uploadTo(
               tmpThumbnailFileName,
               tmpThumbnailPath,
               videoResource.userId,

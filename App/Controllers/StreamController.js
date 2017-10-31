@@ -36,7 +36,7 @@ export default class StreamController {
       const videoResource = await StreamService.uploadVideoResource(user.id, uploadFile, description, hashtags)
 
       // Create Thumbnail
-      await StreamService.getVideoThumbnailResource(videoResource.id)
+      //await StreamService.getVideoThumbnailResource(videoResource.id)
 
       res({
         statusCode: 200,

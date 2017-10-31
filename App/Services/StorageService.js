@@ -55,16 +55,22 @@ export default class StorageService {
 
           fileStream.on('finish', () => {
             fileStream.close(async () => {
-              const resource = await StorageService.uploadToGoogleCloudStorage(
-                tmpFileName,
-                tmpFilePath,
-                userId,
-                ResourceTypesEnum.avatar
-              )
+              try {
+                const resource = await StorageService.uploadTo(
+                  tmpFileName,
+                  tmpFilePath,
+                  userId,
+                  ResourceTypesEnum.avatar
+                )
 
-              fs.unlink(tmpFilePath, () => {
-                resolve(resource)
-              })
+                fs.unlink(tmpFilePath, () => {
+                  resolve(resource)
+                })
+              } catch (err) {
+                fs.unlink(tmpFilePath, () => {
+                  reject(err)
+                })
+              }
             })
           })
         }).on('error', (err) => {
@@ -82,6 +88,10 @@ export default class StorageService {
         })
       }
     })
+  }
+
+  static async uploadTo (fileName, filePath, userId, type) {
+    return await this.uploadToGoogleCloudStorage(fileName, filePath, userId, type)
   }
 
   //static uploadToAzureStorage (fileName, filePath, userId, type) {
@@ -130,7 +140,6 @@ export default class StorageService {
   //  })
   //}
 
-
   static uploadToGoogleCloudStorage (fileName, filePath, userId, type) {
     const log   = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage`)
     const error = debug(`${configs.debugZone}:StorageService:uploadToGoogleCloudStorage:error`)
@@ -139,42 +148,38 @@ export default class StorageService {
 
     return new Promise((resolve, reject) => {
       try {
-        googleStorage.upload(filePath, (err) => {
+        const fileDestination = path.join(type, fileName)
+
+        googleStorage.upload(filePath, { destination: fileDestination}, async (err) => {
           if (err) {
             error(err.message)
 
             return reject(err)
           }
 
-          // Give read access to all the users
-          googleStorage.file(fileName)
-            .acl
-            .readers
-            .addAllUsers(async (aclError) => {
-              if (aclError) {
-                // Delete file from the gcs bucket in case of failure
-                googleStorage.file(fileName).delete()
+          try {
+            googleStorage.file(fileDestination).makePublic()
 
-                error(aclError)
+            const cloudUrl = StorageService.getGCloudUrl(type, fileName)
 
-                return reject(aclError)
-              }
+            const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
 
+            if (!resource) {
+              googleStorage.file(fileDestination).delete()
 
-              const cloudUrl = StorageService.getGCloudUrl(type, fileName)
+              error('create resource has been failed')
 
-              const resource = await ResourceRepository.createResource(userId, type, cloudUrl, fileName)
+              return reject(new Error('create resource has been failed'))
+            }
 
-              if (!resource) {
-                googleStorage.file(fileName).delete()
+            resolve(resource)
+          } catch (err) {
+            googleStorage.file(fileDestination).delete()
 
-                error('create resource has been failed')
+            error(err.message)
 
-                return reject(new Error('create resource has been failed'))
-              }
-
-              resolve(resource)
-            })
+            return reject(err)
+          }
         })
       } catch (err) {
         error(err.message)
@@ -229,7 +234,9 @@ export default class StorageService {
       try {
         const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
 
-        googleStorage.file(videoResource.cloudFilename).delete()
+        const fileDestination = path.join(ResourceTypesEnum.video, videoResource.cloudFilename)
+
+        googleStorage.file(fileDestination).delete()
 
         await ResourceRepository.deleteResource(videoResourceId)
 

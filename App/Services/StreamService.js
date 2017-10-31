@@ -113,7 +113,7 @@ export default class StreamService {
           }
 
             // Add video Resource
-          const videoResource = await StorageService.uploadToAzureStorage(
+          const videoResource = await StorageService.uploadTo(
               uploadedFileName,
               uploadedFilePath,
               userId,
@@ -127,10 +127,12 @@ export default class StreamService {
             // handle video hashtags
             await VideosRepository.createHashtags(videoResource.id, hashtags)
 
-            fs.unlink(uploadedFilePath, () => {
+            fs.unlink(uploadedFilePath, async () => {
               log(`video has been uploaded successfully: ${videoResource.cloudUrl}`)
 
-              resolve(videoResource)
+              const producedVideo = await StreamService.produceStreamResourceById(videoResource.id)
+
+              resolve(producedVideo)
             })
           } catch (err) {
             error(err.message)

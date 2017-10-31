@@ -21,12 +21,12 @@ RUN apt-get -y install  build-essential \
 
 RUN mkdir software && \
     cd software && \
-    wget http://ffmpeg.org/releases/ffmpeg-3.2.2.tar.bz2 && \
+    wget http://ffmpeg.org/releases/ffmpeg-3.3.4.tar.bz2 && \
     cd .. && \
     mkdir src && \
     cd src && \
-    tar xvjf ../software/ffmpeg-3.2.2.tar.bz2 && \
-    cd ffmpeg-3.2.2 && \
+    tar xvjf ../software/ffmpeg-3.3.4.tar.bz2 && \
+    cd ffmpeg-3.3.4 && \
     ./configure \
         --enable-gpl \
         --enable-postproc \
