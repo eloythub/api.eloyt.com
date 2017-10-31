@@ -27,8 +27,7 @@ export default class ChatRecipientsRepository {
       'user_registered_at': 'registeredAt',
       'user_updated_at': 'updatedAt',
       'user_hashtags': 'hashtags',
-      'user_unread_messages_count': 'unreadMessagesCount',
-      'test': 'testNumber'
+      'user_unread_messages_count': 'unreadMessagesCount'
     }
 
     const users = await Models.sequelize.query(`
@@ -63,8 +62,7 @@ export default class ChatRecipientsRepository {
             m.sender_user_id = cr.guest_user_id AND
             m.receiver_user_id = cr.host_user_id AND
             m.seen_at IS NULL
-        )               AS user_unread_messages_count,
-        1 as test
+        )               AS user_unread_messages_count
       FROM chat_recipients AS cr
         LEFT JOIN users AS u
           ON u.id = cr.guest_user_id
