@@ -75,7 +75,10 @@ export default class StreamRoutes {
         validate: {
           query: {
             offset: Joi.number().integer().required(),
-            limit: Joi.number().integer().required()
+            limit: Joi.number().integer().required(),
+            lat: Joi.number().required(),
+            lng: Joi.number().required(),
+            radius: Joi.number().integer().required()
           }
         }
       }

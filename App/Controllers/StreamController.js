@@ -118,11 +118,10 @@ export default class StreamController {
   static async produceStreamResources (req, res) {
     const error = debug(`${configs.debugZone}:StreamController:produceStreamResources`)
 
-    const { offset, limit } = req.query
+    const { offset, limit, lat, lng, radius } = req.query
 
     try {
-      // TODO: at this moment it loads all datas from all the users and have to refactor to work with location radius
-      const data = await StreamService.produceStreamResource(offset, limit)
+      const data = await StreamService.produceStreamResource(offset, limit, lat, lng, radius)
 
       res({
         statusCode: 200,

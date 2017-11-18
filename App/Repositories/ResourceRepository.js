@@ -3,13 +3,26 @@
 import debug from 'debug'
 import configs from '../../Configs'
 import * as Models from '../Models'
+import UsersLocationsRepository from './UsersLocationsRepository'
+import ConversionRateEnum from '../Enums/ConversionRateEnum'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
-export default class ResourceRepository {
-  static async fetchProducedVideoResourcesByLimit (offset, limit) {
-    const log = debug(`${configs.debugZone}:ResourceRepository:fetchProducedVideoResourcesByLimit`)
+const log = debug(`${configs.debugZone}:ResourceRepository`)
 
+export default class ResourceRepository {
+  static async fetchProducedVideoResourcesByLimit (offset, limit, lat, lng, radius) {
     log('fetchProducedVideoResourcesByLimit')
+
+    const usersInArea = await UsersLocationsRepository.fetchUserIdsInRadius(
+      lat,
+      lng,
+      radius,
+      ConversionRateEnum.meterToMile
+    )
+
+    if (usersInArea.length === 0) {
+      return []
+    }
 
     const ProducedMap = {
       'video_resource_id': 'id',
@@ -61,10 +74,12 @@ export default class ResourceRepository {
           ON r.id = vt.video_resource_id
         LEFT JOIN resources AS vtr
           ON vtr.id = vt.thumbnail_resource_id
-        JOIN videos_properties AS vp
+        LEFT JOIN videos_properties AS vp
           ON r.id = vp.video_resource_id
       WHERE
-        r.type = :type
+        r.type = :type 
+          AND
+        u.id IN (:usersInArea)
       ORDER BY
         r.uploaded_at DESC
       OFFSET :offset
@@ -73,7 +88,8 @@ export default class ResourceRepository {
       replacements: {
         offset,
         limit,
-        type: ResourceTypesEnum.video
+        type: ResourceTypesEnum.video,
+        usersInArea
       },
       fieldMap: ProducedMap,
       type: Models.sequelize.QueryTypes.SELECT
@@ -83,8 +99,6 @@ export default class ResourceRepository {
   }
 
   static async fetchProducedVideoResourcesByResourceId (videoResourceId) {
-    const log = debug(`${configs.debugZone}:ResourceRepository:fetchProducedVideoResourcesByResourceId`)
-
     log('fetchProducedVideoResourcesByResourceId')
 
     const ProducedMap = {
@@ -161,8 +175,6 @@ export default class ResourceRepository {
   }
 
   static async fetchResourceById (id, type) {
-    const log = debug(`${configs.debugZone}:ResourceRepository:fetchResourceById`)
-
     log('fetchResourceById')
 
     const resource = await Models.Resources.findOne({ where: { id, type } })
@@ -175,8 +187,6 @@ export default class ResourceRepository {
   }
 
   static async fetchUserIdFromResourceById (id) {
-    const log = debug(`${configs.debugZone}:ResourceRepository:fetchUserIdFromResourceById`)
-
     log('fetchUserIdFromResourceById')
 
     const resource = await Models.Resources.findOne({

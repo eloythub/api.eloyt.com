@@ -14,20 +14,19 @@ import VideosRepository from '../Repositories/VideosRepository'
 import VideosThumbnailsRepository from '../Repositories/VideosThumbnailsRepository'
 import ResourceTypesEnum from '../Enums/ResourceTypesEnum'
 
-export default class StreamService {
-  static async produceStreamResource (offset, limit) {
-    const log = debug(`${configs.debugZone}:StreamService:produceStreamResource`)
+const log = debug(`${configs.debugZone}:StreamService`)
+const error = debug(`${configs.debugZone}:StreamService:error`)
 
+export default class StreamService {
+  static async produceStreamResource (offset, limit, lat, lng, radius) {
     log('produceStreamResource')
 
-    const videoResources = await ResourceRepository.fetchProducedVideoResourcesByLimit(offset, limit)
+    const videoResources = await ResourceRepository.fetchProducedVideoResourcesByLimit(offset, limit, lat, lng, radius)
 
     return videoResources
   }
 
   static async produceStreamResourceById (videoResourceId) {
-    const log = debug(`${configs.debugZone}:StreamService:produceStreamResourceById`)
-
     log('produceStreamResourceById')
 
     const videoResources = await ResourceRepository.fetchProducedVideoResourcesByResourceId(videoResourceId)
@@ -36,8 +35,6 @@ export default class StreamService {
   }
 
   static async reactToResource (userId, resourceId, type) {
-    const log = debug(`${configs.debugZone}:StreamService:reactToResource`)
-
     log('reactToResource')
 
     // get resource's owner user id
@@ -61,8 +58,6 @@ export default class StreamService {
   }
 
   static async getVideoThumbnailResource (videoResourceId) {
-    const log = debug(`${configs.debugZone}:StreamService:getVideoThumbnailResource`)
-
     log('getVideoThumbnailResource')
 
     const videoResource = await ResourceRepository.fetchResourceById(videoResourceId, ResourceTypesEnum.video)
@@ -87,8 +82,7 @@ export default class StreamService {
   }
 
   static uploadVideoResource (userId, uploadFile, description, hashtags) {
-    const log = debug(`${configs.debugZone}:StreamService:uploadVideoResource`)
-    const error = debug(`${configs.debugZone}:StreamService:uploadVideoResource:error`)
+    log('uploadVideoResource')
 
     const uploadedFileName = uuid.v4() + '.mp4'
     const uploadedFilePath = path.join(__dirname, '/../../tmp/', uploadedFileName)
