@@ -3,6 +3,7 @@
 import debug from 'debug'
 import configs from '../../Configs'
 import * as Models from '../Models'
+import UsersLocationsHistoryRepository from './UsersLocationsHistoryRepository'
 
 const log = debug(`${configs.debugZone}:UsersLocationsRepository`)
 
@@ -38,6 +39,68 @@ export default class UsersLocationsRepository {
     }
 
     return users.toString().split(',')
+  }
+
+  static async isUserExists (userId) {
+    log('isUserExists')
+
+    const UserLocationCount = await Models.UsersLocations.count({
+      where: {userId}
+    })
+
+    return UserLocationCount > 0
+  }
+
+  static async updateCoordination (userId, lat, lng) {
+    log('updateCoordination')
+
+    const [, updatedUserCount] = await Models.sequelize.query(`
+      UPDATE users_locations
+      SET
+        coordination = POINT(:lat, :lng)
+      WHERE
+        user_id = :userId;
+    `, {
+      replacements: {
+        userId,
+        lat,
+        lng
+      },
+      type: Models.sequelize.QueryTypes.UPDATE
+    })
+
+    if (updatedUserCount === 0) {
+      return false
+    }
+
+    await UsersLocationsHistoryRepository.addNewCoordination(userId, lat, lng)
+
+    return true
+  }
+
+  static async addNewCoordination (userId, lat, lng) {
+    log('addNewCoordination')
+
+    const [, createdUserCount] = await Models.sequelize.query(`
+      INSERT INTO users_locations 
+             (user_id, coordination)
+      VALUES (:userId, POINT(:lat, :lng));
+    `, {
+      replacements: {
+        userId,
+        lat,
+        lng
+      },
+      type: Models.sequelize.QueryTypes.INSERT
+    })
+
+    if (createdUserCount === 0) {
+      return false
+    }
+
+    await UsersLocationsHistoryRepository.addNewCoordination(userId, lat, lng)
+
+    return true
   }
 
   static async fetchUserInRadius (lat, lng, radius, conversionRate) {
