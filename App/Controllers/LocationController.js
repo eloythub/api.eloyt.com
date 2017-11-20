@@ -4,7 +4,7 @@ import debug from 'debug'
 import configs from '../../Configs'
 import LocationService from '../Services/LocationService'
 
-const error = debug(`${configs.debugZone}:LocationController:search`)
+const error = debug(`${configs.debugZone}:LocationController`)
 
 export default class LocationController {
   static async update (req, res) {
@@ -21,12 +21,13 @@ export default class LocationController {
           isUpdated
         }
       }).code(200)
-    } catch (e) {
-      error(e.message)
+    } catch (err) {
+      error(err.message)
 
       res({
         statusCode: 500,
-        error: e.message
+        error: err.message,
+        err
       }).code(500)
     }
   }
