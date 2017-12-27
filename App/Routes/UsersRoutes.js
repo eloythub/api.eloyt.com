@@ -29,18 +29,17 @@ export default class UsersRoutes {
           payload: {
             attributes: Joi.object()
               .keys({
-                name: Joi.string().required(),
-                username: Joi.string().required(),
-                firstName: Joi.string().required(),
-                lastName: Joi.string().required(),
-                gender: Joi.string().required(),
-                aboutMe: Joi.string().required(),
-                mobile: Joi.string().required(),
-                dateOfBirth: Joi.string().required()
+                name: Joi.string(),
+                username: Joi.string(),
+                firstName: Joi.string(),
+                lastName: Joi.string(),
+                gender: Joi.string().allow('').allow(null),
+                aboutMe: Joi.string().allow('').allow(null),
+                mobile: Joi.string().allow('').allow(null),
+                dateOfBirth: Joi.string().allow('').allow(null)
               })
               .optionalKeys('name', 'username', 'firstName', 'lastName', 'gender', 'aboutMe', 'mobile', 'dateOfBirth')
               .min(1)
-              .required()
           }
         }
       }

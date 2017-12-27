@@ -218,12 +218,12 @@ export default class UsersRepository {
     return users
   }
 
-  static async createUser (facebookId, email, username, name, firstName, lastName, gender, dateOfBirth) {
+  static async createUser (facebookId, email, username, name, firstName, lastName) {
     const log = debug(`${configs.debugZone}:UsersRepository:createUser`)
 
     log('createUser')
 
-    let user = await Models.Users.create({ facebookId, email, username, name, firstName, lastName, gender, dateOfBirth })
+    let user = await Models.Users.create({ facebookId, email, username, name, firstName, lastName })
 
     if (!user) {
       return null

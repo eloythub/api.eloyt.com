@@ -76,14 +76,12 @@ export default class UsersService {
       email,
       name,
       first_name: firstName,
-      last_name: lastName,
-      gender,
-      birthday: dateOfBirth
+      last_name: lastName
     } = profile
 
     const username = null
 
-    let user = await UsersRepository.createUser(id, email, username, name, firstName, lastName, gender, dateOfBirth)
+    let user = await UsersRepository.createUser(id, email, username, name, firstName, lastName)
 
     return user
   }
@@ -93,11 +91,21 @@ export default class UsersService {
 
     log('updateUser')
 
+    let updatingAttributes = {}
+
+    let selectedUser = await UsersRepository.fetchUserById(userId)
+
     if ('username' in attributes) {
       attributes.username = attributes.username.replace(/\W/g, '')
     }
 
-    let user = await UsersRepository.updateUser(userId, attributes)
+    for (let key in attributes) {
+      if (attributes[key] !== selectedUser[key]) {
+        updatingAttributes[key] = attributes[key] ? attributes[key] : null
+      }
+    }
+
+    let user = await UsersRepository.updateUser(userId, updatingAttributes)
 
     return user
   }
@@ -123,8 +131,6 @@ export default class UsersService {
       user.username &&
       user.firstName &&
       user.lastName &&
-      user.dateOfBirth &&
-      user.gender &&
       (user.hashtags !== null && user.hashtags.length >= 1 && user.hashtags.length <= 5)
     )
   }
