@@ -39,7 +39,6 @@ export default class UsersRoutes {
                 dateOfBirth: Joi.string().allow('').allow(null)
               })
               .optionalKeys('name', 'username', 'firstName', 'lastName', 'gender', 'aboutMe', 'mobile', 'dateOfBirth')
-              .min(1)
           }
         }
       }
